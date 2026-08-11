@@ -2,12 +2,20 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>The Forgotten God V5</title>
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no,
+               viewport-fit=cover">
+
+<title>The Forgotten God V6</title>
 
 <style>
+
 *{
     box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
@@ -17,19 +25,23 @@ html,body{
     overflow:hidden;
     background:#030306;
     font-family:Georgia,serif;
+    touch-action:none;
 }
 
 canvas{
     display:block;
-    cursor:crosshair;
+    width:100%;
+    height:100%;
 }
 
-/* ================= MENU ================= */
+/* =========================
+   SCREEN
+========================= */
 
 .screen{
     position:fixed;
     inset:0;
-    z-index:100;
+    z-index:1000;
 
     display:flex;
     flex-direction:column;
@@ -37,6 +49,8 @@ canvas{
     align-items:center;
 
     text-align:center;
+
+    color:#d8bd88;
 
     background:
         radial-gradient(
@@ -46,7 +60,7 @@ canvas{
             #020205 100%
         );
 
-    color:#d8bd88;
+    padding:25px;
 }
 
 .hidden{
@@ -54,10 +68,14 @@ canvas{
 }
 
 .title{
-    font-size:clamp(45px,9vw,105px);
-    line-height:.82;
-    letter-spacing:9px;
     margin:0;
+
+    font-size:
+        clamp(45px,9vw,105px);
+
+    line-height:.82;
+
+    letter-spacing:8px;
 
     text-shadow:
         0 0 15px #9b4659,
@@ -66,82 +84,128 @@ canvas{
 
 .subtitle{
     margin:30px 0;
+
     color:#8e817d;
+
     letter-spacing:5px;
 }
 
 .button{
-    width:300px;
+    width:min(300px,90vw);
+
     min-height:55px;
+
     margin:8px;
 
-    border:1px solid #80694e;
+    border:
+        1px solid #80694e;
+
     background:#0b080c;
+
     color:#d9bd87;
 
     font-family:Georgia,serif;
+
     letter-spacing:3px;
 
     cursor:pointer;
+
+    border-radius:5px;
 }
 
 .button:hover{
     background:#351924;
-    box-shadow:0 0 25px #69283a;
+
+    box-shadow:
+        0 0 25px #69283a;
 }
 
-/* ================= UI ================= */
+/* =========================
+   UI
+========================= */
 
 #ui{
     display:none;
+
     position:fixed;
     inset:0;
+
     z-index:20;
+
     pointer-events:none;
 }
 
 #location{
     position:absolute;
-    top:18px;
+
+    top:
+        max(15px,env(safe-area-inset-top));
+
     left:50%;
-    transform:translateX(-50%);
+
+    transform:
+        translateX(-50%);
 
     color:#d8bd88;
+
     letter-spacing:4px;
-    text-shadow:0 2px 8px black;
+
+    font-size:14px;
+
+    text-shadow:
+        0 2px 8px black;
+
+    white-space:nowrap;
 }
 
 #level{
     position:absolute;
+
     right:20px;
-    top:20px;
+
+    top:
+        max(18px,env(safe-area-inset-top));
+
     color:#bfa87a;
+
     font-family:Arial,sans-serif;
 }
 
 #status{
     position:absolute;
-    top:18px;
+
+    top:
+        max(18px,env(safe-area-inset-top));
+
     left:20px;
+
     width:250px;
 
     color:#d0c0a8;
+
     font-family:Arial,sans-serif;
+
     font-size:13px;
 }
 
 .bar{
     width:225px;
+
     height:15px;
+
     margin-top:7px;
 
-    border:1px solid #795c4b;
+    border:
+        1px solid #795c4b;
+
     background:#18080c;
 }
 
 .barFill{
     width:100%;
+
     height:100%;
+
     transition:.12s;
 }
 
@@ -153,57 +217,90 @@ canvas{
     background:#58459c;
 }
 
+/* =========================
+   BOSS
+========================= */
+
 #bossUI{
     display:none;
 
     position:absolute;
-    top:18px;
-    left:50%;
-    transform:translateX(-50%);
 
-    width:min(600px,70vw);
+    top:
+        max(18px,env(safe-area-inset-top));
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:min(600px,65vw);
 
     text-align:center;
+
     color:#d9bd87;
 }
 
 #bossName{
     letter-spacing:4px;
+
     margin-bottom:5px;
 }
 
 #bossBar{
     height:18px;
-    border:1px solid #9d7653;
+
+    border:
+        1px solid #9d7653;
+
     background:#16060b;
 }
 
 #bossHP{
     width:100%;
+
     height:100%;
+
     background:#8f243e;
+
     transition:.1s;
 }
 
+/* =========================
+   QUEST
+========================= */
+
 #quest{
     position:absolute;
-    top:75px;
+
+    top:80px;
+
     left:20px;
 
     width:315px;
+
     padding:14px;
 
-    background:rgba(8,6,10,.9);
-    border-left:3px solid #9c794d;
+    background:
+        rgba(8,6,10,.88);
+
+    border-left:
+        3px solid #9c794d;
 
     color:#bdb09d;
+
     font-family:Arial,sans-serif;
+
+    font-size:13px;
 }
 
 #questTitle{
     color:#d9bd87;
+
     font-weight:bold;
+
     letter-spacing:2px;
+
     margin-bottom:8px;
 }
 
@@ -213,49 +310,111 @@ canvas{
 
 #distance{
     margin-top:8px;
+
     color:#8f817c;
+
     font-size:11px;
 }
+
+/* =========================
+   CONTROLS PC
+========================= */
 
 #controls{
     position:absolute;
+
     left:20px;
-    bottom:18px;
+
+    bottom:
+        max(18px,env(safe-area-inset-bottom));
 
     padding:10px 13px;
 
-    background:rgba(5,4,7,.85);
+    background:
+        rgba(5,4,7,.85);
+
     color:#8b807d;
 
     font-family:Arial,sans-serif;
+
     font-size:11px;
 }
+
+/* =========================
+   MESSAGE
+========================= */
+
+#message{
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    padding:15px 25px;
+
+    background:
+        rgba(8,5,10,.96);
+
+    border:
+        1px solid #8d704d;
+
+    color:#d7bd8c;
+
+    font-size:15px;
+
+    letter-spacing:2px;
+
+    opacity:0;
+
+    transition:.25s;
+
+    white-space:nowrap;
+}
+
+/* =========================
+   DIALOGUE
+========================= */
 
 #dialogue{
     display:none;
 
     position:absolute;
+
     left:50%;
+
     bottom:25px;
 
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
 
     width:min(760px,90%);
+
     min-height:135px;
 
     padding:20px;
 
-    background:rgba(7,5,9,.97);
-    border:1px solid #80694e;
+    background:
+        rgba(7,5,9,.97);
 
-    box-shadow:0 0 30px black;
+    border:
+        1px solid #80694e;
+
+    box-shadow:
+        0 0 30px black;
 
     color:#cfc0aa;
+
+    pointer-events:auto;
 }
 
 #speaker{
     margin-bottom:10px;
+
     color:#d8b36d;
+
     letter-spacing:3px;
 }
 
@@ -265,45 +424,113 @@ canvas{
 
 #dialogueHint{
     position:absolute;
+
     right:15px;
     bottom:10px;
+
     color:#70666a;
+
     font-size:10px;
 }
 
-#message{
-    position:absolute;
-    top:50%;
+/* =========================
+   INTERACT PROMPT
+========================= */
+
+#interactButton{
+    display:none;
+
+    position:fixed;
+
     left:50%;
 
-    transform:translate(-50%,-50%);
+    bottom:125px;
 
-    padding:15px 25px;
+    transform:
+        translateX(-50%);
 
-    background:rgba(8,5,10,.96);
-    border:1px solid #8d704d;
+    z-index:100;
 
-    color:#d7bd8c;
-    font-size:15px;
+    padding:
+        12px 22px;
+
+    background:
+        rgba(8,6,10,.94);
+
+    border:
+        1px solid #b99b65;
+
+    border-radius:8px;
+
+    color:#d9bd87;
+
+    font-family:Georgia,serif;
+
     letter-spacing:2px;
 
-    opacity:0;
-    transition:.25s;
+    box-shadow:
+        0 0 25px
+        rgba(160,100,50,.25);
+
+    animation:
+        interactPulse 1.2s infinite;
+
+    pointer-events:auto;
+
+    white-space:nowrap;
 }
 
-/* ================= WAKE UP ================= */
+#interactButton.show{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+#interactIcon{
+    font-size:25px;
+}
+
+#interactKey{
+    color:#fff0bd;
+
+    font-weight:bold;
+}
+
+@keyframes interactPulse{
+
+    0%,100%{
+        transform:
+            translateX(-50%)
+            scale(1);
+    }
+
+    50%{
+        transform:
+            translateX(-50%)
+            scale(1.04);
+    }
+
+}
+
+/* =========================
+   WAKE UP
+========================= */
 
 #reviveScreen{
     display:none;
 
     position:fixed;
+
     inset:0;
-    z-index:500;
+
+    z-index:2000;
 
     background:#000;
 
     justify-content:center;
+
     align-items:center;
+
     flex-direction:column;
 
     color:#d8bd87;
@@ -312,40 +539,57 @@ canvas{
 }
 
 #wakeUp{
-    font-size:clamp(55px,11vw,130px);
+    font-size:
+        clamp(55px,11vw,130px);
+
     letter-spacing:16px;
 
     text-shadow:
         0 0 15px #9b4659,
         0 0 50px #401421;
 
-    animation:pulse 2s infinite;
+    animation:
+        pulse 2s infinite;
 }
 
 #reviveText{
     margin-top:20px;
+
     color:#6f6669;
+
     letter-spacing:4px;
 }
 
 #reviveTimer{
     margin-top:20px;
+
     font-size:35px;
 }
 
 @keyframes pulse{
-    0%,100%{opacity:.4}
-    50%{opacity:1}
+
+    0%,100%{
+        opacity:.4;
+    }
+
+    50%{
+        opacity:1;
+    }
+
 }
 
-/* ================= ENDING ================= */
+/* =========================
+   ENDING
+========================= */
 
 #ending{
     display:none;
 
     position:fixed;
+
     inset:0;
-    z-index:600;
+
+    z-index:3000;
 
     background:
         radial-gradient(
@@ -358,7 +602,9 @@ canvas{
     color:#cdb78e;
 
     justify-content:center;
+
     align-items:center;
+
     flex-direction:column;
 
     text-align:center;
@@ -367,10 +613,13 @@ canvas{
 }
 
 #ending h1{
-    font-size:clamp(40px,7vw,80px);
+    font-size:
+        clamp(40px,7vw,80px);
+
     letter-spacing:8px;
 
-    margin:0 0 25px;
+    margin:
+        0 0 25px;
 
     text-shadow:
         0 0 20px #8d4052;
@@ -378,242 +627,672 @@ canvas{
 
 #endingText{
     max-width:700px;
+
     line-height:1.9;
+
     color:#aaa09b;
 }
 
 #thanks{
     margin:25px;
+
     color:#d8bd88;
+
     letter-spacing:4px;
 }
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+#mobileControls{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:200;
+
+    pointer-events:none;
+}
+
+/* JOYSTICK */
+
+#joystick{
+    position:absolute;
+
+    left:
+        max(25px,env(safe-area-inset-left));
+
+    bottom:
+        max(25px,env(safe-area-inset-bottom));
+
+    width:145px;
+    height:145px;
+
+    border:
+        2px solid
+        rgba(220,190,130,.3);
+
+    border-radius:50%;
+
+    background:
+        rgba(20,15,25,.35);
+
+    pointer-events:auto;
+}
+
+#joystickKnob{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:62px;
+    height:62px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border:
+        2px solid
+        rgba(220,190,130,.55);
+
+    border-radius:50%;
+
+    background:
+        rgba(120,70,100,.5);
+
+    box-shadow:
+        0 0 20px
+        rgba(150,80,120,.3);
+}
+
+/* ACTION BUTTONS */
+
+.mobileAction{
+    position:absolute;
+
+    border:
+        2px solid
+        rgba(220,190,130,.5);
+
+    background:
+        rgba(20,10,20,.72);
+
+    color:#e0c58d;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-family:Arial,sans-serif;
+
+    font-weight:bold;
+
+    pointer-events:auto;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+}
+
+#attackButton{
+    right:
+        max(30px,env(safe-area-inset-right));
+
+    bottom:
+        max(45px,env(safe-area-inset-bottom));
+
+    width:90px;
+    height:90px;
+
+    font-size:36px;
+
+    box-shadow:
+        0 0 20px
+        rgba(100,50,160,.3);
+}
+
+#mobileE{
+    right:
+        max(145px,calc(145px + env(safe-area-inset-right)));
+
+    bottom:
+        max(115px,calc(115px + env(safe-area-inset-bottom)));
+
+    width:65px;
+    height:65px;
+
+    font-size:18px;
+}
+
+#mobileHint{
+    position:absolute;
+
+    right:25px;
+
+    bottom:145px;
+
+    color:
+        rgba(220,200,170,.55);
+
+    font-family:Arial,sans-serif;
+
+    font-size:10px;
+}
+
+/* MOBILE DIALOGUE TAP */
+
+#dialogue.mobileDialogue{
+    bottom:145px;
+}
+
+/* ==========================================================
+   MOBILE MEDIA
+========================================================== */
+
+@media (pointer:coarse){
+
+    #mobileControls{
+        display:block;
+    }
+
+    #controls{
+        display:none;
+    }
+
+    #quest{
+        width:270px;
+
+        top:70px;
+
+        font-size:11px;
+
+        opacity:.9;
+    }
+
+    #status{
+        width:190px;
+
+        font-size:11px;
+    }
+
+    .bar{
+        width:170px;
+    }
+
+    #location{
+        font-size:10px;
+
+        letter-spacing:2px;
+    }
+
+    #level{
+        font-size:11px;
+    }
+
+    #bossUI{
+        width:70vw;
+    }
+
+    #message{
+        font-size:12px;
+
+        max-width:90%;
+
+        white-space:normal;
+
+        text-align:center;
+    }
+
+}
+
+/* MOBILE LANDSCAPE */
+
+@media
+(pointer:coarse)
+and
+(orientation:landscape){
+
+    #joystick{
+        width:125px;
+        height:125px;
+    }
+
+    #joystickKnob{
+        width:55px;
+        height:55px;
+    }
+
+    #attackButton{
+        width:80px;
+        height:80px;
+
+        bottom:30px;
+    }
+
+    #mobileE{
+        bottom:105px;
+    }
+
+    #mobileHint{
+        bottom:125px;
+    }
+
+}
+
+/* PORTRAIT WARNING */
+
+#rotateWarning{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:5000;
+
+    background:#050407;
+
+    color:#d9bd87;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    flex-direction:column;
+
+    padding:30px;
+}
+
+@media
+(pointer:coarse)
+and
+(orientation:portrait){
+
+    #rotateWarning{
+        display:flex;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- ================= MENU ================= -->
+<!-- =====================================================
+MENU
+===================================================== -->
 
 <div id="menu" class="screen">
 
-<h1 class="title">
-THE<br>
-FORGOTTEN<br>
-GOD
-</h1>
+    <h1 class="title">
+        THE<br>
+        FORGOTTEN<br>
+        GOD
+    </h1>
 
-<div class="subtitle">
-HE REMEMBERS YOU
-</div>
+    <div class="subtitle">
+        HE REMEMBERS YOU
+    </div>
 
-<button class="button" id="startButton">
-ENTER THE WORLD
-</button>
+    <button
+        class="button"
+        id="startButton">
+        ENTER THE WORLD
+    </button>
 
-<button class="button" id="loreButton">
-THE LORE
-</button>
-
-</div>
-
-
-<!-- ================= LORE ================= -->
-
-<div id="lore" class="screen hidden">
-
-<h2>THE LORE</h2>
-
-<p>
-Hàng trăm năm trước, một vương quốc từng được
-bảo vệ bởi các vị thần.
-</p>
-
-<p>
-Nhưng con người dần quên tên của họ.
-Vương quốc sụp đổ.
-</p>
-
-<p>
-Chỉ còn một vị thần vẫn tồn tại.
-</p>
-
-<p>
-<strong>FORGOTTEN GOD.</strong>
-</p>
-
-<p>
-Một phù thủy tỉnh dậy mà không nhớ mình là ai.
-</p>
-
-<button class="button" id="closeLore">
-QUAY LẠI
-</button>
+    <button
+        class="button"
+        id="loreButton">
+        THE LORE
+    </button>
 
 </div>
 
 
-<!-- ================= CANVAS ================= -->
+<!-- =====================================================
+LORE
+===================================================== -->
+
+<div
+    id="lore"
+    class="screen hidden">
+
+    <h2>THE LORE</h2>
+
+    <p>
+        Hàng trăm năm trước, một vương quốc
+        từng được bảo vệ bởi các vị thần.
+    </p>
+
+    <p>
+        Nhưng con người dần quên tên của họ.
+        Vương quốc sụp đổ.
+    </p>
+
+    <p>
+        Chỉ còn một vị thần vẫn tồn tại.
+    </p>
+
+    <p>
+        <strong>FORGOTTEN GOD.</strong>
+    </p>
+
+    <p>
+        Một phù thủy tỉnh dậy mà không nhớ mình là ai.
+    </p>
+
+    <button
+        class="button"
+        id="closeLore">
+        QUAY LẠI
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+CANVAS
+===================================================== -->
 
 <canvas id="game"></canvas>
 
 
-<!-- ================= UI ================= -->
+<!-- =====================================================
+UI
+===================================================== -->
 
 <div id="ui">
 
-<div id="location">
-THE LOST KINGDOM
+    <div id="location">
+        THE LOST KINGDOM
+    </div>
+
+    <div id="level">
+        LEVEL 1
+    </div>
+
+
+    <!-- PLAYER STATUS -->
+
+    <div id="status">
+
+        🧙‍♂️ WANDERER
+
+        <div class="bar">
+            <div
+                id="hp"
+                class="barFill">
+            </div>
+        </div>
+
+        <div style="margin-top:5px">
+            🔮 MANA
+        </div>
+
+        <div class="bar">
+            <div
+                id="mana"
+                class="barFill">
+            </div>
+        </div>
+
+        <div style="margin-top:8px">
+            👻 SOULS:
+            <span id="souls">0</span>
+        </div>
+
+    </div>
+
+
+    <!-- BOSS -->
+
+    <div id="bossUI">
+
+        <div id="bossName">
+            👑 FORGOTTEN GOD
+        </div>
+
+        <div id="bossBar">
+            <div id="bossHP"></div>
+        </div>
+
+    </div>
+
+
+    <!-- QUEST -->
+
+    <div id="quest">
+
+        <div id="questTitle">
+            📜 NHIỆM VỤ
+        </div>
+
+        <div id="questText">
+            Tìm NPC bí ẩn.
+        </div>
+
+        <div id="distance">
+            📍 Đang tìm mục tiêu...
+        </div>
+
+    </div>
+
+
+    <!-- PC CONTROLS -->
+
+    <div id="controls">
+
+        🎮 <b>ĐIỀU KHIỂN</b>
+        <br><br>
+
+        W A S D → Di chuyển
+        <br>
+
+        🖱️ Chuột → Ngắm phép
+        <br>
+
+        SPACE → Bắn 🔮
+        <br>
+
+        E → Tương tác
+
+    </div>
+
+
+    <!-- DIALOGUE -->
+
+    <div id="dialogue">
+
+        <div id="speaker"></div>
+
+        <div id="dialogueText"></div>
+
+        <div id="dialogueHint">
+            NHẤN E ĐỂ TIẾP TỤC
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div id="message"></div>
+
+
+    <!-- INTERACTION -->
+
+    <div id="interactButton">
+
+        <span id="interactIcon">
+            🚪
+        </span>
+
+        <span id="interactKey">
+            [ E ]
+        </span>
+
+        <span id="interactText">
+            VÀO LÂU ĐÀI
+        </span>
+
+    </div>
+
 </div>
 
-<div id="level">
-LEVEL 1
-</div>
 
-<div id="status">
+<!-- =====================================================
+MOBILE
+===================================================== -->
 
-🧙‍♂️ WANDERER
+<div id="mobileControls">
 
-<div class="bar">
-<div id="hp" class="barFill"></div>
-</div>
+    <!-- JOYSTICK -->
 
-<div style="margin-top:5px">
-🔮 MANA
-</div>
+    <div id="joystick">
 
-<div class="bar">
-<div id="mana" class="barFill"></div>
-</div>
+        <div id="joystickKnob"></div>
 
-<div style="margin-top:8px">
-👻 SOULS:
-<span id="souls">0</span>
-</div>
-
-</div>
+    </div>
 
 
-<!-- BOSS -->
+    <!-- ATTACK -->
 
-<div id="bossUI">
+    <div
+        id="attackButton"
+        class="mobileAction">
 
-<div id="bossName">
-👑 FORGOTTEN GOD
-</div>
+        🔮
 
-<div id="bossBar">
-<div id="bossHP"></div>
-</div>
-
-</div>
+    </div>
 
 
-<!-- QUEST -->
+    <!-- E -->
 
-<div id="quest">
+    <div
+        id="mobileE"
+        class="mobileAction">
 
-<div id="questTitle">
-📜 NHIỆM VỤ
-</div>
+        E
 
-<div id="questText">
-Tìm NPC bí ẩn.
-</div>
+    </div>
 
-<div id="distance">
-📍 Đang tìm mục tiêu...
-</div>
+    <div id="mobileHint">
+        TƯƠNG TÁC
+    </div>
 
 </div>
 
 
-<!-- CONTROLS -->
-
-<div id="controls">
-
-🎮 <b>ĐIỀU KHIỂN</b><br><br>
-
-W A S D → Di chuyển<br>
-🖱️ Chuột → Ngắm phép<br>
-SPACE → Bắn 🔮<br>
-E → Tương tác
-
-</div>
-
-
-<!-- DIALOGUE -->
-
-<div id="dialogue">
-
-<div id="speaker"></div>
-
-<div id="dialogueText"></div>
-
-<div id="dialogueHint">
-NHẤN E ĐỂ TIẾP TỤC
-</div>
-
-</div>
-
-
-<div id="message"></div>
-
-</div>
-
-
-<!-- ================= WAKE UP ================= -->
+<!-- =====================================================
+WAKE UP
+===================================================== -->
 
 <div id="reviveScreen">
 
-<div id="wakeUp">
-WAKE UP
+    <div id="wakeUp">
+        WAKE UP
+    </div>
+
+    <div id="reviveText">
+        THE DARKNESS HAS NOT CLAIMED YOU
+    </div>
+
+    <div id="reviveTimer">
+        5
+    </div>
+
 </div>
 
-<div id="reviveText">
-THE DARKNESS HAS NOT CLAIMED YOU
-</div>
 
-<div id="reviveTimer">
-5
-</div>
-
-</div>
-
-
-<!-- ================= ENDING ================= -->
+<!-- =====================================================
+ENDING
+===================================================== -->
 
 <div id="ending">
 
-<h1>THE END</h1>
+    <h1>
+        THE END
+    </h1>
 
-<div id="endingText">
+    <div id="endingText">
 
-Forgotten God đã bị đánh bại.
+        Forgotten God đã bị đánh bại.
 
-Vương quốc cuối cùng cũng được giải thoát
-khỏi lời nguyền của bóng tối.
+        <br><br>
 
-Nhưng khi vị thần biến mất,
-ký ức của người phù thủy cũng trở lại.
+        Vương quốc cuối cùng cũng được giải thoát
+        khỏi lời nguyền của bóng tối.
 
-Ngươi không phải người được chọn.
+        <br><br>
 
-Ngươi chính là người đã tạo ra lời nguyền
-từ hàng trăm năm trước.
+        Nhưng khi vị thần biến mất,
+        ký ức của người phù thủy cũng trở lại.
 
-Và cuộc chiến này...
+        <br><br>
 
-chỉ là sự thức tỉnh.
+        Ngươi không phải người được chọn.
+
+        <br><br>
+
+        Ngươi chính là người đã tạo ra lời nguyền
+        từ hàng trăm năm trước.
+
+        <br><br>
+
+        Và cuộc chiến này...
+
+        <br><br>
+
+        <strong>
+            chỉ là sự thức tỉnh.
+        </strong>
+
+    </div>
+
+    <div id="thanks">
+        CẢM ƠN BẠN ĐÃ CHƠI
+    </div>
+
+    <button
+        class="button"
+        id="restartButton">
+
+        CHƠI LẠI
+
+    </button>
 
 </div>
 
-<div id="thanks">
-CẢM ƠN BẠN ĐÃ CHƠI
-</div>
 
-<button class="button" id="restartButton">
-CHƠI LẠI
-</button>
+<!-- =====================================================
+ROTATE
+===================================================== -->
+
+<div id="rotateWarning">
+
+    <div style="font-size:60px">
+        📱
+    </div>
+
+    <h2>
+        XOAY ĐIỆN THOẠI
+    </h2>
+
+    <p>
+        Vui lòng xoay điện thoại sang
+        <b>màn hình ngang</b> để chơi.
+    </p>
 
 </div>
 
@@ -625,25 +1304,38 @@ CANVAS
 ===================================================== */
 
 const canvas =
-document.getElementById("game");
+    document.getElementById("game");
 
 const ctx =
-canvas.getContext("2d");
+    canvas.getContext("2d");
 
-let W = innerWidth;
-let H = innerHeight;
+let W =
+    innerWidth;
+
+let H =
+    innerHeight;
+
 
 function resize(){
 
-    W = innerWidth;
-    H = innerHeight;
+    W =
+        innerWidth;
 
-    canvas.width = W;
-    canvas.height = H;
+    H =
+        innerHeight;
+
+    canvas.width =
+        W;
+
+    canvas.height =
+        H;
 
 }
 
-addEventListener("resize",resize);
+addEventListener(
+    "resize",
+    resize
+);
 
 resize();
 
@@ -652,50 +1344,66 @@ resize();
 GAME STATE
 ===================================================== */
 
-let running=false;
+let running =
+    false;
 
-let area="outside";
+let area =
+    "outside";
 
-let castleFloor=0;
+let castleFloor =
+    0;
 
-let souls=0;
+let souls =
+    0;
 
-let questStage=0;
+let questStage =
+    0;
 
-let dialogueOpen=false;
+let dialogueOpen =
+    false;
 
-let dialogueIndex=0;
+let dialogueIndex =
+    0;
 
-let messageTimer=0;
+let messageTimer =
+    0;
 
-let reviving=false;
+let reviving =
+    false;
 
-let gameFinished=false;
+let gameFinished =
+    false;
 
 
 /* =====================================================
 WORLD
 ===================================================== */
 
-const WORLD_W=4200;
-const WORLD_H=3200;
+const WORLD_W =
+    4200;
+
+const WORLD_H =
+    3200;
 
 
 /* =====================================================
 PLAYER
 ===================================================== */
 
-const player={
+const player = {
 
     x:2100,
+
     y:2200,
 
     speed:8,
 
     hp:100,
+
     maxHp:100,
 
     mana:100,
+
     maxMana:100,
 
     cooldown:0,
@@ -710,49 +1418,13 @@ const player={
 
 
 /* =====================================================
-MAGIC PROJECTILES
-===================================================== */
-
-let projectiles=[];
-
-
-/* =====================================================
-BOSS PROJECTILES
-===================================================== */
-
-let bossProjectiles=[];
-
-
-/* =====================================================
-BOSS
-===================================================== */
-
-const boss={
-
-    x:750,
-    y:220,
-
-    hp:150,
-    maxHp:150,
-
-    speed:1.35,
-
-    attackCooldown:0,
-
-    active:false,
-
-    defeated:false
-
-};
-
-
-/* =====================================================
 CAMERA
 ===================================================== */
 
-const camera={
+const camera = {
 
     x:0,
+
     y:0,
 
     smooth:.12
@@ -764,66 +1436,335 @@ const camera={
 MOUSE
 ===================================================== */
 
-const mouse={
+const mouse = {
 
     x:W/2,
+
     y:H/2
 
 };
 
 canvas.addEventListener(
-"mousemove",
-e=>{
+    "mousemove",
+    e=>{
 
-    mouse.x=e.clientX;
-    mouse.y=e.clientY;
+        mouse.x =
+            e.clientX;
 
-});
+        mouse.y =
+            e.clientY;
+
+    }
+);
 
 
 /* =====================================================
-KEYS
+KEYBOARD
 ===================================================== */
 
-const keys={};
+const keys = {};
+
 
 addEventListener(
-"keydown",
-e=>{
+    "keydown",
+    e=>{
 
-    keys[e.key.toLowerCase()]=true;
+        keys[
+            e.key.toLowerCase()
+        ] = true;
 
-    if(e.code==="Space")
+
+        if(e.code === "Space"){
+
+            e.preventDefault();
+
+            keys.space =
+                true;
+
+        }
+
+
+        if(
+            e.key.toLowerCase()
+            === "e"
+        ){
+
+            interact();
+
+        }
+
+    }
+);
+
+
+addEventListener(
+    "keyup",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ] = false;
+
+
+        if(e.code === "Space"){
+
+            keys.space =
+                false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+TOUCH JOYSTICK
+===================================================== */
+
+const joystick =
+    document.getElementById(
+        "joystick"
+    );
+
+const knob =
+    document.getElementById(
+        "joystickKnob"
+    );
+
+let joystickActive =
+    false;
+
+let joystickX =
+    0;
+
+let joystickY =
+    0;
+
+let joystickPointer =
+    null;
+
+
+function setJoystick(
+    clientX,
+    clientY
+){
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+    const centerX =
+        rect.left+
+        rect.width/2;
+
+    const centerY =
+        rect.top+
+        rect.height/2;
+
+    let dx =
+        clientX-centerX;
+
+    let dy =
+        clientY-centerY;
+
+
+    const max =
+        rect.width/2-
+        knob.offsetWidth/2;
+
+
+    const len =
+        Math.sqrt(
+            dx*dx+
+            dy*dy
+        );
+
+
+    if(len>max){
+
+        dx =
+            dx/len*max;
+
+        dy =
+            dy/len*max;
+
+    }
+
+
+    joystickX =
+        dx/max;
+
+    joystickY =
+        dy/max;
+
+
+    knob.style.left =
+        `calc(50% + ${dx}px)`;
+
+    knob.style.top =
+        `calc(50% + ${dy}px)`;
+
+}
+
+
+function resetJoystick(){
+
+    joystickActive =
+        false;
+
+    joystickX =
+        0;
+
+    joystickY =
+        0;
+
+    knob.style.left =
+        "50%";
+
+    knob.style.top =
+        "50%";
+
+}
+
+
+joystick.addEventListener(
+    "pointerdown",
+    e=>{
+
+        joystickActive =
+            true;
+
+        joystickPointer =
+            e.pointerId;
+
+        joystick.setPointerCapture(
+            e.pointerId
+        );
+
+        setJoystick(
+            e.clientX,
+            e.clientY
+        );
+
+    }
+);
+
+
+joystick.addEventListener(
+    "pointermove",
+    e=>{
+
+        if(
+            joystickActive &&
+            e.pointerId === joystickPointer
+        ){
+
+            setJoystick(
+                e.clientX,
+                e.clientY
+            );
+
+        }
+
+    }
+);
+
+
+joystick.addEventListener(
+    "pointerup",
+    resetJoystick
+);
+
+
+joystick.addEventListener(
+    "pointercancel",
+    resetJoystick
+);
+
+
+/* =====================================================
+MOBILE ATTACK
+===================================================== */
+
+const attackButton =
+    document.getElementById(
+        "attackButton"
+    );
+
+
+let mobileAttacking =
+    false;
+
+
+attackButton.addEventListener(
+    "pointerdown",
+    e=>{
+
         e.preventDefault();
 
-    if(e.key.toLowerCase()==="e")
-        interact();
+        mobileAttacking =
+            true;
 
-});
+        rangedAttack();
+
+    }
+);
 
 
-addEventListener(
-"keyup",
-e=>{
+attackButton.addEventListener(
+    "pointerup",
+    ()=>{
 
-    keys[e.key.toLowerCase()]=false;
+        mobileAttacking =
+            false;
 
-});
+    }
+);
+
+
+attackButton.addEventListener(
+    "pointercancel",
+    ()=>{
+
+        mobileAttacking =
+            false;
+
+    }
+);
+
+
+/* =====================================================
+MOBILE E
+===================================================== */
+
+document
+    .getElementById("mobileE")
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            interact();
+
+        }
+    );
 
 
 /* =====================================================
 AUDIO
 ===================================================== */
 
-let audioCtx=null;
+let audioCtx =
+    null;
 
-let master=null;
+let master =
+    null;
 
-let musicTimer=null;
+let musicTimer =
+    null;
 
-let bossMusic=false;
-
-let audioStarted=false;
+let bossMusic =
+    false;
 
 
 function initAudio(){
@@ -831,16 +1772,21 @@ function initAudio(){
     if(audioCtx)
         return;
 
+
     audioCtx =
         new (
             window.AudioContext ||
             window.webkitAudioContext
         )();
 
+
     master =
         audioCtx.createGain();
 
-    master.gain.value=.22;
+
+    master.gain.value =
+        .20;
+
 
     master.connect(
         audioCtx.destination
@@ -848,10 +1794,6 @@ function initAudio(){
 
 }
 
-
-/* =====================================================
-TONE
-===================================================== */
 
 function tone(
     frequency,
@@ -863,31 +1805,42 @@ function tone(
     if(!audioCtx)
         return;
 
+
     const osc =
         audioCtx.createOscillator();
+
 
     const gain =
         audioCtx.createGain();
 
-    osc.type=type;
+
+    osc.type =
+        type;
+
 
     osc.frequency.setValueAtTime(
         frequency,
         audioCtx.currentTime
     );
 
+
     gain.gain.setValueAtTime(
         volume,
         audioCtx.currentTime
     );
 
+
     gain.gain.exponentialRampToValueAtTime(
         .001,
-        audioCtx.currentTime+duration
+        audioCtx.currentTime+
+        duration
     );
 
+
     osc.connect(gain);
+
     gain.connect(master);
+
 
     osc.start();
 
@@ -899,41 +1852,55 @@ function tone(
 }
 
 
-/* =====================================================
-NOISE
-===================================================== */
-
-function noise(duration=.1,volume=.05){
+function noise(
+    duration=.1,
+    volume=.05
+){
 
     if(!audioCtx)
         return;
 
+
     const buffer =
         audioCtx.createBuffer(
             1,
-            audioCtx.sampleRate*duration,
+            audioCtx.sampleRate*
+            duration,
             audioCtx.sampleRate
         );
+
 
     const data =
         buffer.getChannelData(0);
 
-    for(let i=0;i<data.length;i++){
 
-        data[i]=
+    for(
+        let i=0;
+        i<data.length;
+        i++
+    ){
+
+        data[i] =
             Math.random()*2-1;
 
     }
 
+
     const source =
         audioCtx.createBufferSource();
+
 
     const gain =
         audioCtx.createGain();
 
-    source.buffer=buffer;
 
-    gain.gain.value=volume;
+    source.buffer =
+        buffer;
+
+
+    gain.gain.value =
+        volume;
+
 
     source.connect(gain);
 
@@ -945,13 +1912,14 @@ function noise(duration=.1,volume=.05){
 
 
 /* =====================================================
-CHARACTER SOUNDS
+SOUNDS
 ===================================================== */
 
 function footstep(){
 
     tone(
-        65+Math.random()*20,
+        65+
+        Math.random()*20,
         .07,
         "sine",
         .035
@@ -969,13 +1937,16 @@ function castSound(){
         .08
     );
 
+
     setTimeout(
-        ()=>tone(
-            380,
-            .12,
-            "sine",
-            .06
-        ),
+        ()=>{
+            tone(
+                380,
+                .12,
+                "sine",
+                .06
+            );
+        },
         50
     );
 
@@ -990,6 +1961,7 @@ function shootSound(){
         "sawtooth",
         .08
     );
+
 
     tone(
         600,
@@ -1010,6 +1982,7 @@ function hurtSound(){
         .1
     );
 
+
     noise(
         .12,
         .04
@@ -1026,6 +1999,7 @@ function deathSound(){
         "sine",
         .1
     );
+
 
     setTimeout(
         ()=>{
@@ -1051,23 +2025,29 @@ function reviveSound(){
         .06
     );
 
+
     setTimeout(
-        ()=>tone(
-            220,
-            .15,
-            "sine",
-            .07
-        ),
+        ()=>{
+            tone(
+                220,
+                .15,
+                "sine",
+                .07
+            );
+        },
         150
     );
 
+
     setTimeout(
-        ()=>tone(
-            440,
-            .35,
-            "sine",
-            .09
-        ),
+        ()=>{
+            tone(
+                440,
+                .35,
+                "sine",
+                .09
+            );
+        },
         300
     );
 
@@ -1083,13 +2063,16 @@ function npcSound(){
         .05
     );
 
+
     setTimeout(
-        ()=>tone(
-            450,
-            .15,
-            "triangle",
-            .04
-        ),
+        ()=>{
+            tone(
+                450,
+                .15,
+                "triangle",
+                .04
+            );
+        },
         100
     );
 
@@ -1105,23 +2088,29 @@ function levelSound(){
         .07
     );
 
+
     setTimeout(
-        ()=>tone(
-            330,
-            .15,
-            "sine",
-            .07
-        ),
+        ()=>{
+            tone(
+                330,
+                .15,
+                "sine",
+                .07
+            );
+        },
         120
     );
 
+
     setTimeout(
-        ()=>tone(
-            440,
-            .3,
-            "sine",
-            .08
-        ),
+        ()=>{
+            tone(
+                440,
+                .3,
+                "sine",
+                .08
+            );
+        },
         240
     );
 
@@ -1136,6 +2125,7 @@ function bossAttackSound(){
         "sawtooth",
         .12
     );
+
 
     noise(
         .18,
@@ -1166,23 +2156,29 @@ function bossDeathSound(){
         .1
     );
 
+
     setTimeout(
-        ()=>tone(
-            180,
-            .4,
-            "sine",
-            .08
-        ),
+        ()=>{
+            tone(
+                180,
+                .4,
+                "sine",
+                .08
+            );
+        },
         250
     );
 
+
     setTimeout(
-        ()=>tone(
-            440,
-            .8,
-            "sine",
-            .1
-        ),
+        ()=>{
+            tone(
+                440,
+                .8,
+                "sine",
+                .1
+            );
+        },
         500
     );
 
@@ -1190,7 +2186,7 @@ function bossDeathSound(){
 
 
 /* =====================================================
-DARK FANTASY MUSIC
+MUSIC
 ===================================================== */
 
 function startMusic(){
@@ -1198,197 +2194,220 @@ function startMusic(){
     if(musicTimer)
         return;
 
-    let index=0;
 
-    const normalNotes=[
+    let index =
+        0;
+
+
+    const notes = [
+
         55,
         65.41,
         73.42,
         61.74,
         49
+
     ];
 
-    musicTimer=setInterval(()=>{
 
-        if(!audioCtx)
-            return;
+    musicTimer =
+        setInterval(
+            ()=>{
 
-        if(bossMusic)
-            return;
+                if(!audioCtx)
+                    return;
 
-        tone(
-            normalNotes[index%normalNotes.length],
-            1.1,
-            "triangle",
-            .025
+
+                if(bossMusic)
+                    return;
+
+
+                tone(
+                    notes[
+                        index %
+                        notes.length
+                    ],
+                    1.1,
+                    "triangle",
+                    .025
+                );
+
+
+                index++;
+
+            },
+            1000
         );
-
-        index++;
-
-    },1000);
 
 }
 
 
-/* =====================================================
-BOSS MUSIC
-===================================================== */
-
 function startBossMusic(){
 
-    bossMusic=true;
+    bossMusic =
+        true;
 
-    let index=0;
 
-    const notes=[
+    let index =
+        0;
+
+
+    const notes = [
+
         55,
         55,
         73.42,
         49,
         65.41,
         41.20
+
     ];
 
-    const timer=setInterval(()=>{
 
-        if(!bossMusic){
+    const timer =
+        setInterval(
+            ()=>{
 
-            clearInterval(timer);
+                if(!bossMusic){
 
-            return;
+                    clearInterval(
+                        timer
+                    );
 
-        }
+                    return;
 
-        tone(
-            notes[index%notes.length],
-            .7,
-            "sawtooth",
-            .035
+                }
+
+
+                tone(
+                    notes[
+                        index %
+                        notes.length
+                    ],
+                    .7,
+                    "sawtooth",
+                    .035
+                );
+
+
+                index++;
+
+            },
+            650
         );
-
-        index++;
-
-    },650);
 
 }
 
 
 /* =====================================================
-START
+WORLD OBJECTS
 ===================================================== */
 
-document
-.getElementById("startButton")
-.onclick=()=>{
+let trees = [];
 
-    initAudio();
+let rocks = [];
 
-    audioCtx.resume();
+let graves = [];
 
-    audioStarted=true;
+let enemies = [];
 
-    startMusic();
 
-    document
-        .getElementById("menu")
-        .classList.add("hidden");
+const npc = {
 
-    document
-        .getElementById("ui")
-        .style.display="block";
+    x:2200,
 
-    running=true;
+    y:2150,
 
-    createWorld();
+    emoji:"🧝"
 
-    showMessage(
-        "🌑 THE FORGOTTEN GOD AWAKENS"
+};
+
+
+const castle = {
+
+    x:1850,
+
+    y:350,
+
+    width:500,
+
+    height:320
+
+};
+
+
+const gate = {
+
+    x:2100,
+
+    y:670
+
+};
+
+
+const castleNPC = {
+
+    x:750,
+
+    y:550,
+
+    emoji:"🧙"
+
+};
+
+
+/* =====================================================
+BOSS
+===================================================== */
+
+const boss = {
+
+    x:750,
+
+    y:220,
+
+    hp:150,
+
+    maxHp:150,
+
+    speed:1.35,
+
+    attackCooldown:0,
+
+    active:false,
+
+    defeated:false
+
+};
+
+
+let projectiles = [];
+
+let bossProjectiles = [];
+
+
+/* =====================================================
+DISTANCE
+===================================================== */
+
+function distance(
+    x1,y1,
+    x2,y2
+){
+
+    const dx =
+        x2-x1;
+
+    const dy =
+        y2-y1;
+
+
+    return Math.sqrt(
+        dx*dx+
+        dy*dy
     );
 
-    gameLoop();
-
-};
-
-
-/* =====================================================
-LORE
-===================================================== */
-
-document
-.getElementById("loreButton")
-.onclick=()=>{
-
-    document
-        .getElementById("menu")
-        .classList.add("hidden");
-
-    document
-        .getElementById("lore")
-        .classList.remove("hidden");
-
-};
-
-
-document
-.getElementById("closeLore")
-.onclick=()=>{
-
-    document
-        .getElementById("lore")
-        .classList.add("hidden");
-
-    document
-        .getElementById("menu")
-        .classList.remove("hidden");
-
-};
-
-
-/* =====================================================
-RESTART
-===================================================== */
-
-document
-.getElementById("restartButton")
-.onclick=()=>{
-
-    location.reload();
-
-};
-
-
-/* =====================================================
-OBJECTS
-===================================================== */
-
-let trees=[];
-let rocks=[];
-let graves=[];
-let enemies=[];
-
-const npc={
-    x:2200,
-    y:2150,
-    emoji:"🧝"
-};
-
-const castle={
-    x:1850,
-    y:350,
-    width:500,
-    height:320
-};
-
-const gate={
-    x:2100,
-    y:670
-};
-
-const castleNPC={
-    x:750,
-    y:550,
-    emoji:"🧙"
-};
+}
 
 
 /* =====================================================
@@ -1397,17 +2416,30 @@ CREATE WORLD
 
 function createWorld(){
 
-    trees=[];
-    rocks=[];
-    graves=[];
-    enemies=[];
+    trees = [];
 
-    for(let i=0;i<250;i++){
+    rocks = [];
+
+    graves = [];
+
+    enemies = [];
+
+
+    for(
+        let i=0;
+        i<250;
+        i++
+    ){
 
         trees.push({
 
-            x:Math.random()*WORLD_W,
-            y:Math.random()*WORLD_H,
+            x:
+                Math.random()*
+                WORLD_W,
+
+            y:
+                Math.random()*
+                WORLD_H,
 
             size:
                 25+
@@ -1418,12 +2450,21 @@ function createWorld(){
     }
 
 
-    for(let i=0;i<130;i++){
+    for(
+        let i=0;
+        i<130;
+        i++
+    ){
 
         rocks.push({
 
-            x:Math.random()*WORLD_W,
-            y:Math.random()*WORLD_H,
+            x:
+                Math.random()*
+                WORLD_W,
+
+            y:
+                Math.random()*
+                WORLD_H,
 
             size:
                 5+
@@ -1434,41 +2475,61 @@ function createWorld(){
     }
 
 
-    for(let i=0;i<70;i++){
+    for(
+        let i=0;
+        i<70;
+        i++
+    ){
 
         graves.push({
 
             x:
                 700+
-                Math.random()*1000,
+                Math.random()*
+                1000,
 
             y:
                 1200+
-                Math.random()*1000
+                Math.random()*
+                1000
 
         });
 
     }
 
 
-    for(let i=0;i<20;i++)
+    for(
+        let i=0;
+        i<20;
+        i++
+    ){
+
         createEnemy();
+
+    }
 
 }
 
 
 /* =====================================================
-ENEMY
+CREATE ENEMY
 ===================================================== */
 
 function createEnemy(){
 
-    let x,y;
+    let x;
+    let y;
+
 
     do{
 
-        x=Math.random()*WORLD_W;
-        y=Math.random()*WORLD_H;
+        x =
+            Math.random()*
+            WORLD_W;
+
+        y =
+            Math.random()*
+            WORLD_H;
 
     }
     while(
@@ -1483,6 +2544,7 @@ function createEnemy(){
     enemies.push({
 
         x:x,
+
         y:y,
 
         speed:
@@ -1490,6 +2552,7 @@ function createEnemy(){
             Math.random()*.7,
 
         hp:3,
+
         maxHp:3,
 
         emoji:
@@ -1503,27 +2566,7 @@ function createEnemy(){
 
 
 /* =====================================================
-DISTANCE
-===================================================== */
-
-function distance(
-    x1,y1,
-    x2,y2
-){
-
-    const dx=x2-x1;
-    const dy=y2-y1;
-
-    return Math.sqrt(
-        dx*dx+
-        dy*dy
-    );
-
-}
-
-
-/* =====================================================
-PLAYER
+PLAYER UPDATE
 ===================================================== */
 
 function updatePlayer(){
@@ -1531,17 +2574,44 @@ function updatePlayer(){
     if(dialogueOpen)
         return;
 
-    let dx=0;
-    let dy=0;
+
+    let dx =
+        0;
+
+    let dy =
+        0;
 
 
-    if(keys["w"]) dy--;
+    if(keys.w)
+        dy--;
 
-    if(keys["s"]) dy++;
 
-    if(keys["a"]) dx--;
+    if(keys.s)
+        dy++;
 
-    if(keys["d"]) dx++;
+
+    if(keys.a)
+        dx--;
+
+
+    if(keys.d)
+        dx++;
+
+
+    /* MOBILE */
+
+    if(
+        Math.abs(joystickX)>.05 ||
+        Math.abs(joystickY)>.05
+    ){
+
+        dx +=
+            joystickX;
+
+        dy +=
+            joystickY;
+
+    }
 
 
     const moving =
@@ -1557,38 +2627,52 @@ function updatePlayer(){
                 dy*dy
             );
 
-        dx/=len;
-        dy/=len;
+
+        if(len>0){
+
+            dx/=len;
+
+            dy/=len;
+
+        }
 
 
         player.x +=
-            dx*player.speed;
+            dx*
+            player.speed;
+
 
         player.y +=
-            dy*player.speed;
+            dy*
+            player.speed;
 
 
         player.footTimer--;
 
-        if(player.footTimer<=0){
+
+        if(
+            player.footTimer<=0
+        ){
 
             footstep();
 
-            player.footTimer=18;
+            player.footTimer =
+                18;
 
         }
 
     }
     else{
 
-        player.footTimer=0;
+        player.footTimer =
+            0;
 
     }
 
 
     if(area==="outside"){
 
-        player.x=
+        player.x =
             Math.max(
                 40,
                 Math.min(
@@ -1597,7 +2681,8 @@ function updatePlayer(){
                 )
             );
 
-        player.y=
+
+        player.y =
             Math.max(
                 40,
                 Math.min(
@@ -1609,7 +2694,7 @@ function updatePlayer(){
     }
     else{
 
-        player.x=
+        player.x =
             Math.max(
                 80,
                 Math.min(
@@ -1618,7 +2703,8 @@ function updatePlayer(){
                 )
             );
 
-        player.y=
+
+        player.y =
             Math.max(
                 80,
                 Math.min(
@@ -1638,19 +2724,29 @@ CAMERA
 
 function updateCamera(){
 
-    const targetX=
-        player.x-W/2;
+    const targetX =
+        player.x-
+        W/2;
 
-    const targetY=
-        player.y-H/2;
+
+    const targetY =
+        player.y-
+        H/2;
 
 
     camera.x +=
-        (targetX-camera.x)*
+        (
+            targetX-
+            camera.x
+        )*
         camera.smooth;
 
+
     camera.y +=
-        (targetY-camera.y)*
+        (
+            targetY-
+            camera.y
+        )*
         camera.smooth;
 
 
@@ -1659,26 +2755,34 @@ function updateCamera(){
         ?WORLD_W-W
         :1500-W;
 
+
     const maxY =
         area==="outside"
         ?WORLD_H-H
         :1000-H;
 
 
-    camera.x=
+    camera.x =
         Math.max(
             0,
             Math.min(
-                Math.max(0,maxX),
+                Math.max(
+                    0,
+                    maxX
+                ),
                 camera.x
             )
         );
 
-    camera.y=
+
+    camera.y =
         Math.max(
             0,
             Math.min(
-                Math.max(0,maxY),
+                Math.max(
+                    0,
+                    maxY
+                ),
                 camera.y
             )
         );
@@ -1695,11 +2799,14 @@ function rangedAttack(){
     if(!running)
         return;
 
+
     if(dialogueOpen)
         return;
 
+
     if(player.cooldown>0)
         return;
+
 
     if(player.mana<8){
 
@@ -1712,11 +2819,16 @@ function rangedAttack(){
     }
 
 
-    player.cooldown=9;
+    player.cooldown =
+        9;
 
-    player.mana-=8;
+
+    player.mana -=
+        8;
+
 
     castSound();
+
 
     setTimeout(
         shootSound,
@@ -1724,31 +2836,50 @@ function rangedAttack(){
     );
 
 
-    const worldMouseX=
-        mouse.x+camera.x;
-
-    const worldMouseY=
-        mouse.y+camera.y;
+    let targetX;
+    let targetY;
 
 
-    const dx=
-        worldMouseX-player.x;
+    /* PC */
 
-    const dy=
-        worldMouseY-player.y;
+    targetX =
+        mouse.x+
+        camera.x;
 
 
-    const len=
+    targetY =
+        mouse.y+
+        camera.y;
+
+
+    const dx =
+        targetX-
+        player.x;
+
+
+    const dy =
+        targetY-
+        player.y;
+
+
+    const len =
         Math.sqrt(
             dx*dx+
             dy*dy
         );
 
 
+    if(len===0)
+        return;
+
+
     projectiles.push({
 
-        x:player.x,
-        y:player.y,
+        x:
+            player.x,
+
+        y:
+            player.y,
 
         vx:
             dx/len*17,
@@ -1756,9 +2887,11 @@ function rangedAttack(){
         vy:
             dy/len*17,
 
-        life:90,
+        life:
+            90,
 
-        damage:2
+        damage:
+            2
 
     });
 
@@ -1766,13 +2899,15 @@ function rangedAttack(){
 
 
 /* =====================================================
-ATTACK
+ATTACK UPDATE
 ===================================================== */
 
 function updateAttack(){
 
-    if(keys[" "]||
-       keys["space"]){
+    if(
+        keys.space ||
+        mobileAttacking
+    ){
 
         rangedAttack();
 
@@ -1783,10 +2918,13 @@ function updateAttack(){
         player.cooldown--;
 
 
-    if(player.mana<
-       player.maxMana){
+    if(
+        player.mana<
+        player.maxMana
+    ){
 
-        player.mana+=.08;
+        player.mana +=
+            .08;
 
     }
 
@@ -1800,16 +2938,23 @@ PROJECTILES
 function updateProjectiles(){
 
     for(
-        let i=projectiles.length-1;
+        let i=
+            projectiles.length-1;
         i>=0;
         i--
     ){
 
-        const p=
+        const p =
             projectiles[i];
 
-        p.x+=p.vx;
-        p.y+=p.vy;
+
+        p.x +=
+            p.vx;
+
+
+        p.y +=
+            p.vy;
+
 
         p.life--;
 
@@ -1821,24 +2966,36 @@ function updateProjectiles(){
             !boss.defeated &&
             castleFloor===3 &&
             distance(
-                p.x,p.y,
-                boss.x,boss.y
-            )<55
+                p.x,
+                p.y,
+                boss.x,
+                boss.y
+            )<60
         ){
 
-            boss.hp-=p.damage;
+            boss.hp -=
+                p.damage;
 
-            projectiles.splice(i,1);
+
+            projectiles.splice(
+                i,
+                1
+            );
+
 
             bossHitSound();
 
-            if(boss.hp<=0){
+
+            if(
+                boss.hp<=0
+            ){
 
                 boss.hp=0;
 
                 defeatBoss();
 
             }
+
 
             continue;
 
@@ -1848,37 +3005,53 @@ function updateProjectiles(){
         /* ENEMIES */
 
         for(
-            let j=enemies.length-1;
+            let j=
+                enemies.length-1;
             j>=0;
             j--
         ){
 
-            const e=enemies[j];
+            const e =
+                enemies[j];
 
 
             if(
                 distance(
-                    p.x,p.y,
-                    e.x,e.y
+                    p.x,
+                    p.y,
+                    e.x,
+                    e.y
                 )<40
             ){
 
-                e.hp-=p.damage;
+                e.hp -=
+                    p.damage;
 
-                projectiles.splice(i,1);
+
+                projectiles.splice(
+                    i,
+                    1
+                );
+
 
                 bossHitSound();
 
 
                 if(e.hp<=0){
 
-                    enemies.splice(j,1);
+                    enemies.splice(
+                        j,
+                        1
+                    );
+
 
                     souls++;
+
 
                     createEnemy();
 
                 }
+
 
                 break;
 
@@ -1887,9 +3060,14 @@ function updateProjectiles(){
         }
 
 
-        if(p.life<=0){
+        if(
+            p.life<=0
+        ){
 
-            projectiles.splice(i,1);
+            projectiles.splice(
+                i,
+                1
+            );
 
         }
 
@@ -1908,9 +3086,11 @@ function updateEnemies(){
         return;
 
 
-    for(const e of enemies){
+    for(
+        const e of enemies
+    ){
 
-        const d=
+        const d =
             distance(
                 player.x,
                 player.y,
@@ -1924,27 +3104,35 @@ function updateEnemies(){
             d>45
         ){
 
-            const dx=
-                player.x-e.x;
-
-            const dy=
-                player.y-e.y;
+            const dx =
+                player.x-
+                e.x;
 
 
-            e.x+=
+            const dy =
+                player.y-
+                e.y;
+
+
+            e.x +=
                 dx/d*
                 e.speed;
 
-            e.y+=
+
+            e.y +=
                 dy/d*
                 e.speed;
 
         }
 
 
-        if(d<45){
+        if(
+            d<45
+        ){
 
-            damagePlayer(.12);
+            damagePlayer(
+                .12
+            );
 
         }
 
@@ -1954,22 +3142,33 @@ function updateEnemies(){
 
 
 /* =====================================================
-DAMAGE PLAYER
+PLAYER DAMAGE
 ===================================================== */
 
-function damagePlayer(amount){
+function damagePlayer(
+    amount
+){
 
-    if(player.damageCooldown>0)
+    if(
+        player.damageCooldown>0
+    )
         return;
 
-    player.damageCooldown=25;
 
-    player.hp-=amount;
+    player.damageCooldown =
+        25;
+
+
+    player.hp -=
+        amount;
+
 
     hurtSound();
 
 
-    if(player.hp<=0){
+    if(
+        player.hp<=0
+    ){
 
         player.hp=0;
 
@@ -1981,7 +3180,7 @@ function damagePlayer(amount){
 
 
 /* =====================================================
-PLAYER DEATH
+DEATH
 ===================================================== */
 
 function playerDeath(){
@@ -1989,46 +3188,72 @@ function playerDeath(){
     if(reviving)
         return;
 
-    reviving=true;
 
-    running=false;
+    reviving =
+        true;
+
+
+    running =
+        false;
+
+
+    mobileAttacking =
+        false;
+
 
     deathSound();
 
-    const screen=
+
+    const screen =
         document.getElementById(
             "reviveScreen"
         );
 
-    const timer=
+
+    const timer =
         document.getElementById(
             "reviveTimer"
         );
 
-    screen.style.display="flex";
 
-    let count=5;
-
-    timer.textContent=count;
+    screen.style.display =
+        "flex";
 
 
-    const interval=
-        setInterval(()=>{
-
-            count--;
-
-            timer.textContent=count;
+    let count =
+        5;
 
 
-            if(count<=0){
+    timer.textContent =
+        count;
 
-                clearInterval(interval);
 
-                revivePlayer();
+    const interval =
+        setInterval(
+            ()=>{
 
-            }
+                count--;
 
-        },1000);
+                timer.textContent =
+                    count;
+
+
+                if(
+                    count<=0
+                ){
+
+                    clearInterval(
+                        interval
+                    );
+
+
+                    revivePlayer();
+
+                }
+
+            },
+            1000
+        );
 
 }
 
@@ -2042,37 +3267,58 @@ function revivePlayer(){
     reviveSound();
 
 
-    player.hp=player.maxHp;
+    player.hp =
+        player.maxHp;
 
-    player.mana=player.maxMana;
+
+    player.mana =
+        player.maxMana;
 
 
-    /*
-       Điểm hồi sinh
-    */
+    projectiles =
+        [];
 
-    if(area==="outside"){
 
-        player.x=2100;
-        player.y=2200;
+    bossProjectiles =
+        [];
+
+
+    if(
+        area==="outside"
+    ){
+
+        player.x =
+            2100;
+
+        player.y =
+            2200;
 
     }
     else{
 
-        player.x=750;
-        player.y=800;
+        player.x =
+            750;
+
+        player.y =
+            800;
 
     }
 
 
     document
-        .getElementById("reviveScreen")
-        .style.display="none";
+        .getElementById(
+            "reviveScreen"
+        )
+        .style.display =
+        "none";
 
 
-    reviving=false;
+    reviving =
+        false;
 
-    running=true;
+
+    running =
+        true;
 
 
     showMessage(
@@ -2091,7 +3337,24 @@ INTERACTION
 
 function interact(){
 
-    if(area==="outside"){
+    if(!running)
+        return;
+
+
+    if(dialogueOpen){
+
+        nextDialogue();
+
+        return;
+
+    }
+
+
+    /* OUTSIDE */
+
+    if(
+        area==="outside"
+    ){
 
         if(
             distance(
@@ -2102,10 +3365,7 @@ function interact(){
             )<160
         ){
 
-            if(dialogueOpen)
-                nextDialogue();
-            else
-                startDialogue();
+            startDialogue();
 
             return;
 
@@ -2118,7 +3378,7 @@ function interact(){
                 player.y,
                 gate.x,
                 gate.y
-            )<140
+            )<180
         ){
 
             enterCastle();
@@ -2130,7 +3390,11 @@ function interact(){
     }
 
 
-    if(area==="inside"){
+    /* INSIDE */
+
+    if(
+        area==="inside"
+    ){
 
         if(
             castleFloor===1 &&
@@ -2142,10 +3406,7 @@ function interact(){
             )<160
         ){
 
-            if(dialogueOpen)
-                nextDialogue();
-            else
-                startDialogue();
+            startDialogue();
 
             return;
 
@@ -2153,8 +3414,12 @@ function interact(){
 
 
         if(
-            player.x>1100 &&
-            player.y<350
+            distance(
+                player.x,
+                player.y,
+                1240,
+                170
+            )<180
         ){
 
             nextFloor();
@@ -2166,7 +3431,7 @@ function interact(){
 
         if(
             castleFloor===1 &&
-            player.y>830 &&
+            player.y>820 &&
             player.x>650 &&
             player.x<850
         ){
@@ -2188,30 +3453,97 @@ ENTER CASTLE
 
 function enterCastle(){
 
-    area="inside";
+    area =
+        "inside";
 
-    castleFloor=1;
 
-    player.x=750;
-    player.y=800;
+    castleFloor =
+        1;
 
-    questStage=2;
+
+    player.x =
+        750;
+
+
+    player.y =
+        800;
+
+
+    questStage =
+        2;
+
 
     levelSound();
+
 
     showMessage(
         "🏰 FORGOTTEN CASTLE"
     );
 
-    document
-        .getElementById("location")
-        .textContent=
-        "FORGOTTEN CASTLE — FLOOR 1";
 
     document
-        .getElementById("level")
-        .textContent=
+        .getElementById(
+            "location"
+        )
+        .textContent =
+        "FORGOTTEN CASTLE — FLOOR 1";
+
+
+    document
+        .getElementById(
+            "level"
+        )
+        .textContent =
         "FLOOR 1";
+
+}
+
+
+/* =====================================================
+EXIT
+===================================================== */
+
+function exitCastle(){
+
+    area =
+        "outside";
+
+
+    castleFloor =
+        0;
+
+
+    player.x =
+        2100;
+
+
+    player.y =
+        720;
+
+
+    questStage =
+        1;
+
+
+    document
+        .getElementById(
+            "location"
+        )
+        .textContent =
+        "THE LOST KINGDOM";
+
+
+    document
+        .getElementById(
+            "level"
+        )
+        .textContent =
+        "OUTSIDE";
+
+
+    showMessage(
+        "🌲 QUAY LẠI VƯƠNG QUỐC"
+    );
 
 }
 
@@ -2222,10 +3554,11 @@ NEXT FLOOR
 
 function nextFloor(){
 
-    if(castleFloor>=3){
+    if(
+        castleFloor>=3
+    ){
 
         if(
-            castleFloor===3 &&
             boss.defeated
         ){
 
@@ -2247,29 +3580,43 @@ function nextFloor(){
 
     castleFloor++;
 
+
     levelSound();
 
 
-    player.x=750;
-    player.y=800;
+    player.x =
+        750;
+
+
+    player.y =
+        800;
 
 
     document
-        .getElementById("location")
-        .textContent=
+        .getElementById(
+            "location"
+        )
+        .textContent =
         "FORGOTTEN CASTLE — FLOOR "+
         castleFloor;
 
+
     document
-        .getElementById("level")
-        .textContent=
+        .getElementById(
+            "level"
+        )
+        .textContent =
         "FLOOR "+
         castleFloor;
 
 
-    if(castleFloor===2){
+    if(
+        castleFloor===2
+    ){
 
-        questStage=3;
+        questStage =
+            3;
+
 
         showMessage(
             "🪜 TẦNG 2"
@@ -2278,9 +3625,13 @@ function nextFloor(){
     }
 
 
-    if(castleFloor===3){
+    if(
+        castleFloor===3
+    ){
 
-        questStage=4;
+        questStage =
+            4;
+
 
         activateBoss();
 
@@ -2290,30 +3641,44 @@ function nextFloor(){
 
 
 /* =====================================================
-ACTIVATE BOSS
+BOSS
 ===================================================== */
 
 function activateBoss(){
 
-    boss.active=true;
+    boss.active =
+        true;
 
-    boss.defeated=false;
 
-    boss.hp=boss.maxHp;
+    boss.defeated =
+        false;
 
-    boss.x=750;
 
-    boss.y=220;
+    boss.hp =
+        boss.maxHp;
+
+
+    boss.x =
+        750;
+
+
+    boss.y =
+        220;
 
 
     document
-        .getElementById("bossUI")
-        .style.display="block";
+        .getElementById(
+            "bossUI"
+        )
+        .style.display =
+        "block";
 
 
     startBossMusic();
 
+
     bossAttackSound();
+
 
     showMessage(
         "👑 FORGOTTEN GOD HAS AWAKENED"
@@ -2323,7 +3688,7 @@ function activateBoss(){
 
 
 /* =====================================================
-BOSS AI
+BOSS UPDATE
 ===================================================== */
 
 function updateBoss(){
@@ -2336,7 +3701,7 @@ function updateBoss(){
         return;
 
 
-    const d=
+    const d =
         distance(
             boss.x,
             boss.y,
@@ -2347,25 +3712,31 @@ function updateBoss(){
 
     if(d>85){
 
-        const dx=
-            player.x-boss.x;
-
-        const dy=
-            player.y-boss.y;
+        const dx =
+            player.x-
+            boss.x;
 
 
-        boss.x+=
+        const dy =
+            player.y-
+            boss.y;
+
+
+        boss.x +=
             dx/d*
             boss.speed;
 
-        boss.y+=
+
+        boss.y +=
             dy/d*
             boss.speed;
 
     }
 
 
-    if(boss.attackCooldown>0){
+    if(
+        boss.attackCooldown>0
+    ){
 
         boss.attackCooldown--;
 
@@ -2379,14 +3750,19 @@ function updateBoss(){
 
         bossAttack();
 
-        boss.attackCooldown=75;
+        boss.attackCooldown =
+            75;
 
     }
 
 
-    if(d<80){
+    if(
+        d<80
+    ){
 
-        damagePlayer(.45);
+        damagePlayer(
+            .45
+        );
 
     }
 
@@ -2402,24 +3778,34 @@ function bossAttack(){
     bossAttackSound();
 
 
-    const dx=
-        player.x-boss.x;
-
-    const dy=
-        player.y-boss.y;
+    const dx =
+        player.x-
+        boss.x;
 
 
-    const len=
+    const dy =
+        player.y-
+        boss.y;
+
+
+    const len =
         Math.sqrt(
             dx*dx+
             dy*dy
         );
 
 
+    if(len===0)
+        return;
+
+
     bossProjectiles.push({
 
-        x:boss.x,
-        y:boss.y,
+        x:
+            boss.x,
+
+        y:
+            boss.y,
 
         vx:
             dx/len*7,
@@ -2427,7 +3813,8 @@ function bossAttack(){
         vy:
             dy/len*7,
 
-        life:120
+        life:
+            120
 
     });
 
@@ -2441,39 +3828,60 @@ BOSS PROJECTILES
 function updateBossProjectiles(){
 
     for(
-        let i=bossProjectiles.length-1;
+        let i=
+            bossProjectiles.length-1;
         i>=0;
         i--
     ){
 
-        const p=
+        const p =
             bossProjectiles[i];
 
-        p.x+=p.vx;
-        p.y+=p.vy;
+
+        p.x +=
+            p.vx;
+
+
+        p.y +=
+            p.vy;
+
 
         p.life--;
 
 
         if(
             distance(
-                p.x,p.y,
-                player.x,player.y
+                p.x,
+                p.y,
+                player.x,
+                player.y
             )<35
         ){
 
-            damagePlayer(12);
+            damagePlayer(
+                12
+            );
 
-            bossProjectiles.splice(i,1);
+
+            bossProjectiles.splice(
+                i,
+                1
+            );
+
 
             continue;
 
         }
 
 
-        if(p.life<=0){
+        if(
+            p.life<=0
+        ){
 
-            bossProjectiles.splice(i,1);
+            bossProjectiles.splice(
+                i,
+                1
+            );
 
         }
 
@@ -2488,24 +3896,41 @@ DEFEAT BOSS
 
 function defeatBoss(){
 
-    boss.defeated=true;
+    if(
+        boss.defeated
+    )
+        return;
 
-    boss.active=false;
+
+    boss.defeated =
+        true;
+
+
+    boss.active =
+        false;
+
 
     bossDeathSound();
 
-    bossMusic=false;
+
+    bossMusic =
+        false;
 
 
     document
-        .getElementById("bossUI")
-        .style.display="none";
+        .getElementById(
+            "bossUI"
+        )
+        .style.display =
+        "none";
 
 
-    souls+=50;
+    souls +=
+        50;
 
 
-    questStage=5;
+    questStage =
+        5;
 
 
     showMessage(
@@ -2527,16 +3952,26 @@ ENDING
 
 function showEnding(){
 
-    if(gameFinished)
+    if(
+        gameFinished
+    )
         return;
 
-    gameFinished=true;
 
-    running=false;
+    gameFinished =
+        true;
+
+
+    running =
+        false;
+
 
     document
-        .getElementById("ending")
-        .style.display="flex";
+        .getElementById(
+            "ending"
+        )
+        .style.display =
+        "flex";
 
 }
 
@@ -2545,7 +3980,7 @@ function showEnding(){
 DIALOGUE
 ===================================================== */
 
-const dialogues=[
+const dialogues = [
 
     [
         "MYSTERIOUS NPC",
@@ -2590,7 +4025,7 @@ const dialogues=[
 ];
 
 
-const castleDialogues=[
+const castleDialogues = [
 
     [
         "KEEPER",
@@ -2617,11 +4052,28 @@ const castleDialogues=[
 
 function startDialogue(){
 
-    dialogueOpen=true;
+    dialogueOpen =
+        true;
 
-    dialogueIndex=0;
+
+    dialogueIndex =
+        0;
+
 
     npcSound();
+
+
+    document
+        .getElementById(
+            "dialogue"
+        )
+        .classList.toggle(
+            "mobileDialogue",
+            window.matchMedia(
+                "(pointer: coarse)"
+            ).matches
+        );
+
 
     showDialogue();
 
@@ -2630,27 +4082,38 @@ function startDialogue(){
 
 function showDialogue(){
 
-    const list=
+    const list =
         area==="outside"
         ?dialogues
         :castleDialogues;
 
 
     document
-        .getElementById("dialogue")
-        .style.display="block";
+        .getElementById(
+            "dialogue"
+        )
+        .style.display =
+        "block";
 
 
     document
-        .getElementById("speaker")
-        .textContent=
-        list[dialogueIndex][0];
+        .getElementById(
+            "speaker"
+        )
+        .textContent =
+        list[
+            dialogueIndex
+        ][0];
 
 
     document
-        .getElementById("dialogueText")
-        .textContent=
-        list[dialogueIndex][1];
+        .getElementById(
+            "dialogueText"
+        )
+        .textContent =
+        list[
+            dialogueIndex
+        ][1];
 
 }
 
@@ -2660,26 +4123,36 @@ function nextDialogue(){
     dialogueIndex++;
 
 
-    const list=
+    const list =
         area==="outside"
         ?dialogues
         :castleDialogues;
 
 
     if(
-        dialogueIndex>=list.length
+        dialogueIndex>=
+        list.length
     ){
 
-        dialogueOpen=false;
+        dialogueOpen =
+            false;
+
 
         document
-            .getElementById("dialogue")
-            .style.display="none";
+            .getElementById(
+                "dialogue"
+            )
+            .style.display =
+            "none";
 
 
-        if(area==="outside"){
+        if(
+            area==="outside"
+        ){
 
-            questStage=1;
+            questStage =
+                1;
+
 
             showMessage(
                 "📜 ĐI ĐẾN LÂU ĐÀI"
@@ -2688,13 +4161,16 @@ function nextDialogue(){
         }
         else{
 
-            questStage=3;
+            questStage =
+                3;
+
 
             showMessage(
                 "📜 TÌM CẦU THANG"
             );
 
         }
+
 
         return;
 
@@ -2712,97 +4188,124 @@ QUEST
 
 function updateQuest(){
 
-    const text=
+    const text =
         document.getElementById(
             "questText"
         );
 
-    const distEl=
+
+    const distEl =
         document.getElementById(
             "distance"
         );
 
 
-    let target=null;
+    let target =
+        null;
 
-    let name="";
+
+    let name =
+        "";
 
 
-    if(questStage===0){
+    if(
+        questStage===0
+    ){
 
-        target=npc;
+        target =
+            npc;
 
-        name="NPC BÍ ẨN";
+        name =
+            "NPC BÍ ẨN";
 
-        text.innerHTML=
+
+        text.innerHTML =
             "🌲 Tìm NPC bí ẩn.<br>"+
             "💬 Nhấn E.";
 
     }
+    else if(
+        questStage===1
+    ){
 
-    else if(questStage===1){
+        target =
+            gate;
 
-        target=gate;
+        name =
+            "LÂU ĐÀI";
 
-        name="LÂU ĐÀI";
 
-        text.innerHTML=
+        text.innerHTML =
             "🏰 Đi đến lâu đài.<br>"+
             "🚪 Nhấn E.";
 
     }
+    else if(
+        questStage===2
+    ){
 
-    else if(questStage===2){
+        target =
+            castleNPC;
 
-        target=castleNPC;
+        name =
+            "KEEPER";
 
-        name="KEEPER";
 
-        text.innerHTML=
+        text.innerHTML =
             "🧙 Tìm Keeper.<br>"+
             "💬 Nhấn E.";
 
     }
+    else if(
+        questStage===3
+    ){
 
-    else if(questStage===3){
-
-        target={
+        target = {
             x:1240,
             y:170
         };
 
-        name="CẦU THANG";
 
-        text.innerHTML=
+        name =
+            "CẦU THANG";
+
+
+        text.innerHTML =
             "🪜 Tìm cầu thang.<br>"+
             "⬆️ Nhấn E.";
 
     }
+    else if(
+        questStage===4
+    ){
 
-    else if(questStage===4){
+        target =
+            boss;
 
-        target=boss;
+        name =
+            "FORGOTTEN GOD";
 
-        name="FORGOTTEN GOD";
 
-        text.innerHTML=
+        text.innerHTML =
             "👑 Đánh bại Forgotten God.";
 
     }
-
     else{
 
-        target=player;
+        target =
+            player;
 
-        name="HOÀN THÀNH";
+        name =
+            "HOÀN THÀNH";
 
-        text.innerHTML=
+
+        text.innerHTML =
             "🏆 Vương quốc đã được giải thoát.";
 
     }
 
 
-    const d=
+    const d =
         Math.round(
             distance(
                 player.x,
@@ -2813,7 +4316,7 @@ function updateQuest(){
         );
 
 
-    distEl.textContent=
+    distEl.textContent =
         "📍 "+
         name+
         " — "+
@@ -2824,21 +4327,228 @@ function updateQuest(){
 
 
 /* =====================================================
+INTERACTION PROMPT
+===================================================== */
+
+function updateInteractionPrompt(){
+
+    const button =
+        document.getElementById(
+            "interactButton"
+        );
+
+
+    const icon =
+        document.getElementById(
+            "interactIcon"
+        );
+
+
+    const text =
+        document.getElementById(
+            "interactText"
+        );
+
+
+    button.classList.remove(
+        "show"
+    );
+
+
+    if(
+        !running ||
+        dialogueOpen
+    )
+        return;
+
+
+    /* =====================
+       OUTSIDE
+    ===================== */
+
+    if(
+        area==="outside"
+    ){
+
+        const npcDistance =
+            distance(
+                player.x,
+                player.y,
+                npc.x,
+                npc.y
+            );
+
+
+        if(
+            npcDistance<160
+        ){
+
+            icon.textContent =
+                "💬";
+
+            text.textContent =
+                "NÓI CHUYỆN";
+
+            button.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+
+        const castleDistance =
+            distance(
+                player.x,
+                player.y,
+                gate.x,
+                gate.y
+            );
+
+
+        if(
+            castleDistance<180
+        ){
+
+            icon.textContent =
+                "🚪";
+
+            text.textContent =
+                "VÀO LÂU ĐÀI";
+
+            button.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    /* =====================
+       INSIDE
+    ===================== */
+
+    if(
+        area==="inside"
+    ){
+
+        if(
+            castleFloor===1
+        ){
+
+            const keeperDistance =
+                distance(
+                    player.x,
+                    player.y,
+                    castleNPC.x,
+                    castleNPC.y
+                );
+
+
+            if(
+                keeperDistance<160
+            ){
+
+                icon.textContent =
+                    "💬";
+
+                text.textContent =
+                    "NÓI CHUYỆN";
+
+                button.classList.add(
+                    "show"
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        const stairDistance =
+            distance(
+                player.x,
+                player.y,
+                1240,
+                170
+            );
+
+
+        if(
+            stairDistance<180 &&
+            castleFloor<3
+        ){
+
+            icon.textContent =
+                "🪜";
+
+            text.textContent =
+                "LÊN TẦNG";
+
+            button.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            castleFloor===1 &&
+            player.y>820 &&
+            player.x>650 &&
+            player.x<850
+        ){
+
+            icon.textContent =
+                "🚪";
+
+            text.textContent =
+                "RỜI LÂU ĐÀI";
+
+            button.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
 MESSAGE
 ===================================================== */
 
-function showMessage(text){
+function showMessage(
+    text
+){
 
-    const el=
+    const el =
         document.getElementById(
             "message"
         );
 
-    el.textContent=text;
 
-    el.style.opacity="1";
+    el.textContent =
+        text;
 
-    messageTimer=120;
+
+    el.style.opacity =
+        "1";
+
+
+    messageTimer =
+        120;
 
 }
 
@@ -2849,30 +4559,44 @@ DRAW OUTSIDE
 
 function drawOutside(){
 
-    ctx.fillStyle="#111017";
+    ctx.fillStyle =
+        "#111017";
+
 
     ctx.fillRect(
-        0,0,W,H
+        0,
+        0,
+        W,
+        H
     );
 
 
-    ctx.strokeStyle=
+    ctx.strokeStyle =
         "rgba(130,120,130,.045)";
 
 
-    const grid=100;
+    const grid =
+        100;
 
 
     for(
-        let x=-camera.x%grid;
+        let x =
+            -camera.x%grid;
         x<W;
         x+=grid
     ){
 
         ctx.beginPath();
 
-        ctx.moveTo(x,0);
-        ctx.lineTo(x,H);
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            H
+        );
 
         ctx.stroke();
 
@@ -2880,15 +4604,23 @@ function drawOutside(){
 
 
     for(
-        let y=-camera.y%grid;
+        let y =
+            -camera.y%grid;
         y<H;
         y+=grid
     ){
 
         ctx.beginPath();
 
-        ctx.moveTo(0,y);
-        ctx.lineTo(W,y);
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            W,
+            y
+        );
 
         ctx.stroke();
 
@@ -2903,66 +4635,85 @@ TREES
 
 function drawTrees(){
 
-    for(const t of trees){
+    for(
+        const t of trees
+    ){
 
-        const x=
-            t.x-camera.x;
+        const x =
+            t.x-
+            camera.x;
 
-        const y=
-            t.y-camera.y;
+
+        const y =
+            t.y-
+            camera.y;
 
 
         if(
-            x<-100||
-            x>W+100||
-            y<-100||
+            x<-100 ||
+            x>W+100 ||
+            y<-100 ||
             y>H+100
         )
             continue;
 
 
-        ctx.strokeStyle="#241a20";
+        ctx.strokeStyle =
+            "#241a20";
 
-        ctx.lineWidth=9;
+
+        ctx.lineWidth =
+            9;
+
 
         ctx.beginPath();
+
 
         ctx.moveTo(
             x,
             y+t.size
         );
 
+
         ctx.lineTo(
             x,
             y-t.size
         );
 
+
         ctx.stroke();
 
 
-        ctx.lineWidth=5;
+        ctx.lineWidth =
+            5;
+
 
         ctx.beginPath();
+
 
         ctx.moveTo(
             x,
             y
         );
 
+
         ctx.lineTo(
             x-t.size,
             y-t.size*.7
         );
+
 
         ctx.moveTo(
             x,
             y-10
         );
 
+
         ctx.lineTo(
             x+t.size,
             y-t.size*.8
         );
+
 
         ctx.stroke();
 
@@ -2977,18 +4728,26 @@ ROCKS
 
 function drawRocks(){
 
-    for(const r of rocks){
+    for(
+        const r of rocks
+    ){
 
-        const x=
-            r.x-camera.x;
-
-        const y=
-            r.y-camera.y;
+        const x =
+            r.x-
+            camera.x;
 
 
-        ctx.fillStyle="#2b282e";
+        const y =
+            r.y-
+            camera.y;
+
+
+        ctx.fillStyle =
+            "#2b282e";
+
 
         ctx.beginPath();
+
 
         ctx.arc(
             x,
@@ -2997,6 +4756,7 @@ function drawRocks(){
             0,
             Math.PI*2
         );
+
 
         ctx.fill();
 
@@ -3011,18 +4771,27 @@ GRAVES
 
 function drawGraves(){
 
-    for(const g of graves){
+    for(
+        const g of graves
+    ){
 
-        const x=
-            g.x-camera.x;
-
-        const y=
-            g.y-camera.y;
+        const x =
+            g.x-
+            camera.x;
 
 
-        ctx.font="30px Arial";
+        const y =
+            g.y-
+            camera.y;
 
-        ctx.textAlign="center";
+
+        ctx.font =
+            "30px Arial";
+
+
+        ctx.textAlign =
+            "center";
+
 
         ctx.fillText(
             "🪦",
@@ -3041,14 +4810,19 @@ CASTLE
 
 function drawCastle(){
 
-    const x=
-        castle.x-camera.x;
-
-    const y=
-        castle.y-camera.y;
+    const x =
+        castle.x-
+        camera.x;
 
 
-    ctx.fillStyle="#29242d";
+    const y =
+        castle.y-
+        camera.y;
+
+
+    ctx.fillStyle =
+        "#29242d";
+
 
     ctx.fillRect(
         x,
@@ -3074,7 +4848,8 @@ function drawCastle(){
     );
 
 
-    ctx.fillStyle="#09070b";
+    ctx.fillStyle =
+        "#09070b";
 
 
     ctx.beginPath();
@@ -3121,7 +4896,9 @@ function drawCastle(){
     ctx.fill();
 
 
-    ctx.fillStyle="#050408";
+    ctx.fillStyle =
+        "#050408";
+
 
     ctx.fillRect(
         x+195,
@@ -3131,10 +4908,15 @@ function drawCastle(){
     );
 
 
-    ctx.fillStyle="#a97842";
+    ctx.fillStyle =
+        "#a97842";
 
 
-    for(let i=0;i<4;i++){
+    for(
+        let i=0;
+        i<4;
+        i++
+    ){
 
         ctx.fillRect(
             x+70+i*85,
@@ -3146,11 +4928,17 @@ function drawCastle(){
     }
 
 
-    ctx.fillStyle="#d1af72";
+    ctx.fillStyle =
+        "#d1af72";
 
-    ctx.font="bold 18px Georgia";
 
-    ctx.textAlign="center";
+    ctx.font =
+        "bold 18px Georgia";
+
+
+    ctx.textAlign =
+        "center";
+
 
     ctx.fillText(
         "THE FORGOTTEN CASTLE",
@@ -3168,10 +4956,12 @@ function drawCastle(){
         )<180
     ){
 
-        ctx.font="bold 16px Arial";
+        ctx.font =
+            "bold 16px Arial";
+
 
         ctx.fillText(
-            "🚪 E — VÀO LÂU ĐÀI",
+            "🚪 [ E ] VÀO LÂU ĐÀI",
             x+250,
             y+410
         );
@@ -3187,18 +4977,27 @@ NPC
 
 function drawNPC(){
 
-    const x=
-        npc.x-camera.x;
-
-    const y=
-        npc.y-camera.y;
+    const x =
+        npc.x-
+        camera.x;
 
 
-    ctx.font="60px Arial";
+    const y =
+        npc.y-
+        camera.y;
 
-    ctx.textAlign="center";
 
-    ctx.textBaseline="middle";
+    ctx.font =
+        "60px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.textBaseline =
+        "middle";
+
 
     ctx.fillText(
         npc.emoji,
@@ -3207,9 +5006,13 @@ function drawNPC(){
     );
 
 
-    ctx.font="13px Georgia";
+    ctx.font =
+        "13px Georgia";
 
-    ctx.fillStyle="#d0af73";
+
+    ctx.fillStyle =
+        "#d0af73";
+
 
     ctx.fillText(
         "MYSTERIOUS NPC",
@@ -3226,20 +5029,31 @@ ENEMIES
 
 function drawEnemies(){
 
-    for(const e of enemies){
+    for(
+        const e of enemies
+    ){
 
-        const x=
-            e.x-camera.x;
-
-        const y=
-            e.y-camera.y;
+        const x =
+            e.x-
+            camera.x;
 
 
-        ctx.font="48px Arial";
+        const y =
+            e.y-
+            camera.y;
 
-        ctx.textAlign="center";
 
-        ctx.textBaseline="middle";
+        ctx.font =
+            "48px Arial";
+
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.textBaseline =
+            "middle";
+
 
         ctx.fillText(
             e.emoji,
@@ -3248,7 +5062,9 @@ function drawEnemies(){
         );
 
 
-        ctx.fillStyle="#22090e";
+        ctx.fillStyle =
+            "#22090e";
+
 
         ctx.fillRect(
             x-22,
@@ -3258,12 +5074,18 @@ function drawEnemies(){
         );
 
 
-        ctx.fillStyle="#b52f45";
+        ctx.fillStyle =
+            "#b52f45";
+
 
         ctx.fillRect(
             x-22,
             y-40,
-            44*(e.hp/e.maxHp),
+            44*
+            (
+                e.hp/
+                e.maxHp
+            ),
             5
         );
 
@@ -3278,7 +5100,7 @@ INTERIOR
 
 function drawInterior(){
 
-    ctx.fillStyle=
+    ctx.fillStyle =
         castleFloor===1
         ?"#0e0a10"
         :castleFloor===2
@@ -3287,26 +5109,39 @@ function drawInterior(){
 
 
     ctx.fillRect(
-        0,0,W,H
+        0,
+        0,
+        W,
+        H
     );
 
 
-    ctx.strokeStyle=
+    ctx.strokeStyle =
         "rgba(170,140,100,.08)";
 
-    ctx.lineWidth=2;
+
+    ctx.lineWidth =
+        2;
 
 
     for(
-        let x=-camera.x%100;
+        let x =
+            -camera.x%100;
         x<W;
         x+=100
     ){
 
         ctx.beginPath();
 
-        ctx.moveTo(x,0);
-        ctx.lineTo(x,H);
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            H
+        );
 
         ctx.stroke();
 
@@ -3314,24 +5149,36 @@ function drawInterior(){
 
 
     for(
-        let y=-camera.y%100;
+        let y =
+            -camera.y%100;
         y<H;
         y+=100
     ){
 
         ctx.beginPath();
 
-        ctx.moveTo(0,y);
-        ctx.lineTo(W,y);
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            W,
+            y
+        );
 
         ctx.stroke();
 
     }
 
 
-    ctx.strokeStyle="#3a3038";
+    ctx.strokeStyle =
+        "#3a3038";
 
-    ctx.lineWidth=25;
+
+    ctx.lineWidth =
+        25;
+
 
     ctx.strokeRect(
         -camera.x,
@@ -3341,10 +5188,9 @@ function drawInterior(){
     );
 
 
-    ctx.fillStyle=
-        castleFloor===3
-        ?" #4b1524"
-        :"#321822";
+    ctx.fillStyle =
+        "#321822";
+
 
     ctx.fillRect(
         700-camera.x,
@@ -3354,16 +5200,23 @@ function drawInterior(){
     );
 
 
-    /* CẦU THANG */
+    /* STAIRS */
 
-    ctx.fillStyle="#4b3a40";
+    ctx.fillStyle =
+        "#4b3a40";
 
 
-    for(let i=0;i<7;i++){
+    for(
+        let i=0;
+        i<7;
+        i++
+    ){
 
         ctx.fillRect(
             1120-camera.x,
-            700-i*70-camera.y,
+            700-
+                i*70-
+                camera.y,
             240,
             50
         );
@@ -3371,11 +5224,17 @@ function drawInterior(){
     }
 
 
-    ctx.fillStyle="#d1b477";
+    ctx.fillStyle =
+        "#d1b477";
 
-    ctx.font="bold 15px Arial";
 
-    ctx.textAlign="center";
+    ctx.font =
+        "bold 15px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
 
     ctx.fillText(
         "⬆ CẦU THANG",
@@ -3384,22 +5243,23 @@ function drawInterior(){
     );
 
 
-    /* NẾN */
-
     drawCandle(
         400-camera.x,
         250-camera.y
     );
+
 
     drawCandle(
         1050-camera.x,
         250-camera.y
     );
 
+
     drawCandle(
         400-camera.x,
         700-camera.y
     );
+
 
     drawCandle(
         1050-camera.x,
@@ -3407,20 +5267,22 @@ function drawInterior(){
     );
 
 
-    /* BOSS ROOM */
-
-    if(castleFloor===3){
+    if(
+        castleFloor===3
+    ){
 
         drawBossRoom();
 
     }
 
 
-    /* EXIT */
+    if(
+        castleFloor===1
+    ){
 
-    if(castleFloor===1){
+        ctx.fillStyle =
+            "#080609";
 
-        ctx.fillStyle="#080609";
 
         ctx.fillRect(
             700-camera.x,
@@ -3429,7 +5291,10 @@ function drawInterior(){
             100
         );
 
-        ctx.fillStyle="#b99b65";
+
+        ctx.fillStyle =
+            "#b99b65";
+
 
         ctx.fillText(
             "🚪 EXIT",
@@ -3448,14 +5313,21 @@ BOSS ROOM
 
 function drawBossRoom(){
 
-    const pulse=
+    const pulse =
         Math.sin(
             Date.now()/300
         )*.5+.5;
 
 
-    ctx.fillStyle=
-        `rgba(120,20,45,${.03+pulse*.04})`;
+    ctx.fillStyle =
+        `rgba(
+            120,
+            20,
+            45,
+            ${.03+
+            pulse*.04}
+        )`;
+
 
     ctx.fillRect(
         0,
@@ -3465,13 +5337,16 @@ function drawBossRoom(){
     );
 
 
-    ctx.strokeStyle=
+    ctx.strokeStyle =
         "rgba(170,30,60,.25)";
 
-    ctx.lineWidth=4;
+
+    ctx.lineWidth =
+        4;
 
 
     ctx.beginPath();
+
 
     ctx.arc(
         750-camera.x,
@@ -3481,14 +5356,21 @@ function drawBossRoom(){
         Math.PI*2
     );
 
+
     ctx.stroke();
 
 
-    ctx.font="100px Arial";
+    ctx.font =
+        "100px Arial";
 
-    ctx.textAlign="center";
 
-    ctx.textBaseline="middle";
+    ctx.textAlign =
+        "center";
+
+
+    ctx.textBaseline =
+        "middle";
+
 
     ctx.fillText(
         "👑",
@@ -3497,9 +5379,13 @@ function drawBossRoom(){
     );
 
 
-    ctx.font="bold 18px Georgia";
+    ctx.font =
+        "bold 18px Georgia";
 
-    ctx.fillStyle="#d9bd87";
+
+    ctx.fillStyle =
+        "#d9bd87";
+
 
     ctx.fillText(
         "FORGOTTEN GOD",
@@ -3516,22 +5402,33 @@ CASTLE NPC
 
 function drawCastleNPC(){
 
-    if(castleFloor!==1)
+    if(
+        castleFloor!==1
+    )
         return;
 
 
-    const x=
-        castleNPC.x-camera.x;
-
-    const y=
-        castleNPC.y-camera.y;
+    const x =
+        castleNPC.x-
+        camera.x;
 
 
-    ctx.font="60px Arial";
+    const y =
+        castleNPC.y-
+        camera.y;
 
-    ctx.textAlign="center";
 
-    ctx.textBaseline="middle";
+    ctx.font =
+        "60px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.textBaseline =
+        "middle";
+
 
     ctx.fillText(
         castleNPC.emoji,
@@ -3540,9 +5437,13 @@ function drawCastleNPC(){
     );
 
 
-    ctx.font="13px Georgia";
+    ctx.font =
+        "13px Georgia";
 
-    ctx.fillStyle="#d0af73";
+
+    ctx.fillStyle =
+        "#d0af73";
+
 
     ctx.fillText(
         "KEEPER",
@@ -3557,9 +5458,14 @@ function drawCastleNPC(){
 CANDLE
 ===================================================== */
 
-function drawCandle(x,y){
+function drawCandle(
+    x,
+    y
+){
 
-    ctx.fillStyle="#704d37";
+    ctx.fillStyle =
+        "#704d37";
+
 
     ctx.fillRect(
         x-5,
@@ -3569,7 +5475,7 @@ function drawCandle(x,y){
     );
 
 
-    const glow=
+    const glow =
         ctx.createRadialGradient(
             x,
             y-5,
@@ -3579,19 +5485,25 @@ function drawCandle(x,y){
             45
         );
 
+
     glow.addColorStop(
         0,
         "rgba(220,160,70,.35)"
     );
+
 
     glow.addColorStop(
         1,
         "rgba(220,160,70,0)"
     );
 
-    ctx.fillStyle=glow;
+
+    ctx.fillStyle =
+        glow;
+
 
     ctx.beginPath();
+
 
     ctx.arc(
         x,
@@ -3601,12 +5513,16 @@ function drawCandle(x,y){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
-    ctx.fillStyle="#e1a24d";
+    ctx.fillStyle =
+        "#e1a24d";
+
 
     ctx.beginPath();
+
 
     ctx.arc(
         x,
@@ -3615,6 +5531,7 @@ function drawCandle(x,y){
         0,
         Math.PI*2
     );
+
 
     ctx.fill();
 
@@ -3627,19 +5544,24 @@ PLAYER DRAW
 
 function drawPlayer(){
 
-    const x=
-        player.x-camera.x;
-
-    const y=
-        player.y-camera.y;
+    const x =
+        player.x-
+        camera.x;
 
 
-    /* bóng */
+    const y =
+        player.y-
+        camera.y;
 
-    ctx.fillStyle=
+
+    /* SHADOW */
+
+    ctx.fillStyle =
         "rgba(0,0,0,.5)";
 
+
     ctx.beginPath();
+
 
     ctx.ellipse(
         x,
@@ -3651,16 +5573,23 @@ function drawPlayer(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
-    /* nhân vật */
+    /* CHARACTER */
 
-    ctx.font="62px Arial";
+    ctx.font =
+        "62px Arial";
 
-    ctx.textAlign="center";
 
-    ctx.textBaseline="middle";
+    ctx.textAlign =
+        "center";
+
+
+    ctx.textBaseline =
+        "middle";
+
 
     ctx.fillText(
         player.emoji,
@@ -3669,36 +5598,42 @@ function drawPlayer(){
     );
 
 
-    /* hướng */
+    /* AIM */
 
-    const worldMouseX=
-        mouse.x+camera.x;
-
-    const worldMouseY=
-        mouse.y+camera.y;
+    const worldMouseX =
+        mouse.x+
+        camera.x;
 
 
-    const angle=
+    const worldMouseY =
+        mouse.y+
+        camera.y;
+
+
+    const angle =
         Math.atan2(
-            worldMouseY-player.y,
-            worldMouseX-player.x
+            worldMouseY-
+            player.y,
+            worldMouseX-
+            player.x
         );
 
 
-    /*
-       🔮 QUẢ CẦU PHÉP
-    */
-
-    const orbX=
+    const orbX =
         x+
-        Math.cos(angle)*38;
+        Math.cos(angle)*
+        38;
 
-    const orbY=
+
+    const orbY =
         y+
-        Math.sin(angle)*38;
+        Math.sin(angle)*
+        38;
 
 
-    const glow=
+    /* ORB GLOW */
+
+    const glow =
         ctx.createRadialGradient(
             orbX,
             orbY,
@@ -3708,24 +5643,31 @@ function drawPlayer(){
             25
         );
 
+
     glow.addColorStop(
         0,
         "rgba(230,190,255,.9)"
     );
+
 
     glow.addColorStop(
         .3,
         "rgba(150,90,220,.6)"
     );
 
+
     glow.addColorStop(
         1,
         "rgba(80,30,150,0)"
     );
 
-    ctx.fillStyle=glow;
+
+    ctx.fillStyle =
+        glow;
+
 
     ctx.beginPath();
+
 
     ctx.arc(
         orbX,
@@ -3735,40 +5677,19 @@ function drawPlayer(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
-    ctx.font="25px Arial";
+    ctx.font =
+        "25px Arial";
+
 
     ctx.fillText(
         "🔮",
         orbX,
         orbY
     );
-
-
-    /* đường ngắm */
-
-    ctx.strokeStyle=
-        "rgba(220,190,120,.25)";
-
-    ctx.lineWidth=2;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        orbX,
-        orbY
-    );
-
-    ctx.lineTo(
-        orbX+
-        Math.cos(angle)*55,
-        orbY+
-        Math.sin(angle)*55
-    );
-
-    ctx.stroke();
 
 }
 
@@ -3779,39 +5700,55 @@ PROJECTILE DRAW
 
 function drawProjectiles(){
 
-    for(const p of projectiles){
+    for(
+        const p of projectiles
+    ){
 
-        const x=
-            p.x-camera.x;
-
-        const y=
-            p.y-camera.y;
+        const x =
+            p.x-
+            camera.x;
 
 
-        const glow=
+        const y =
+            p.y-
+            camera.y;
+
+
+        const glow =
             ctx.createRadialGradient(
-                x,y,2,
-                x,y,30
+                x,
+                y,
+                2,
+                x,
+                y,
+                30
             );
+
 
         glow.addColorStop(
             0,
             "rgba(240,210,255,.95)"
         );
 
+
         glow.addColorStop(
             .25,
             "rgba(170,100,255,.7)"
         );
+
 
         glow.addColorStop(
             1,
             "rgba(80,30,150,0)"
         );
 
-        ctx.fillStyle=glow;
+
+        ctx.fillStyle =
+            glow;
+
 
         ctx.beginPath();
+
 
         ctx.arc(
             x,
@@ -3821,12 +5758,17 @@ function drawProjectiles(){
             Math.PI*2
         );
 
+
         ctx.fill();
 
 
-        ctx.font="20px Arial";
+        ctx.font =
+            "20px Arial";
 
-        ctx.textAlign="center";
+
+        ctx.textAlign =
+            "center";
+
 
         ctx.fillText(
             "🔮",
@@ -3837,36 +5779,51 @@ function drawProjectiles(){
     }
 
 
-    /* BOSS PROJECTILES */
+    /* BOSS */
 
-    for(const p of bossProjectiles){
+    for(
+        const p of bossProjectiles
+    ){
 
-        const x=
-            p.x-camera.x;
-
-        const y=
-            p.y-camera.y;
+        const x =
+            p.x-
+            camera.x;
 
 
-        const glow=
+        const y =
+            p.y-
+            camera.y;
+
+
+        const glow =
             ctx.createRadialGradient(
-                x,y,2,
-                x,y,30
+                x,
+                y,
+                2,
+                x,
+                y,
+                30
             );
+
 
         glow.addColorStop(
             0,
             "rgba(255,60,80,.9)"
         );
 
+
         glow.addColorStop(
             1,
             "rgba(100,0,20,0)"
         );
 
-        ctx.fillStyle=glow;
+
+        ctx.fillStyle =
+            glow;
+
 
         ctx.beginPath();
+
 
         ctx.arc(
             x,
@@ -3876,10 +5833,13 @@ function drawProjectiles(){
             Math.PI*2
         );
 
+
         ctx.fill();
 
 
-        ctx.font="22px Arial";
+        ctx.font =
+            "22px Arial";
+
 
         ctx.fillText(
             "🔥",
@@ -3908,9 +5868,11 @@ function drawQuestArrow(){
     let target;
 
 
-    if(area==="outside"){
+    if(
+        area==="outside"
+    ){
 
-        target=
+        target =
             questStage===0
             ?npc
             :gate;
@@ -3921,12 +5883,13 @@ function drawQuestArrow(){
         boss.active
     ){
 
-        target=boss;
+        target =
+            boss;
 
     }
     else{
 
-        target=
+        target =
             questStage===2
             ?castleNPC
             :{
@@ -3937,50 +5900,85 @@ function drawQuestArrow(){
     }
 
 
-    const dx=
-        target.x-player.x;
-
-    const dy=
-        target.y-player.y;
+    const dx =
+        target.x-
+        player.x;
 
 
-    const angle=
+    const dy =
+        target.y-
+        player.y;
+
+
+    const angle =
         Math.atan2(
             dy,
             dx
         );
 
 
-    const x=
+    const x =
         W/2+
-        Math.cos(angle)*105;
+        Math.cos(angle)*
+        105;
 
-    const y=
+
+    const y =
         H/2+
-        Math.sin(angle)*105;
+        Math.sin(angle)*
+        105;
 
 
     ctx.save();
 
-    ctx.translate(x,y);
 
-    ctx.rotate(angle);
+    ctx.translate(
+        x,
+        y
+    );
 
-    ctx.fillStyle="#d9bd87";
+
+    ctx.rotate(
+        angle
+    );
+
+
+    ctx.fillStyle =
+        "#d9bd87";
+
 
     ctx.beginPath();
 
-    ctx.moveTo(25,0);
 
-    ctx.lineTo(-15,-14);
+    ctx.moveTo(
+        25,
+        0
+    );
 
-    ctx.lineTo(-8,0);
 
-    ctx.lineTo(-15,14);
+    ctx.lineTo(
+        -15,
+        -14
+    );
+
+
+    ctx.lineTo(
+        -8,
+        0
+    );
+
+
+    ctx.lineTo(
+        -15,
+        14
+    );
+
 
     ctx.closePath();
 
+
     ctx.fill();
+
 
     ctx.restore();
 
@@ -3993,14 +5991,17 @@ DARKNESS
 
 function darkness(){
 
-    const g=
+    const g =
         ctx.createRadialGradient(
             W/2,
             H/2,
             100,
             W/2,
             H/2,
-            Math.max(W,H)*.75
+            Math.max(
+                W,
+                H
+            )*.75
         );
 
 
@@ -4009,10 +6010,12 @@ function darkness(){
         "rgba(0,0,0,0)"
     );
 
+
     g.addColorStop(
         .6,
         "rgba(0,0,0,.16)"
     );
+
 
     g.addColorStop(
         1,
@@ -4020,50 +6023,61 @@ function darkness(){
     );
 
 
-    ctx.fillStyle=g;
+    ctx.fillStyle =
+        g;
+
 
     ctx.fillRect(
-        0,0,W,H
+        0,
+        0,
+        W,
+        H
     );
 
 }
 
 
 /* =====================================================
-UI
+UI UPDATE
 ===================================================== */
 
 function updateUI(){
 
     document
         .getElementById("hp")
-        .style.width=
+        .style.width =
         Math.max(
             0,
             player.hp
-        )+"%";
+        )+
+        "%";
 
 
     document
         .getElementById("mana")
-        .style.width=
+        .style.width =
         Math.max(
             0,
             player.mana
-        )+"%";
+        )+
+        "%";
 
 
     document
         .getElementById("souls")
-        .textContent=
+        .textContent =
         souls;
 
 
-    if(boss.active){
+    if(
+        boss.active
+    ){
 
         document
-            .getElementById("bossHP")
-            .style.width=
+            .getElementById(
+                "bossHP"
+            )
+            .style.width =
             Math.max(
                 0,
                 boss.hp
@@ -4077,26 +6091,199 @@ function updateUI(){
 
     updateQuest();
 
+    updateInteractionPrompt();
 
-    if(player.damageCooldown>0)
+
+    if(
+        player.damageCooldown>0
+    ){
+
         player.damageCooldown--;
 
+    }
 
-    if(messageTimer>0){
+
+    if(
+        messageTimer>0
+    ){
 
         messageTimer--;
 
-        if(messageTimer===0){
+
+        if(
+            messageTimer===0
+        ){
 
             document
-                .getElementById("message")
-                .style.opacity="0";
+                .getElementById(
+                    "message"
+                )
+                .style.opacity =
+                "0";
 
         }
 
     }
 
 }
+
+
+/* =====================================================
+START
+===================================================== */
+
+document
+    .getElementById(
+        "startButton"
+    )
+    .onclick =
+    ()=>{
+
+        initAudio();
+
+        if(
+            audioCtx.state ===
+            "suspended"
+        ){
+
+            audioCtx.resume();
+
+        }
+
+
+        startMusic();
+
+
+        document
+            .getElementById(
+                "menu"
+            )
+            .classList.add(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "ui"
+            )
+            .style.display =
+            "block";
+
+
+        running =
+            true;
+
+
+        createWorld();
+
+
+        showMessage(
+            "🌑 THE FORGOTTEN GOD AWAKENS"
+        );
+
+
+        gameLoop();
+
+    };
+
+
+/* =====================================================
+LORE BUTTON
+===================================================== */
+
+document
+    .getElementById(
+        "loreButton"
+    )
+    .onclick =
+    ()=>{
+
+        document
+            .getElementById(
+                "menu"
+            )
+            .classList.add(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "lore"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+    };
+
+
+/* =====================================================
+CLOSE LORE
+===================================================== */
+
+document
+    .getElementById(
+        "closeLore"
+    )
+    .onclick =
+    ()=>{
+
+        document
+            .getElementById(
+                "lore"
+            )
+            .classList.add(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "menu"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+    };
+
+
+/* =====================================================
+RESTART
+===================================================== */
+
+document
+    .getElementById(
+        "restartButton"
+    )
+    .onclick =
+    ()=>{
+
+        location.reload();
+
+    };
+
+
+/* =====================================================
+INTERACT BUTTON
+===================================================== */
+
+document
+    .getElementById(
+        "interactButton"
+    )
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            interact();
+
+        }
+    );
 
 
 /* =====================================================
@@ -4128,7 +6315,9 @@ function gameLoop(){
 
     /* DRAW */
 
-    if(area==="outside"){
+    if(
+        area==="outside"
+    ){
 
         drawOutside();
 
