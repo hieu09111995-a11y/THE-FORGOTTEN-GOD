@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Forgotten God - 2D RPG Edition</title>
+    <title>The Forgotten God - Epic Boss Edition</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,8 @@
             --border-color: #4a3b69;
             --primary-glow: #9d4edd;
             --gold: #ffb703;
+            --hp-green: #2ecc71;
+            --hp-red: #e74c3c;
             --text-color: #e0e1dd;
         }
 
@@ -39,7 +41,6 @@
             overflow: hidden;
         }
 
-        /* Game Layout Wrapper */
         .wrapper {
             position: relative;
             width: 900px;
@@ -59,7 +60,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             box-shadow: 0 -5px 15px rgba(157, 78, 221, 0.2);
         }
 
@@ -74,6 +75,24 @@
             font-weight: bold;
         }
 
+        /* UI Thanh Máu */
+        .hp-container {
+            width: 120px;
+            height: 14px;
+            background: #2a1111;
+            border: 1px solid var(--hp-red);
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hp-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #e74c3c, #2ecc71);
+            transition: width 0.3s ease;
+        }
+
         /* Canvas Screen */
         #gameCanvas {
             background: #110e19;
@@ -81,10 +100,9 @@
             border-right: 1px solid var(--border-color);
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
             display: block;
-            cursor: default;
         }
 
-        /* Dialogue & Interaction Box Overlay */
+        /* Dialogue Box Overlay */
         .dialogue-overlay {
             position: absolute;
             bottom: 20px;
@@ -97,14 +115,8 @@
             box-shadow: 0 0 25px rgba(157, 78, 221, 0.4);
             display: none;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             z-index: 10;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .dialogue-speaker {
@@ -112,33 +124,104 @@
             font-size: 1.1rem;
             color: var(--gold);
             font-weight: bold;
+        }
+
+        /* MÀN HÌNH CHIẾN ĐẤU THEO LƯỢT (BATTLE OVERLAY) */
+        .battle-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 8, 16, 0.96);
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px 30px;
+            z-index: 15;
+            box-shadow: inset 0 0 50px rgba(157, 78, 221, 0.3);
+            transition: background 0.5s ease;
+        }
+
+        .battle-overlay.phase2-bg {
+            background: rgba(25, 4, 18, 0.97);
+            box-shadow: inset 0 0 60px rgba(231, 76, 60, 0.5);
+        }
+
+        .battle-arena {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
         }
 
-        .dialogue-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #f0f0f5;
+        .combatant-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 12px;
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
         }
 
-        .dialogue-hint {
-            font-size: 0.8rem;
-            color: #8a8aab;
-            text-align: right;
-            font-style: italic;
+        .combatant-icon {
+            font-size: 3.5rem;
+            transition: transform 0.3s ease;
         }
 
-        /* Start / Game Over Screen Overlay */
+        .battle-log {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 18px;
+            height: 95px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            color: #d1d1e0;
+            line-height: 1.5;
+        }
+
+        .battle-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #3c096c, #240046);
+            border: 1px solid var(--primary-glow);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            background: linear-gradient(135deg, #7b2cbf, #3c096c);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.6);
+        }
+
+        /* Start & Game Over Modals */
         .modal-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 4, 8, 0.92);
+            background: rgba(5, 4, 8, 0.94);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 20;
+            z-index: 30;
             text-align: center;
             padding: 30px;
             border-radius: 10px;
@@ -169,17 +252,6 @@
 
         .start-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(157, 78, 221, 0.9);
-        }
-
-        .controls-info {
-            margin-top: 15px;
-            background: rgba(255,255,255,0.05);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #aaa;
-            line-height: 1.5;
         }
 
         .key-badge {
@@ -194,47 +266,91 @@
 <body>
 
 <div class="wrapper">
-    <!-- Top HUD -->
+    <!-- Top HUD Bar -->
     <div class="hud-bar">
-        <div class="hud-item">🧙‍♂️ Phù Thủy: <span id="player-name-hud" class="stat-val">Lang Thang</span></div>
-        <div class="hud-item">📍 Khu vực: <span id="location-hud" class="hud-val">Bãi Tỉnh Dậy</span></div>
+        <div class="hud-item">
+            🧙‍♂️ HP: 
+            <div class="hp-container">
+                <div id="hpFillHUD" class="hp-fill"></div>
+            </div>
+            <span id="hpTextHUD" class="hud-val">100/100</span>
+        </div>
+        <div class="hud-item">📍 Vùng: <span id="location-hud" class="hud-val">Bãi Tỉnh Dậy</span></div>
+        <div class="hud-item">🧪 Thuốc Máu: <span id="potion-hud" class="hud-val">3</span></div>
         <div class="hud-item">✨ Linh hồn: <span id="souls-hud" class="hud-val">0</span></div>
-        <div class="hud-item">🔑 Cổ vật: <span id="relic-hud" class="hud-val">Chưa có</span></div>
     </div>
 
-    <!-- Main Game Canvas -->
+    <!-- Canvas Map -->
     <canvas id="gameCanvas" width="900" height="500"></canvas>
 
-    <!-- Dialogue Box Overlay -->
+    <!-- Dialogue Overlay -->
     <div id="dialogueBox" class="dialogue-overlay">
-        <div class="dialogue-speaker">
-            <span id="speakerName">NPC</span>
-            <span id="pressEHint" style="font-size: 0.8rem; color: var(--gold);">[Nhấn E để tiếp tục]</span>
-        </div>
-        <div id="dialogueText" class="dialogue-text">...</div>
-        <div class="dialogue-hint">Bấm [E] hoặc [Space] để tương tác</div>
+        <div id="speakerName" class="dialogue-speaker">NPC</div>
+        <div id="dialogueText">...</div>
+        <div style="font-size: 0.8rem; color: #8a8aab; text-align: right;">Bấm [E] hoặc [Space] để tiếp tục</div>
     </div>
 
-    <!-- Start / End Screen Modal -->
-    <div id="startModal" class="modal-overlay">
-        <h1 class="modal-title">THE FORGOTTEN GOD</h1>
-        <p style="color: #a0a0ba; max-width: 600px;">
-            Một vương quốc sụp đổ. Những vị thần bị lãng quên. Bạn tỉnh dậy mà không nhớ mình là ai... hãy tự tay di chuyển và khám phá bí mật đen tối này.
-        </p>
+    <!-- Turn-Based Battle Overlay -->
+    <div id="battleOverlay" class="battle-overlay">
+        <h2 id="battleHeader" style="font-family: 'Cinzel', serif; color: var(--gold); text-align: center;">⚔️ TRẬN CHIẾN BẮT ĐẦU ⚔️</h2>
         
-        <div class="controls-info">
-            🎮 <b>Hướng dẫn điều khiển:</b><br>
-            • Di chuyển: Dùng các phím <span class="key-badge">W</span> <span class="key-badge">A</span> <span class="key-badge">S</span> <span class="key-badge">D</span> hoặc <span class="key-badge">Phím mũi tên</span><br>
-            • Tương tác / Nói chuyện / Tấn công: Bấm phím <span class="key-badge">E</span> hoặc <span class="key-badge">Space</span> khi lại gần mục tiêu
+        <div class="battle-arena">
+            <!-- Player Card -->
+            <div class="combatant-card">
+                <div class="combatant-icon">🧙‍♂️</div>
+                <div style="font-weight: bold; color: var(--gold);">Phù Thủy</div>
+                <div class="hp-container" style="width: 100%;">
+                    <div id="playerBattleHpFill" class="hp-fill"></div>
+                </div>
+                <div id="playerBattleHpText" style="font-size: 0.85rem;">100/100 HP</div>
+            </div>
+
+            <div style="font-family: 'Cinzel', serif; font-size: 2rem; color: #e74c3c; font-weight: bold;">VS</div>
+
+            <!-- Enemy Card -->
+            <div class="combatant-card">
+                <div id="enemyIcon" class="combatant-icon">👑</div>
+                <div id="enemyName" style="font-weight: bold; color: #e74c3c;">Boss</div>
+                <div class="hp-container" style="width: 100%;">
+                    <div id="enemyBattleHpFill" class="hp-fill"></div>
+                </div>
+                <div id="enemyBattleHpText" style="font-size: 0.85rem;">160/160 HP</div>
+            </div>
         </div>
 
-        <button class="start-btn" onclick="startGame()">BẮT ĐẦU KHÁM PHÁ 🧙‍♂️</button>
+        <!-- Battle Log -->
+        <div id="battleLog" class="battle-log">
+            Bạn chạm trán đối thủ! Hãy chọn hành động chiến đấu.
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="battle-actions">
+            <button class="btn-action" onclick="playerAttack()">⚔️ Tấn Công Physical</button>
+            <button class="btn-action" onclick="playerSpell()">⚡ Chưởng Ma Thuật (Tốn 5 ✨)</button>
+            <button class="btn-action" onclick="playerHeal()">🧪 Bơm Máu (Hồi 40 HP)</button>
+            <button id="runBtn" class="btn-action" onclick="runAway()">🏃 Bỏ Chạy</button>
+        </div>
+    </div>
+
+    <!-- Start / Game Over Modal -->
+    <div id="startModal" class="modal-overlay">
+        <h1 id="modalTitle" class="modal-title">THE FORGOTTEN GOD</h1>
+        <p id="modalDesc" style="color: #a0a0ba; max-width: 600px; margin-bottom: 15px;">
+            Nhập vai Phù thủy tỉnh dậy ở thế giới sụp đổ. Hãy di chuyển, thu thập Linh Hồn để tiến vào Lâu Đài thách thức vị Thần Bị Lãng Quên!
+        </p>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 8px; font-size: 0.85rem; color: #aaa; line-height: 1.6;">
+            🎮 <b>Điều khiển:</b> Di chuyển bằng <span class="key-badge">WASD</span> hoặc <span class="key-badge">Mũi tên</span>.<br>
+            Tương tác / Tấn công / Nói chuyện: Nhấn <span class="key-badge">E</span> hoặc <span class="key-badge">Space</span> khi lại gần.
+        </div>
+
+        <button id="modalBtn" class="start-btn" onclick="startGame()">BẮT ĐẦU KHÁM PHÁ 🧙‍♂️</button>
     </div>
 </div>
 
 <script>
 // ==========================================
-// 1. HỆ THỐNG ÂM THANH (WEB AUDIO API)
+// 1. ÂM THANH (WEB AUDIO API)
 // ==========================================
 let audioCtx = null;
 
@@ -245,259 +361,156 @@ function initAudio() {
     }
 }
 
-function playStepSFX() {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.08);
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.08);
-}
-
-function playTalkSFX() {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(450 + Math.random() * 100, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.06);
-}
-
-function playSoulSFX() {
+function playSFX(type) {
     if (!audioCtx) return;
     const now = audioCtx.currentTime;
-    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    if (type === 'step') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-        gain.gain.setValueAtTime(0.1, now + idx * 0.06);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now + idx * 0.06);
-        osc.stop(now + idx * 0.06 + 0.25);
-    });
-}
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.08);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+    } else if (type === 'hit') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+    } else if (type === 'spell') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+    } else if (type === 'heal') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.3);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    } else if (type === 'boss_phase') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, now);
+        osc.frequency.exponentialRampToValueAtTime(500, now + 0.6);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+    }
 
-function playFightSFX() {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(50, now + 0.2);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start(now);
-    osc.stop(now + 0.2);
+    osc.stop(now + 0.6);
 }
 
 // ==========================================
-// 2. KHỞI TẠO CANVAS & TRẠNG THÁI GAME
+// 2. KHỞI TẠO GAME & NHÂN VẬT
 // ==========================================
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let gameRunning = false;
 let inDialogue = false;
-let currentDialogueQueue = [];
-let dialogueCallback = null;
+let inBattle = false;
+let dialogueQueue = [];
 
-// Khai báo Nhân vật (Phù thủy)
 const player = {
-    x: 80,
-    y: 250,
-    radius: 18,
-    speed: 3.2,
+    x: 80, y: 250,
+    radius: 18, speed: 3.2,
     icon: "🧙‍♂️",
+    hp: 100, maxHp: 100,
+    atk: 16,
     souls: 0,
+    potions: 3,
     hasRelic: false,
     stepTimer: 0
 };
 
-// Quản lý Phím bấm
 const keys = {
     w: false, a: false, s: false, d: false,
     ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false,
     e: false, " ": false
 };
 
-// Danh sách các Thực thể trên Bản đồ (NPC, Quái vật, Linh hồn, Cổng)
+// Quái vật & Boss Cuối
 let entities = [
     {
-        id: "elf_npc",
-        x: 280, y: 140,
-        radius: 22,
-        icon: "🧝",
-        name: "NPC Tiên Trí (Elf)",
-        prompt: "Nói chuyện [E]",
-        interacted: false,
-        action: () => {
-            triggerDialogue([
-                { speaker: "🧝 NPC Tiên Trí", text: "Ngươi đã tỉnh rồi sao, Phù Thủy lang thang?" },
-                { speaker: "🧝 NPC Tiên Trí", text: "Vương quốc này đã sụp đổ từ lâu. Nhưng một vị thần vẫn còn tồn tại... Hắn là **Forgotten God** – vị thần bị toàn bộ thế giới lãng quên." },
-                { speaker: "🧝 NPC Tiên Trí", text: "Hãy đi về phía Đông để tìm Lâu Đài 🏰. Nhưng ngươi cần ít nhất **10 Linh Hồn ✨** để phá giải phong ấn cánh cổng!" }
-            ]);
-        }
+        id: "elf_npc", x: 280, y: 140, radius: 22, icon: "🧝",
+        name: "NPC Tiên Trí", prompt: "Nói chuyện [E]",
+        action: () => triggerDialogue([
+            { speaker: "🧝 NPC Tiên Trí", text: "Trong Lâu Đài 🏰 ẩn chứa vị thần bị lãng quên **Forgotten God**. Hãy thu thập **10 Linh Hồn ✨** để mở cổng vinh quang!" },
+            { speaker: "🧝 NPC Tiên Trí", text: "Nhận lấy 2 Thuốc Máu 🧪 này để chuẩn bị cho trận chiến định mệnh!" }
+        ], () => { player.potions += 2; updateHUD(); })
     },
     {
-        id: "monster_forest",
-        x: 340, y: 80,
-        radius: 22,
-        icon: "👹",
-        name: "Quái Vật Rừng Chết",
-        prompt: "Chiến đấu [E]",
-        alive: true,
-        action: function() {
-            if (!this.alive) return;
-            playFightSFX();
-            this.alive = false;
-            player.souls += 10;
-            updateHUD();
-            triggerDialogue([
-                { speaker: "🧙‍♂️ Phù Thủy", text: "Bạn vận ma thuật giáng một luồng sét tiêu diệt Quái Vật Rừng! 👹" },
-                { speaker: "✨ Thu Thập", text: "Bạn thu thập được **+10 Linh Hồn ✨** từ xác quái vật!" }
-            ]);
-        }
+        id: "monster_forest", x: 360, y: 110, radius: 24, icon: "👹",
+        name: "Quái Vật Rừng Chết", prompt: "Chiến đấu [E]",
+        alive: true, maxHp: 65, hp: 65, atk: 12, soulsReward: 10,
+        action: function() { if (this.alive) startBattle(this); }
     },
     {
-        id: "village_souls",
-        x: 220, y: 400,
-        radius: 22,
-        icon: "💀",
-        name: "Linh Hồn Oan Khuất",
-        prompt: "Thanh tẩy [E]",
-        cleansed: false,
+        id: "monster_graveyard", x: 600, y: 380, radius: 24, icon: "👾",
+        name: "Bóng Ma Nghĩa Địa", prompt: "Chiến đấu [E]",
+        alive: true, maxHp: 90, hp: 90, atk: 16, soulsReward: 15,
+        action: function() { if (this.alive) startBattle(this); }
+    },
+    {
+        id: "village_souls", x: 220, y: 400, radius: 22, icon: "💀",
+        name: "Linh Hồn Oan Khuất", prompt: "Thanh tẩy [E]", cleansed: false,
         action: function() {
             if (this.cleansed) return;
-            playSoulSFX();
             this.cleansed = true;
-            player.souls += 15;
-            player.hasRelic = true;
+            player.souls += 15; player.hasRelic = true;
             updateHUD();
             triggerDialogue([
-                { speaker: "💀 Linh Hồn", text: "Cảm ơn ngươi... giai điệu phép thuật của ngươi nghe thật quen thuộc..." },
-                { speaker: "✨ Thu Thập", text: "Linh hồn tan biến và để lại **+15 Linh Hồn ✨** cùng một **Cổ Vật Ký Ức 🗿**!" }
+                { speaker: "✨ Thanh Tẩy", text: "Bạn nhận được **+15 Linh Hồn ✨** và **Cổ Vật Ký Ức 🗿**!" }
             ]);
         }
     },
     {
-        id: "graveyard_tomb",
-        x: 580, y: 120,
-        radius: 22,
-        icon: "🪦",
-        name: "Bia Đá Cổ Nghĩa Địa",
-        prompt: "Đọc văn bản [E]",
-        action: () => {
-            triggerDialogue([
-                { speaker: "🪦 Bia Đá Cổ", text: "'Kẻ phong ấn thần linh mang gậy phép mặt trăng. Kẻ đó đã tự xóa ký ức của chính mình để gánh chịu lời nguyền...'" },
-                { speaker: "🧙‍♂️ Phù Thủy", text: "Một cảm giác ớn lạnh sống lưng... Tại sao dòng chữ này lại khiến tim bạn đập nhanh như vậy?" }
-            ]);
-        }
-    },
-    {
-        id: "castle_gate",
-        x: 760, y: 250,
-        radius: 28,
-        icon: "🏰",
-        name: "Cổng Lâu Đài Hoang",
-        prompt: "Mở Cổng [E]",
-        opened: false,
+        id: "castle_gate", x: 760, y: 250, radius: 28, icon: "🏰",
+        name: "Cổng Lâu Đài", prompt: "Mở Cổng [E]", opened: false,
         action: function() {
             if (this.opened) {
-                enterCastle👑();
+                spawnBossInside();
                 return;
             }
             if (player.souls >= 10) {
                 this.opened = true;
-                playSoulSFX();
                 triggerDialogue([
-                    { speaker: "🏰 Cổng Lâu Đài", text: "Sức mạnh của 10 Linh Hồn bùng cháy! Cánh cổng đá khổng lồ rung chuyển và từ từ mở ra..." },
-                    { speaker: "🧙‍♂️ Phù Thủy", text: "Hãy nhấn [E] một lần nữa để bước vào Phòng Ngai Vàng!" }
-                ]);
+                    { speaker: "🏰 Cổng Lâu Đài", text: "Sức mạnh 10 Linh Hồn bùng cháy! Cánh cổng phong ấn mở ra..." },
+                    { speaker: "🧙‍♂️ Phù Thủy", text: "Vị Thần Bị Lãng Quên đã xuất hiện bên trong Ngai Vàng!" }
+                ], () => spawnBossInside());
             } else {
-                triggerDialogue([
-                    { speaker: "🏰 Cổng Lâu Đài", text: "Cánh cổng bị phong ấn bởi ma thuật đen dày đặc! Ngươi cần ít nhất **10 Linh Hồn ✨** để mở." }
-                ]);
+                triggerDialogue([{ speaker: "🏰 Cổng Lâu Đài", text: "Cần ít nhất **10 Linh Hồn ✨** để mở cổng!" }]);
             }
         }
     }
 ];
 
-// ==========================================
-// 3. VẼ BẢN ĐỒ & CÁC VÙNG KHU VỰC
-// ==========================================
-function drawMap() {
-    // 1. Nơi Tỉnh Dậy (Trái)
-    ctx.fillStyle = "#1a1829";
-    ctx.fillRect(0, 0, 180, 500);
+// Mới: Boss Cuối 2 Phase
+const finalBoss = {
+    id: "final_boss", x: 820, y: 250, radius: 32, icon: "👑",
+    name: "Forgotten God (Phase 1)", prompt: "Thách Thức [E]",
+    isBoss: true, phase: 1, alive: false,
+    maxHp: 160, hp: 160, atk: 18,
+    action: function() { if (this.alive) startBattle(this); }
+};
 
-    // 2. Rừng Chết 🌲 (Trên Giữa)
-    ctx.fillStyle = "#0d1b12";
-    ctx.fillRect(180, 0, 320, 250);
-
-    // 3. Ngôi Làng Hoang 🏚️ (Dưới Giữa)
-    ctx.fillStyle = "#221a14";
-    ctx.fillRect(180, 250, 320, 250);
-
-    // 4. Nghĩa Địa 🪦 (Phải Trên)
-    ctx.fillStyle = "#1c1424";
-    ctx.fillRect(500, 0, 200, 500);
-
-    // 5. Lâu Đài 🏰 (Phải Cùng)
-    ctx.fillStyle = "#2b0d1e";
-    ctx.fillRect(700, 0, 200, 500);
-
-    // Đường ranh giới khu vực
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(180, 0); ctx.lineTo(180, 500);
-    ctx.moveTo(180, 250); ctx.lineTo(500, 250);
-    ctx.moveTo(500, 0); ctx.lineTo(500, 500);
-    ctx.moveTo(700, 0); ctx.lineTo(700, 500);
-    ctx.stroke();
-
-    // Nhãn tên khu vực trên nền đất
-    ctx.font = "bold 13px 'Cinzel', serif";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
-    ctx.fillText("BÃI TỈNH DẬY", 20, 30);
-    ctx.fillText("RỪNG CHẾT 🌲", 200, 30);
-    ctx.fillText("LÀNG HOANG 🏚️", 200, 280);
-    ctx.fillText("NGHĨA ĐỊA 🪦", 520, 30);
-    ctx.fillText("LÂU ĐÀI 🏰", 720, 30);
-
-    // Cây cối trang trí Rừng Chết
-    ctx.font = "20px sans-serif";
-    ctx.fillText("🌲", 220, 90);
-    ctx.fillText("🌲", 420, 180);
-    ctx.fillText("🌲", 300, 220);
-    ctx.fillText("🏚️", 280, 360);
-    ctx.fillText("🏚️", 400, 440);
+function spawnBossInside() {
+    finalBoss.alive = true;
+    if (!entities.includes(finalBoss)) entities.push(finalBoss);
 }
 
 // ==========================================
-// 4. LOGIC TƯƠNG TÁC & DI CHUYỂN
+// 3. DI CHUYỂN & LẬP TRÌNH BẢN ĐỒ
 // ==========================================
 let nearEntity = null;
 
-function updatePlayerPosition() {
-    if (inDialogue) return; // Khóa di chuyển khi đang nói chuyện
+function updatePlayer() {
+    if (inDialogue || inBattle) return;
 
     let dx = 0, dy = 0;
     if (keys.w || keys.ArrowUp) dy -= 1;
@@ -505,197 +518,333 @@ function updatePlayerPosition() {
     if (keys.a || keys.ArrowLeft) dx -= 1;
     if (keys.d || keys.ArrowRight) dx += 1;
 
-    // Chuẩn hóa tốc độ đi chéo
-    if (dx !== 0 && dy !== 0) {
-        dx *= 0.7071;
-        dy *= 0.7071;
-    }
+    if (dx !== 0 && dy !== 0) { dx *= 0.7071; dy *= 0.7071; }
 
     if (dx !== 0 || dy !== 0) {
         player.x += dx * player.speed;
         player.y += dy * player.speed;
-
-        // Giới hạn trong khung Canvas
         player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x));
         player.y = Math.max(player.radius, Math.min(canvas.height - player.radius, player.y));
 
-        // Tiếng bước chân
         player.stepTimer++;
-        if (player.stepTimer % 18 === 0) {
-            playStepSFX();
-        }
-
+        if (player.stepTimer % 18 === 0) playSFX('step');
         updateLocationHUD();
     }
 
-    // Kiểm tra khoảng cách tương tác với các Entity
     nearEntity = null;
     entities.forEach(ent => {
-        // Skip quái vật đã chết hoặc linh hồn đã thanh tẩy
-        if (ent.id === "monster_forest" && !ent.alive) return;
-        if (ent.id === "village_souls" && ent.cleansed) return;
-
+        if ((ent.alive === false) || (ent.cleansed === true)) return;
         const dist = Math.hypot(player.x - ent.x, player.y - ent.y);
-        if (dist < player.radius + ent.radius + 25) {
-            nearEntity = ent;
-        }
+        if (dist < player.radius + ent.radius + 25) nearEntity = ent;
     });
 }
 
-function updateLocationHUD() {
-    const locHud = document.getElementById('location-hud');
-    if (player.x < 180) locHud.innerText = "Bãi Tỉnh Dậy";
-    else if (player.x < 500 && player.y < 250) locHud.innerText = "Rừng Chết 🌲";
-    else if (player.x < 500 && player.y >= 250) locHud.innerText = "Ngôi Làng Hoang 🏚️";
-    else if (player.x < 700) locHud.innerText = "Nghĩa Địa Cổ 🪦";
-    else locHud.innerText = "Cổng Lâu Đài 🏰";
-}
+function drawMap() {
+    ctx.fillStyle = "#1a1829"; ctx.fillRect(0, 0, 180, 500); // Bãi tỉnh dậy
+    ctx.fillStyle = "#0d1b12"; ctx.fillRect(180, 0, 320, 250); // Rừng chết
+    ctx.fillStyle = "#221a14"; ctx.fillRect(180, 250, 320, 250); // Làng hoang
+    ctx.fillStyle = "#1c1424"; ctx.fillRect(500, 0, 200, 500); // Nghĩa địa
+    ctx.fillStyle = "#2b0d1e"; ctx.fillRect(700, 0, 200, 500); // Lâu đài
 
-function updateHUD() {
-    document.getElementById('souls-hud').innerText = player.souls;
-    document.getElementById('relic-hud').innerText = player.hasRelic ? "Có (Cổ Vật Ký Ức)" : "Chưa có";
-}
-
-// ==========================================
-// 5. VẼ CÁC ĐỐI TƯỢNG VÀ GIAO DIỆN HƯỚNG DẪN
-// ==========================================
-function renderEntities() {
-    entities.forEach(ent => {
-        if (ent.id === "monster_forest" && !ent.alive) return;
-        if (ent.id === "village_souls" && ent.cleansed) return;
-
-        // Vẽ biểu tượng
-        ctx.font = "26px sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(ent.icon, ent.x, ent.y);
-
-        // Hiệu ứng vòng tròn ma thuật phát sáng xung quanh
-        ctx.strokeStyle = "rgba(157, 78, 221, 0.4)";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(ent.x, ent.y, ent.radius + 4, 0, Math.PI * 2);
-        ctx.stroke();
-    });
-
-    // Vẽ Nhân vật Phù thủy
-    ctx.font = "28px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(player.icon, player.x, player.y);
-
-    // Vòng hào quang phù thủy
-    ctx.strokeStyle = varColor('--gold');
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)"; ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+    ctx.moveTo(180,0); ctx.lineTo(180,500);
+    ctx.moveTo(180,250); ctx.lineTo(500,250);
+    ctx.moveTo(500,0); ctx.lineTo(500,500);
+    ctx.moveTo(700,0); ctx.lineTo(700,500);
     ctx.stroke();
 
-    // Hiện gợi ý bấm phím [E] khi đứng gần
-    if (nearEntity && !inDialogue) {
-        ctx.fillStyle = "rgba(15, 12, 24, 0.9)";
-        ctx.strokeStyle = "#9d4edd";
-        ctx.lineWidth = 1;
-        ctx.fillRect(nearEntity.x - 65, nearEntity.y - 50, 130, 26);
-        ctx.strokeRect(nearEntity.x - 65, nearEntity.y - 50, 130, 26);
+    ctx.font = "bold 13px 'Cinzel', serif"; ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+    ctx.fillText("BÃI TỈNH DẬY", 20, 30);
+    ctx.fillText("RỪNG CHẾT 🌲", 200, 30);
+    ctx.fillText("LÀNG HOANG 🏚️", 200, 280);
+    ctx.fillText("NGHĨA ĐỊA 🪦", 520, 30);
+    ctx.fillText("LÂU ĐÀI 🏰", 720, 30);
+}
 
-        ctx.font = "bold 12px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillStyle = "#ffb703";
+function renderEntities() {
+    entities.forEach(ent => {
+        if (ent.alive === false || ent.cleansed === true) return;
+        ctx.font = "26px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(ent.icon, ent.x, ent.y);
+    });
+
+    // Vẽ Phù thủy
+    ctx.font = "28px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(player.icon, player.x, player.y);
+
+    // Gợi ý [E]
+    if (nearEntity && !inDialogue && !inBattle) {
+        ctx.fillStyle = "rgba(15, 12, 24, 0.9)";
+        ctx.strokeStyle = "#9d4edd"; ctx.lineWidth = 1;
+        ctx.fillRect(nearEntity.x - 70, nearEntity.y - 50, 140, 26);
+        ctx.strokeRect(nearEntity.x - 70, nearEntity.y - 50, 140, 26);
+        ctx.font = "bold 12px sans-serif"; ctx.fillStyle = "#ffb703";
         ctx.fillText(nearEntity.prompt, nearEntity.x, nearEntity.y - 37);
     }
 }
 
-function varColor(name) {
-    return name === '--gold' ? '#ffb703' : '#9d4edd';
+// ==========================================
+// 4. HỆ THỐNG CHIẾN ĐẤU BẮT ĐẦU & PHASE TRANSITION
+// ==========================================
+let currentEnemy = null;
+
+function startBattle(enemy) {
+    inBattle = true;
+    currentEnemy = enemy;
+    
+    const overlay = document.getElementById('battleOverlay');
+    overlay.style.display = 'flex';
+    overlay.classList.remove('phase2-bg');
+
+    document.getElementById('battleHeader').innerText = enemy.isBoss ? "👑 THÁCH THỨC BOSS CUỐI 👑" : "⚔️ TRẬN CHIẾN BẮT ĐẦU ⚔️";
+    document.getElementById('enemyIcon').innerText = enemy.icon;
+    document.getElementById('enemyName').innerText = enemy.name;
+    document.getElementById('runBtn').style.display = enemy.isBoss ? "none" : "flex"; // Không cho phép chạy trốn Boss!
+
+    document.getElementById('battleLog').innerHTML = `🔥 Bạn đối mặt với <b>${enemy.name}</b>! Hãy chọn hành động.`;
+    updateBattleUI();
 }
 
-// ==========================================
-// 6. HỆ THỐNG HỘP THOẠI (DIALOGUE ENGINE)
-// ==========================================
-function triggerDialogue(dialogueList, callback = null) {
-    inDialogue = true;
-    currentDialogueQueue = [...dialogueList];
-    dialogueCallback = callback;
-    document.getElementById('dialogueBox').style.display = 'flex';
-    advanceDialogue();
+function updateBattleUI() {
+    const playerHpPct = Math.max(0, (player.hp / player.maxHp) * 100);
+    document.getElementById('playerBattleHpFill').style.width = playerHpPct + '%';
+    document.getElementById('playerBattleHpText').innerText = `${player.hp}/${player.maxHp} HP`;
+
+    const enemyHpPct = Math.max(0, (currentEnemy.hp / currentEnemy.maxHp) * 100);
+    document.getElementById('enemyBattleHpFill').style.width = enemyHpPct + '%';
+    document.getElementById('enemyBattleHpText').innerText = `${currentEnemy.hp}/${currentEnemy.maxHp} HP`;
+
+    updateHUD();
 }
 
-function advanceDialogue() {
-    if (currentDialogueQueue.length === 0) {
-        document.getElementById('dialogueBox').style.display = 'none';
-        inDialogue = false;
-        if (dialogueCallback) dialogueCallback();
+function logBattle(msg) {
+    const log = document.getElementById('battleLog');
+    log.innerHTML += `<br>• ${msg}`;
+    log.scrollTop = log.scrollHeight;
+}
+
+function playerAttack() {
+    if (!inBattle) return;
+    playSFX('hit');
+    const dmg = Math.floor(player.atk + Math.random() * 6);
+    currentEnemy.hp -= dmg;
+    logBattle(`Bạn vung gậy phép gây <b style="color:#ffb703">${dmg} sát thương</b>!`);
+    updateBattleUI();
+
+    if (checkBattleEnd()) return;
+    setTimeout(enemyTurn, 800);
+}
+
+function playerSpell() {
+    if (!inBattle) return;
+    if (player.souls < 5) {
+        logBattle(`<span style="color:#e74c3c">Không đủ Linh Hồn! Cần 5 ✨ để bắn ma thuật.</span>`);
         return;
     }
+    playSFX('spell');
+    player.souls -= 5;
+    const dmg = Math.floor(30 + Math.random() * 12);
+    currentEnemy.hp -= dmg;
+    logBattle(`⚡ Bạn giáng luồng Sét Ma Thuật gây <b style="color:#9d4edd">${dmg} sát thương chí mạng</b>!`);
+    updateBattleUI();
 
-    playTalkSFX();
-    const currentLine = currentDialogueQueue.shift();
-    document.getElementById('speakerName').innerText = currentLine.speaker;
-    document.getElementById('dialogueText').innerHTML = currentLine.text;
+    if (checkBattleEnd()) return;
+    setTimeout(enemyTurn, 800);
+}
+
+function playerHeal() {
+    if (!inBattle) return;
+    if (player.potions <= 0) {
+        logBattle(`<span style="color:#e74c3c">Bạn đã hết Thuốc Máu 🧪!</span>`);
+        return;
+    }
+    playSFX('heal');
+    player.potions--;
+    const healAmt = 45;
+    player.hp = Math.min(player.maxHp, player.hp + healAmt);
+    logBattle(`🧪 Bạn uống Thuốc Máu, hồi <b style="color:#2ecc71">+${healAmt} HP</b>!`);
+    updateBattleUI();
+
+    setTimeout(enemyTurn, 800);
+}
+
+function enemyTurn() {
+    if (!inBattle || currentEnemy.hp <= 0) return;
+
+    playSFX('hit');
+    let dmg = Math.floor(currentEnemy.atk + Math.random() * 6);
+
+    // Kỹ năng đặc biệt của Boss Phase 2: Lời Nguyền Lãng Quên
+    if (currentEnemy.isBoss && currentEnemy.phase === 2 && Math.random() < 0.35) {
+        dmg = Math.floor(dmg * 1.5);
+        logBattle(`👁️‍🗨️ <b>${currentEnemy.name}</b> thi triển <b style="color:#e74c3c">LỜI NGUYỀN LÃNG QUÊN</b> gây cực đại <b style="color:#e74c3c">${dmg} sát thương</b>!`);
+    } else {
+        logBattle(`💥 <b>${currentEnemy.name}</b> tấn công gây <b style="color:#e74c3c">${dmg} sát thương</b>!`);
+    }
+
+    player.hp -= dmg;
+    updateBattleUI();
+
+    if (player.hp <= 0) {
+        setTimeout(gameOver, 600);
+    }
+}
+
+// Xử lý Chuyển Phase 1 -> Phase 2 & Kết thúc trận đấu
+function checkBattleEnd() {
+    if (currentEnemy.hp <= 0) {
+        // BOSS PHASE 1 -> TRANSITION TO PHASE 2!
+        if (currentEnemy.isBoss && currentEnemy.phase === 1) {
+            playSFX('boss_phase');
+            currentEnemy.phase = 2;
+            currentEnemy.name = "Forgotten God - Thực Thể Cấm Đoán (Phase 2)";
+            currentEnemy.icon = "👁️‍🗨️";
+            currentEnemy.maxHp = 240;
+            currentEnemy.hp = 240;
+            currentEnemy.atk = 26;
+
+            // Hồi sức nhẹ cho Phù thủy
+            player.hp = Math.min(player.maxHp, player.hp + 45);
+
+            document.getElementById('enemyIcon').innerText = currentEnemy.icon;
+            document.getElementById('enemyName').innerText = currentEnemy.name;
+            document.getElementById('battleOverlay').classList.add('phase2-bg');
+
+            logBattle(`<br><b style="color:#e74c3c; font-size:1.05rem;">⚠️ BÙNG NỔ THẦN LỰC! Forgotten God ngã xuống nhưng trút bỏ lốt thần linh, biến thành THỰC THỂ CẤM ĐOÁN (PHASE 2)!</b>`);
+            logBattle(`<b style="color:#2ecc71">✨ Ma thuật cổ đại thức tỉnh giúp bạn hồi phục +45 HP!</b>`);
+            
+            updateBattleUI();
+            return true;
+        }
+
+        // BOSS PHASE 2 DEFEATED -> GAME VICTORY!
+        if (currentEnemy.isBoss && currentEnemy.phase === 2) {
+            currentEnemy.alive = false;
+            logBattle(`🏆 <b style="color:#2ecc71; font-size:1.1rem;">BẠN ĐÃ ĐÁNH BẠI FORGOTTEN GOD KHỎI THẾ GIỚI!</b>`);
+            setTimeout(() => {
+                document.getElementById('battleOverlay').style.display = 'none';
+                inBattle = false;
+                triggerEndingStory();
+            }, 1800);
+            return true;
+        }
+
+        // Quái thường bị tiêu diệt
+        currentEnemy.alive = false;
+        player.souls += currentEnemy.soulsReward;
+        logBattle(`🎉 <b style="color:#2ecc71">Đã tiêu diệt quái vật!</b> Nhận +${currentEnemy.soulsReward} Linh Hồn ✨.`);
+        setTimeout(() => {
+            document.getElementById('battleOverlay').style.display = 'none';
+            inBattle = false;
+            updateHUD();
+        }, 1200);
+        return true;
+    }
+    return false;
+}
+
+function runAway() {
+    logBattle(`🏃 Bạn nhanh trí bỏ chạy khỏi trận chiến!`);
+    setTimeout(() => {
+        document.getElementById('battleOverlay').style.display = 'none';
+        inBattle = false;
+    }, 600);
 }
 
 // ==========================================
-// 7. KẾT THÚC CỐT TRUYỆN (REVELATION)
+// 5. CỐT TRUYỆN KẾT THÚC (ENDING STORY)
 // ==========================================
-function enterCastle👑() {
+function triggerEndingStory() {
     triggerDialogue([
-        { speaker: "👑 Forgotten God", text: "Ngươi đã bước vào ngai vàng... Cuối cùng ngươi cũng đến, Phù Thủy." },
-        { speaker: "👑 Forgotten God", text: "Hắn nhìn bạn bằng ánh mắt u buồn xót xa: 'Ngươi vẫn cầm cây gậy phép mặt trăng đó... Ngươi không hề nhớ tên ta, và ngươi cũng đã quên mất **TÊN THẬT** của chính mình.'" },
-        { speaker: "🧙‍♂️ Phù Thủy", text: "Đầu bạn đau nhói dữ dội! Những ký ức bị phong ấn vỡ òa chảy về..." },
-        { speaker: "👑 Forgotten God", text: "Trận chiến năm xưa... Không phải thảm họa hay quái vật phá hủy vương quốc. Chính **BẠN** là người đã thi triển đại phép thuật cấm đoán để xóa sạch tên tuổi của hắn khỏi tâm trí nhân loại nhằm phong ấn sức mạnh diệt thế của hắn." },
-        { speaker: "💥 Sự Thật Phơi Bày", text: "<b>Bạn không phải là người giải cứu. Bạn chính là người đã khiến cả thế giới quên đi vị thần này!</b>" }
+        { speaker: "👁️‍🗨️ Forgotten God", text: "Thực thể tan biến dần vào không trung... 'Ngươi vẫn mạnh mẽ như năm xưa, Phù Thủy...'" },
+        { speaker: "🧙‍♂️ Phù Thủy", text: "Tay bạn run lên khi cầm gậy phép. Tất cả ký ức bị phong ấn vỡ òa ùa về!" },
+        { speaker: "💥 Sự Thật Phơi Bày", text: "Bạn chợt nhận ra: Chính BẠN là người đã dùng Đại Phép Thuật Cấm Đoán để xóa bỏ tên tuổi vị thần này khỏi lịch sử nhân loại nhằm giam giữ sức mạnh diệt thế của hắn!" },
+        { speaker: "👑 Huyền Thoại Mới", text: "Thế giới đã được cứu thoát vĩnh viễn. Bạn không chỉ là người giải cứu, mà còn là ĐẤNG PHONG ẤN TỐI CAO!" }
     ], () => {
-        alert("🎉 CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH CỐT TRUYỆN 'THE FORGOTTEN GOD'!");
-        location.reload();
+        document.getElementById('modalTitle').innerText = "🏆 CHIẾN THẮNG KHANH HOÀNG 🏆";
+        document.getElementById('modalDesc').innerText = "Chúc mừng bạn đã hoàn thiện toàn bộ hành trình 'The Forgotten God' và giải mã bí mật lớn nhất!";
+        document.getElementById('modalBtn').innerText = "CHƠI LẠI TRẢI NGHIỆM 🔄";
+        document.getElementById('startModal').style.display = 'flex';
     });
 }
 
 // ==========================================
-// 8. BẮT SỰ KIỆN BÀN PHÍM (INPUT LISTENERS)
+// 6. HÀM BỔ TRỢ & BÀN PHÍM
 // ==========================================
-window.addEventListener('keydown', (e) => {
-    if (keys.hasOwnProperty(e.key) || e.key === " ") {
-        keys[e.key] = true;
-    }
+function updateHUD() {
+    const hpPct = Math.max(0, (player.hp / player.maxHp) * 100);
+    document.getElementById('hpFillHUD').style.width = hpPct + '%';
+    document.getElementById('hpTextHUD').innerText = `${player.hp}/${player.maxHp}`;
+    document.getElementById('souls-hud').innerText = player.souls;
+    document.getElementById('potion-hud').innerText = player.potions;
+}
 
-    // Xử lý phím E hoặc Space
+function updateLocationHUD() {
+    const loc = document.getElementById('location-hud');
+    if (player.x < 180) loc.innerText = "Bãi Tỉnh Dậy";
+    else if (player.x < 500 && player.y < 250) loc.innerText = "Rừng Chết 🌲";
+    else if (player.x < 500 && player.y >= 250) loc.innerText = "Làng Hoang 🏚️";
+    else if (player.x < 700) loc.innerText = "Nghĩa Địa Cổ 🪦";
+    else loc.innerText = "Lâu Đài 🏰";
+}
+
+function triggerDialogue(lines, callback = null) {
+    inDialogue = true;
+    dialogueQueue = [...lines];
+    document.getElementById('dialogueBox').style.display = 'flex';
+    advanceDialogue(callback);
+}
+
+function advanceDialogue(callback = null) {
+    if (dialogueQueue.length === 0) {
+        document.getElementById('dialogueBox').style.display = 'none';
+        inDialogue = false;
+        if (callback) callback();
+        return;
+    }
+    const current = dialogueQueue.shift();
+    document.getElementById('speakerName').innerText = current.speaker;
+    document.getElementById('dialogueText').innerHTML = current.text;
+}
+
+function gameOver() {
+    document.getElementById('modalTitle').innerText = "💀 GAME OVER 💀";
+    document.getElementById('modalDesc').innerText = "Sức mạnh của Boss đã vượt quá tầm kiểm soát của bạn...";
+    document.getElementById('modalBtn').innerText = "THỬ LẠI 🔄";
+    document.getElementById('startModal').style.display = 'flex';
+}
+
+window.addEventListener('keydown', (e) => {
+    if (keys.hasOwnProperty(e.key) || e.key === " ") keys[e.key] = true;
     if (e.key.toLowerCase() === 'e' || e.key === ' ') {
-        e.preventDefault();
-        if (inDialogue) {
-            advanceDialogue();
-        } else if (nearEntity) {
-            nearEntity.action();
-        }
+        if (inDialogue) advanceDialogue();
+        else if (nearEntity && !inBattle) nearEntity.action();
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    if (keys.hasOwnProperty(e.key) || e.key === " ") {
-        keys[e.key] = false;
-    }
+    if (keys.hasOwnProperty(e.key) || e.key === " ") keys[e.key] = false;
 });
-
-// ==========================================
-// 9. GAME LOOP
-// ==========================================
-function gameLoop() {
-    if (gameRunning) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawMap();
-        updatePlayerPosition();
-        renderEntities();
-    }
-    requestAnimationFrame(gameLoop);
-}
 
 function startGame() {
     initAudio();
+    if (player.hp <= 0 || !finalBoss.alive) location.reload();
     document.getElementById('startModal').style.display = 'none';
     gameRunning = true;
     updateHUD();
 }
 
-// Bắt đầu vòng lặp game
+function gameLoop() {
+    if (gameRunning) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawMap();
+        updatePlayer();
+        renderEntities();
+    }
+    requestAnimationFrame(gameLoop);
+}
+
 gameLoop();
 </script>
 
