@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,192 +11,413 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #050507;
-    font-family: Georgia, serif;
 }
 
-#game {
+body {
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            #21141b 0%,
+            #0d090d 45%,
+            #020204 100%
+        );
+
+    color: #d9c18e;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* DARK FOG */
+
+body::before {
+    content: "";
     position: fixed;
     inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            transparent 0%,
+            rgba(0,0,0,.25) 50%,
+            rgba(0,0,0,.8) 100%
+        );
+
+    pointer-events: none;
 }
 
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
+/* MAIN */
 
 #menu {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
+    position: relative;
+
+    width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+
     align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+/* TITLE */
+
+.title {
+    font-size: clamp(50px, 9vw, 105px);
+
+    line-height: 0.9;
+
+    letter-spacing: 9px;
+
+    margin: 0;
+
+    color: #e5cc99;
+
+    text-shadow:
+        0 0 8px rgba(255,210,160,.35),
+        0 0 25px rgba(130,40,55,.7),
+        0 0 60px rgba(100,20,40,.35);
+
+    animation: titleGlow 4s infinite alternate;
+}
+
+@keyframes titleGlow {
+
+    from {
+        text-shadow:
+            0 0 8px rgba(255,210,160,.3),
+            0 0 20px rgba(130,40,55,.5);
+    }
+
+    to {
+        text-shadow:
+            0 0 12px rgba(255,220,170,.5),
+            0 0 35px rgba(150,45,65,.8);
+    }
+
+}
+
+/* SUBTITLE */
+
+.subtitle {
+
+    margin-top: 28px;
+
+    color: #8e8176;
+
+    font-size: 14px;
+
+    letter-spacing: 7px;
+}
+
+/* BUTTONS */
+
+.buttons {
+
+    margin-top: 55px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    width: 300px;
+}
+
+.gameButton {
+
+    height: 57px;
+
+    border: 1px solid #705c49;
+
+    background: rgba(15,10,14,.7);
+
+    color: #d8bd8a;
+
+    font-family: Georgia, serif;
+
+    font-size: 15px;
+
+    letter-spacing: 4px;
+
+    cursor: pointer;
+
+    transition:
+        .3s ease;
+}
+
+.gameButton:hover {
+
+    background: rgba(70,30,40,.45);
+
+    border-color: #b18b61;
+
+    color: #f0d7a4;
+
+    box-shadow:
+        0 0 20px rgba(130,40,55,.4);
+
+    transform:
+        scale(1.03);
+}
+
+/* FOOTER */
+
+.footer {
+
+    position: absolute;
+
+    bottom: 50px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: #51484a;
+
+    font-size: 12px;
+
+    line-height: 18px;
+
+    letter-spacing: 1px;
+
+    width: 90%;
+}
+
+/* GAME SCREEN */
+
+#gameScreen {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
 
     background:
         radial-gradient(
             circle at center,
-            #24151c,
-            #08070a 65%,
-            #020203
+            #21151b,
+            #08070a 70%
         );
 
-    color: #dfc693;
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
     text-align: center;
 }
 
-h1 {
-    margin: 0;
+#gameScreen h2 {
 
-    font-size: clamp(45px, 9vw, 100px);
-    letter-spacing: 8px;
+    color: #d9c18e;
 
-    text-shadow:
-        0 0 15px #8c3546,
-        0 0 40px #5b1828;
+    font-size: 45px;
+
+    letter-spacing: 6px;
+
 }
 
-p {
-    letter-spacing: 5px;
-    color: #988b7b;
+#gameScreen p {
+
+    color: #81756e;
+
+    letter-spacing: 2px;
+
 }
 
-button {
-    margin-top: 35px;
+/* LORE */
 
-    width: 260px;
-    height: 60px;
+#loreScreen {
 
-    background: #110c11;
-    border: 1px solid #a68a60;
-
-    color: #dfc693;
-
-    font-family: Georgia, serif;
-    font-size: 16px;
-    letter-spacing: 3px;
-
-    cursor: pointer;
-}
-
-button:hover {
-    background: #291720;
-}
-
-#ui {
     display: none;
 
     position: fixed;
-    top: 20px;
-    left: 20px;
 
-    z-index: 5;
-
-    color: white;
-    font-family: Arial, sans-serif;
-}
-
-#bar {
-    width: 220px;
-    height: 18px;
-
-    margin-top: 6px;
-
-    border: 1px solid #9c8058;
-    background: #180b10;
-}
-
-#hp {
-    width: 100%;
-    height: 100%;
-    background: #a52f43;
-}
-
-#info {
-    margin-top: 8px;
-    color: #d8c18e;
-}
-
-#gameover {
-    display: none;
-
-    position: fixed;
     inset: 0;
 
-    z-index: 20;
+    background:
+        radial-gradient(
+            circle,
+            #24151d,
+            #050507 75%
+        );
+
+    align-items: center;
 
     justify-content: center;
-    align-items: center;
+
     flex-direction: column;
 
-    background: rgba(0,0,0,.9);
+    text-align: center;
 
-    color: #c94a58;
+    padding: 30px;
+
 }
 
-#gameover h2 {
-    font-size: 60px;
+#loreScreen h2 {
+
+    color: #d9c18e;
+
+    font-size: 45px;
+
     letter-spacing: 6px;
+
 }
+
+.loreText {
+
+    max-width: 700px;
+
+    color: #9b8c80;
+
+    line-height: 1.8;
+
+    font-size: 16px;
+
+}
+
+.back {
+
+    margin-top: 35px;
+
+    padding: 14px 35px;
+
+    background: transparent;
+
+    color: #d9c18e;
+
+    border: 1px solid #705c49;
+
+    cursor: pointer;
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="game">
-    <canvas id="canvas"></canvas>
-</div>
+<!-- =========================
+     MAIN MENU
+========================= -->
 
 <div id="menu">
 
-    <h1>
+    <h1 class="title">
         THE<br>
-        FORGOTTEN GOD
+        FORGOTTEN<br>
+        GOD
     </h1>
 
+    <div class="subtitle">
+        HE REMEMBERS YOU
+    </div>
+
+    <div class="buttons">
+
+        <button
+            class="gameButton"
+            onclick="enterWorld()">
+
+            ENTER THE WORLD
+
+        </button>
+
+        <button
+            class="gameButton"
+            onclick="showLore()">
+
+            THE LORE
+
+        </button>
+
+    </div>
+
+    <div class="footer">
+
+        THE GODS FORGOT THE WORLD.<br>
+        THE WORLD DID NOT FORGET THEM.
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME SCREEN
+========================= -->
+
+<div id="gameScreen">
+
+    <h2>
+        THE LOST KINGDOM
+    </h2>
+
     <p>
-        THE DARKNESS REMEMBERS
+        THE WORLD IS WAITING FOR YOU...
     </p>
 
-    <button id="start">
-        ENTER THE WORLD
+    <button
+        class="back"
+        onclick="backToMenu()">
+
+        RETURN TO MENU
+
     </button>
 
 </div>
 
-<div id="ui">
 
-    LIFE
+<!-- =========================
+     LORE SCREEN
+========================= -->
 
-    <div id="bar">
-        <div id="hp"></div>
+<div id="loreScreen">
+
+    <h2>
+        THE LORE
+    </h2>
+
+    <div class="loreText">
+
+        Long ago, the gods ruled the world.<br><br>
+
+        Then humanity forgot their names.
+
+        Their temples fell.
+
+        Their kingdoms disappeared.
+
+        Their stories became myths.<br><br>
+
+        But one god was never forgotten.
+
+        He was only waiting.
+
+        And now...
+
+        he remembers you.
+
     </div>
 
-    <div id="info">
-        SOULS: <span id="score">0</span>
-    </div>
+    <button
+        class="back"
+        onclick="backToMenu()">
 
-    <div style="margin-top:10px;">
-        WASD: MOVE<br>
-        SPACE: ATTACK
-    </div>
+        RETURN TO MENU
 
-</div>
-
-<div id="gameover">
-
-    <h2>YOU DIED</h2>
-
-    <button id="again">
-        TRY AGAIN
     </button>
 
 </div>
@@ -204,561 +425,52 @@ button:hover {
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+/* ENTER WORLD */
 
-let W = 0;
-let H = 0;
+function enterWorld() {
 
-function resize() {
+    document.getElementById("menu").style.display =
+        "none";
 
-    W = window.innerWidth;
-    H = window.innerHeight;
+    document.getElementById("loreScreen").style.display =
+        "none";
 
-    canvas.width = W;
-    canvas.height = H;
-}
+    document.getElementById("gameScreen").style.display =
+        "flex";
 
-resize();
-
-window.addEventListener("resize", resize);
-
-
-/* =========================
-   GAME
-========================= */
-
-let playing = false;
-
-let score = 0;
-
-const keys = {};
-
-const player = {
-    x: 0,
-    y: 0,
-    speed: 4,
-    hp: 100,
-    maxHp: 100,
-    attack: 0
-};
-
-let enemies = [];
-
-
-/* =========================
-   KEYBOARD
-========================= */
-
-window.addEventListener("keydown", function(e) {
-
-    keys[e.key.toLowerCase()] = true;
-
-    if (e.code === "Space") {
-
-        e.preventDefault();
-
-        attack();
-    }
-});
-
-window.addEventListener("keyup", function(e) {
-
-    keys[e.key.toLowerCase()] = false;
-});
-
-
-/* =========================
-   START
-========================= */
-
-document.getElementById("start").onclick = function() {
-
-    startGame();
-
-};
-
-
-/* =========================
-   START GAME
-========================= */
-
-function startGame() {
-
-    document.getElementById("menu").style.display = "none";
-
-    document.getElementById("gameover").style.display = "none";
-
-    document.getElementById("ui").style.display = "block";
-
-    playing = true;
-
-    score = 0;
-
-    player.x = W / 2;
-    player.y = H / 2;
-
-    player.hp = 100;
-
-    enemies = [];
-
-    for (let i = 0; i < 6; i++) {
-
-        createEnemy();
-    }
-
-    requestAnimationFrame(loop);
 }
 
 
-/* =========================
-   CREATE ENEMY
-========================= */
+/* SHOW LORE */
 
-function createEnemy() {
+function showLore() {
 
-    let x;
-    let y;
+    document.getElementById("menu").style.display =
+        "none";
 
-    do {
+    document.getElementById("gameScreen").style.display =
+        "none";
 
-        x = 80 + Math.random() * (W - 160);
-        y = 80 + Math.random() * (H - 160);
+    document.getElementById("loreScreen").style.display =
+        "flex";
 
-    } while (
-        Math.abs(x - player.x) < 180 &&
-        Math.abs(y - player.y) < 180
-    );
-
-    enemies.push({
-
-        x: x,
-        y: y,
-
-        size: 20,
-
-        speed: 1,
-
-        hp: 2
-
-    });
 }
 
 
-/* =========================
-   MOVE PLAYER
-========================= */
+/* BACK */
 
-function movePlayer() {
+function backToMenu() {
 
-    let dx = 0;
-    let dy = 0;
+    document.getElementById("gameScreen").style.display =
+        "none";
 
-    if (keys["w"]) dy -= 1;
-    if (keys["s"]) dy += 1;
-    if (keys["a"]) dx -= 1;
-    if (keys["d"]) dx += 1;
+    document.getElementById("loreScreen").style.display =
+        "none";
 
-    if (dx !== 0 || dy !== 0) {
+    document.getElementById("menu").style.display =
+        "flex";
 
-        const length =
-            Math.sqrt(dx * dx + dy * dy);
-
-        dx /= length;
-        dy /= length;
-
-        player.x += dx * player.speed;
-        player.y += dy * player.speed;
-    }
-
-    player.x = Math.max(
-        30,
-        Math.min(W - 30, player.x)
-    );
-
-    player.y = Math.max(
-        30,
-        Math.min(H - 30, player.y)
-    );
 }
-
-
-/* =========================
-   ATTACK
-========================= */
-
-function attack() {
-
-    if (!playing) return;
-
-    if (player.attack > 0) return;
-
-    player.attack = 15;
-
-    for (let i = enemies.length - 1; i >= 0; i--) {
-
-        const e = enemies[i];
-
-        const dx = e.x - player.x;
-        const dy = e.y - player.y;
-
-        const distance =
-            Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 80) {
-
-            e.hp--;
-
-            if (e.hp <= 0) {
-
-                enemies.splice(i, 1);
-
-                score++;
-
-                createEnemy();
-            }
-        }
-    }
-}
-
-
-/* =========================
-   ENEMIES
-========================= */
-
-function updateEnemies() {
-
-    for (const e of enemies) {
-
-        const dx = player.x - e.x;
-        const dy = player.y - e.y;
-
-        const distance =
-            Math.sqrt(dx * dx + dy * dy);
-
-        if (distance > 38) {
-
-            e.x +=
-                dx / distance *
-                e.speed;
-
-            e.y +=
-                dy / distance *
-                e.speed;
-
-        } else {
-
-            player.hp -= 0.2;
-        }
-    }
-}
-
-
-/* =========================
-   DRAW
-========================= */
-
-function draw() {
-
-    /* BACKGROUND */
-
-    ctx.fillStyle = "#08080d";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* MOON */
-
-    const gradient =
-        ctx.createRadialGradient(
-            W - 150,
-            130,
-            10,
-            W - 150,
-            130,
-            180
-        );
-
-    gradient.addColorStop(
-        0,
-        "rgba(255,230,180,.35)"
-    );
-
-    gradient.addColorStop(
-        1,
-        "rgba(255,230,180,0)"
-    );
-
-    ctx.fillStyle = gradient;
-
-    ctx.beginPath();
-
-    ctx.arc(
-        W - 150,
-        130,
-        180,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* MOON */
-
-    ctx.fillStyle = "#e6d9bb";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        W - 150,
-        130,
-        48,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* GROUND */
-
-    ctx.fillStyle = "#111117";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* GRID */
-
-    ctx.strokeStyle =
-        "rgba(120,100,100,.12)";
-
-    for (
-        let x = 0;
-        x < W;
-        x += 80
-    ) {
-
-        ctx.beginPath();
-
-        ctx.moveTo(x, 0);
-
-        ctx.lineTo(x, H);
-
-        ctx.stroke();
-    }
-
-    for (
-        let y = 0;
-        y < H;
-        y += 80
-    ) {
-
-        ctx.beginPath();
-
-        ctx.moveTo(0, y);
-
-        ctx.lineTo(W, y);
-
-        ctx.stroke();
-    }
-
-
-    /* ENEMIES */
-
-    for (const e of enemies) {
-
-        ctx.fillStyle = "#591827";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            e.x,
-            e.y,
-            e.size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-
-        /* EYES */
-
-        ctx.fillStyle = "#ff5360";
-
-        ctx.fillRect(
-            e.x - 8,
-            e.y - 4,
-            5,
-            5
-        );
-
-        ctx.fillRect(
-            e.x + 3,
-            e.y - 4,
-            5,
-            5
-        );
-    }
-
-
-    /* PLAYER */
-
-    ctx.fillStyle = "#321723";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        player.x,
-        player.y,
-        24,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* HEAD */
-
-    ctx.fillStyle = "#c7aa88";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        player.x,
-        player.y - 27,
-        9,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* SWORD */
-
-    ctx.strokeStyle = "#e3d4ad";
-
-    ctx.lineWidth = 5;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        player.x + 10,
-        player.y - 5
-    );
-
-    ctx.lineTo(
-        player.x + 42,
-        player.y - 38
-    );
-
-    ctx.stroke();
-
-
-    /* ATTACK */
-
-    if (player.attack > 0) {
-
-        ctx.strokeStyle =
-            "rgba(235,200,140,.8)";
-
-        ctx.lineWidth = 4;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            player.x,
-            player.y,
-            75,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-    }
-}
-
-
-/* =========================
-   UI
-========================= */
-
-function updateUI() {
-
-    const hp =
-        Math.max(
-            0,
-            player.hp
-        );
-
-    document.getElementById("hp")
-        .style.width =
-        hp + "%";
-
-    document.getElementById("score")
-        .textContent =
-        score;
-}
-
-
-/* =========================
-   LOOP
-========================= */
-
-function loop() {
-
-    if (!playing) return;
-
-    movePlayer();
-
-    updateEnemies();
-
-    if (player.attack > 0) {
-        player.attack--;
-    }
-
-    updateUI();
-
-    draw();
-
-
-    if (player.hp <= 0) {
-
-        playing = false;
-
-        document.getElementById("gameover")
-            .style.display = "flex";
-
-        return;
-    }
-
-    requestAnimationFrame(loop);
-}
-
-
-/* =========================
-   RESTART
-========================= */
-
-document.getElementById("again").onclick =
-function() {
-
-    startGame();
-
-};
 
 </script>
 
