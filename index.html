@@ -1,330 +1,1891 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Forgotten God - Trò Chơi Nhập Vai</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Forgotten God</title>
 
-    <!-- Google Fonts cho style Dark Fantasy -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
-        :root {
-            --bg-color: #0b0c10;
-            --card-bg: rgba(26, 26, 36, 0.85);
-            --border-color: #3a2e56;
-            --primary-glow: #9d4edd;
-            --gold-glow: #ffb703;
-            --text-color: #e0e1dd;
-            --danger-color: #e63946;
-        }
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050509;
+    font-family: Georgia, serif;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+canvas {
+    display: block;
+}
 
-        body {
-            background: radial-gradient(circle at center, #1a102f 0%, #08070c 100%);
-            color: var(--text-color);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+/* ================= MENU ================= */
 
-        .game-container {
-            width: 100%;
-            max-width: 750px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 0 35px rgba(157, 78, 221, 0.15),
-                        inset 0 0 15px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            position: relative;
-        }
+#menu {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-        }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-        .title {
-            font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #fff;
-            text-shadow: 0 0 12px var(--primary-glow);
-            text-transform: uppercase;
-        }
+    background:
+        radial-gradient(
+            circle,
+            #321827 0%,
+            #120b13 45%,
+            #030305 100%
+        );
 
-        .subtitle {
-            font-size: 0.95rem;
-            color: #a0a0ba;
-            margin-top: 5px;
-            font-style: italic;
-        }
+    color: #d8bd88;
+    text-align: center;
+}
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(10, 10, 15, 0.6);
-            padding: 10px 18px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+#menu h1 {
+    margin: 0;
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    font-size: clamp(48px, 9vw, 100px);
+    line-height: .85;
+    letter-spacing: 8px;
 
-        .stat-val {
-            color: var(--gold-glow);
-            font-weight: bold;
-        }
+    text-shadow:
+        0 0 15px #9b4659,
+        0 0 40px #401421;
+}
 
-        .story-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 3px solid var(--primary-glow);
-            padding: 20px;
-            border-radius: 0 8px 8px 0;
-            min-height: 180px;
-            margin-bottom: 25px;
-            line-height: 1.7;
-            font-size: 1.05rem;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+#menu p {
+    margin: 30px 0;
+    color: #8e817d;
+    letter-spacing: 5px;
+}
 
-        .choices-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+.menuButton {
+    width: 280px;
+    height: 55px;
+    margin: 8px;
 
-        .choice-btn {
-            background: linear-gradient(135deg, #241938 0%, #151022 100%);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 14px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    border: 1px solid #80694e;
+    background: rgba(10, 7, 11, .85);
 
-        .choice-btn:hover {
-            border-color: var(--primary-glow);
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, #32224e 0%, #1d1530 100%);
-        }
+    color: #d9bd87;
 
-        .choice-btn:active {
-            transform: translateY(0);
-        }
+    font-family: Georgia, serif;
+    letter-spacing: 3px;
 
-        .footer {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #6c6c8a;
-        }
+    cursor: pointer;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.menuButton:hover {
+    background: #351924;
+    box-shadow: 0 0 25px #69283a;
+}
 
-        @media (max-width: 600px) {
-            .title { font-size: 1.6rem; }
-            .game-container { padding: 20px; }
-            .stats-bar { flex-direction: column; gap: 8px; }
-        }
-    </style>
+/* ================= UI ================= */
+
+#ui {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+#location {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: #d8bd88;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 5px black;
+}
+
+#status {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    color: #d0c0a8;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+#hpBox {
+    width: 220px;
+    height: 15px;
+
+    margin-top: 8px;
+
+    border: 1px solid #795c4b;
+    background: #18080c;
+}
+
+#hp {
+    width: 100%;
+    height: 100%;
+    background: #a72d43;
+}
+
+#controls {
+    position: absolute;
+    bottom: 18px;
+    left: 20px;
+
+    color: #837977;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+}
+
+/* ================= DIALOGUE ================= */
+
+#dialogue {
+    display: none;
+
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: min(750px, 90%);
+    min-height: 125px;
+
+    padding: 20px;
+
+    background: rgba(7, 5, 9, .96);
+    border: 1px solid #80694e;
+
+    box-shadow: 0 0 30px black;
+
+    color: #cfc0aa;
+}
+
+#speaker {
+    margin-bottom: 10px;
+
+    color: #d8b36d;
+    letter-spacing: 3px;
+}
+
+#dialogueText {
+    line-height: 1.6;
+}
+
+#dialogueHint {
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+
+    color: #70666a;
+    font-size: 10px;
+}
+
+/* ================= LORE ================= */
+
+#lore {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+
+    justify-content: center;
+    align-items: center;
+
+    background: #050407;
+}
+
+#loreBox {
+    width: min(700px, 90%);
+    padding: 40px;
+
+    background: #0e090f;
+    border: 1px solid #80694e;
+
+    color: #bcae9c;
+    text-align: center;
+}
+
+#loreBox h2 {
+    color: #d9bd87;
+    letter-spacing: 5px;
+}
+
+#loreBox p {
+    line-height: 1.8;
+}
+</style>
 </head>
+
 <body>
 
-<div class="game-container">
-    <div class="header">
-        <h1 class="title">The Forgotten God</h1>
-        <p class="subtitle">Vị Thần Bị Lãng Quên</p>
-    </div>
+<!-- ================= MENU ================= -->
 
-    <div class="stats-bar">
-        <div class="stat-item">🧙‍♂️ Vai trò: <span class="stat-val">Phù thủy lang thang</span></div>
-        <div class="stat-item">📍 Vị trí: <span id="location-text" class="stat-val">Bên ngoài Vương Quốc</span></div>
-        <div class="stat-item">✨ Linh hồn (Souls): <span id="souls-count" class="stat-val">0</span></div>
-    </div>
+<div id="menu">
 
-    <div id="story-box" class="story-box">
-        <!-- Nội dung cốt truyện sẽ hiển thị ở đây -->
-    </div>
+    <h1>
+        THE<br>
+        FORGOTTEN<br>
+        GOD
+    </h1>
 
-    <div id="choices-container" class="choices-container">
-        <!-- Các lựa chọn sẽ hiển thị ở đây -->
-    </div>
+    <p>HE REMEMBERS YOU</p>
 
-    <div class="footer">
-        Cốt truyện & Mã nguồn tối ưu cho GitHub Pages • 2026
-    </div>
+    <button class="menuButton" id="start">
+        ENTER THE WORLD
+    </button>
+
+    <button class="menuButton" id="showLore">
+        THE LORE
+    </button>
+
 </div>
 
+
+<!-- ================= CANVAS ================= -->
+
+<canvas id="game"></canvas>
+
+
+<!-- ================= GAME UI ================= -->
+
+<div id="ui">
+
+    <div id="location">
+        THE LOST KINGDOM
+    </div>
+
+    <div id="status">
+
+        WANDERER
+
+        <div id="hpBox">
+            <div id="hp"></div>
+        </div>
+
+        <div style="margin-top:8px;">
+            SOULS:
+            <span id="souls">0</span>
+        </div>
+
+    </div>
+
+    <div id="controls">
+        W A S D — DI CHUYỂN
+        &nbsp;&nbsp;
+        SPACE — TẤN CÔNG
+        &nbsp;&nbsp;
+        E — NÓI CHUYỆN
+    </div>
+
+    <div id="dialogue">
+
+        <div id="speaker"></div>
+
+        <div id="dialogueText"></div>
+
+        <div id="dialogueHint">
+            NHẤN E ĐỂ TIẾP TỤC
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= LORE ================= -->
+
+<div id="lore">
+
+    <div id="loreBox">
+
+        <h2>THE LORE</h2>
+
+        <p>
+            Hàng trăm năm trước, một vương quốc hùng mạnh
+            từng được bảo vệ bởi các vị thần.
+        </p>
+
+        <p>
+            Nhưng con người dần quên tên của họ.
+            Vương quốc sụp đổ và bóng tối tràn vào.
+        </p>
+
+        <p>
+            Chỉ còn một vị thần vẫn tồn tại.
+        </p>
+
+        <p>
+            Người ta gọi hắn là
+            <b>Forgotten God.</b>
+        </p>
+
+        <p>
+            Một đêm nọ, một phù thủy tỉnh dậy
+            bên ngoài vương quốc mà không nhớ mình là ai.
+        </p>
+
+        <p>
+            Và một NPC bí ẩn đang chờ anh ta trong khu rừng.
+        </p>
+
+        <button class="menuButton" id="closeLore">
+            QUAY LẠI
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
-    // Trạng thái người chơi
-    let gameState = {
-        souls: 0,
-        metElf: false,
-        hasAncientRelic: false
-    };
 
-    // Dữ liệu các chương cốt truyện
-    const storyNodes = {
-        start: {
-            location: "Bên ngoài tàn tích Vương Quốc",
-            text: "Hàng trăm năm trước, một vương quốc hùng mạnh từng được bảo hộ bởi các vị thần. Nhưng sau cuộc chiến bí ẩn, vương quốc sụp đổ, lâu đài bị bỏ hoang, khu rừng trở thành nơi hoành hành của quái vật.<br><br>Bạn tỉnh dậy giữa sương mù lạnh lẽo. Bạn không nhớ mình là ai, từ đâu đến, chỉ biết trên tay đang cầm một cây gậy phép tràn đầy ma thuật cổ xưa 🧙‍♂️.",
-            choices: [
-                { text: "Tiến vào Rừng Chết 🌲", target: "dead_forest" },
-                { text: "Khám phá ngôi làng hoang gần đó 🏚️", target: "abandoned_village" }
-            ]
-        },
-        dead_forest: {
-            location: "Rừng Chết 🌲",
-            text: "Những cái cây đen quánh như xương người vươn lên bầu trời u uất. Đột nhiên, từ bóng tối xuất hiện 🧝 một NPC bí ẩn với đôi tai nhọn và ánh mắt u buồn.<br><br><i>'Ngươi đã tỉnh rồi sao, Phù Thủy?'</i> - Người đó thì thầm. <i>'Một vị thần vẫn còn tồn tại. Hắn là **Forgotten God** – vị thần bị cả thế giới lãng quên. Để đến được Lâu Đài 🏰, ngươi phải thu thập đủ linh hồn để mở cánh cổng phép thuật.'</i>",
-            onEnter: () => { gameState.metElf = true; },
-            choices: [
-                { text: "Chiến đấu với Quái Vật Rừng 👹 (+10 Linh Hồn)", target: "fight_monster" },
-                { text: "Đi thẳng tới Nghĩa Địa 🪦", target: "graveyard" }
-            ]
-        },
-        abandoned_village: {
-            location: "Ngôi Làng Hoang 🏚️",
-            text: "Ngôi làng tràn ngập tàn tích mục nát. Những linh hồn 💀 lang thang vất vưởng trong gió lạnh. Khi thấy bạn, họ không tấn công mà thì thầm một giai điệu quen thuộc... giai điệu mà dường như chính bạn đã từng viết ra.",
-            choices: [
-                { text: "Cầu nguyện và thanh tẩy Linh Hồn 💀 (+15 Linh Hồn)", target: "cleanse_souls" },
-                { text: "Rời làng tiến vào Rừng Chết 🌲", target: "dead_forest" }
-            ]
-        },
-        fight_monster: {
-            location: "Đầm Lầy Rừng Chết 👹",
-            text: "Một sinh vật quái dị gầm lên và lao ra! Bạn giơ gậy phép, tung ra những tia sáng ma thuật rực rỡ tiêu diệt nó. Sinh vật tan biến, để lại những luồng sáng linh hồn lấp lánh.",
-            onEnter: () => { gameState.souls += 10; },
-            choices: [
-                { text: "Tiến về phía Nghĩa Địa Cổ 🪦", target: "graveyard" }
-            ]
-        },
-        cleanse_souls: {
-            location: "Ngôi Làng Hoang 🏚️",
-            text: "Ánh sáng phép thuật từ tay bạn xua tan nỗi đau của các linh hồn. Trước khi biến mất, một linh hồn trao cho bạn một **Cổ Vật Ký Ức**.",
-            onEnter: () => { 
-                gameState.souls += 15; 
-                gameState.hasAncientRelic = true;
-            },
-            choices: [
-                { text: "Đi về phía Rừng Chết 🌲", target: "dead_forest" }
-            ]
-        },
-        graveyard: {
-            location: "Nghĩa Địa Cổ 🪦",
-            text: "Nghĩa địa chìm trong màn sương máu. Sức mạnh ma thuật ở đây vô cùng đậm đặc. Xa xa, đỉnh ngọn tháp Lâu Đài 🏰 rực cháy phép thuật đen đã xuất hiện ngay trước mắt.",
-            choices: [
-                { 
-                    text: "Dùng linh hồn mở Cổng Lâu Đài 🏰 (Cần ≥10 Linh Hồn)", 
-                    target: "castle_gate",
-                    condition: () => gameState.souls >= 10
-                },
-                { 
-                    text: "Săn thêm linh hồn ở Rừng Chết 🌲", 
-                    target: "fight_monster" 
-                }
-            ]
-        },
-        castle_gate: {
-            location: "Cổng Lâu Đài Hoang 🏰",
-            text: "Cánh cổng đá khổng lồ tự động mở ra. Luồng gió cổ xưa thổi qua áo khoác phù thủy của bạn. Bạn bước vào ngai vàng, nơi một bóng hình khổng lồ chìm trong xích sắt đen đang chờ đợi...<br><br>Đó là **Forgotten God**.",
-            choices: [
-                { text: "Đối mặt với Forgotten God...", target: "final_revelation" }
-            ]
-        },
-        final_revelation: {
-            location: "Phòng Ngai Vàng 👑",
-            text: `Vị thần từ từ mở mắt. Hắn không hề tức giận. Hắn nhìn bạn và mỉm cười xót xa:<br><br>
-            <i>"Ngươi đã quay lại rồi sao... <b>[Phù Thủy]</b>?"</i><br><br>
-            Hắn gọi chính xác **TÊN THẬT** của bạn – tên mà chính bạn cũng đã quên! Ký ức trong bạn vỡ òa:<br><br>
-            Trận chiến năm xưa... không phải quái vật hay thảm họa phá hủy vương quốc. Chính **BẠN** là người đã thi triển đại phép thuật cấm đoán để xóa sạch tên tuổi của hắn khỏi tâm trí nhân loại nhằm phong ấn sức mạnh diệt thế của hắn.<br><br>
-            <b>Bạn không phải là người giải cứu. Bạn chính là người đã khiến cả thế giới quên đi vị thần này.</b>`,
-            choices: [
-                { text: "🔄 Chơi lại từ đầu", target: "restart" }
-            ]
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let W = window.innerWidth;
+let H = window.innerHeight;
+
+
+function resize() {
+
+    W = window.innerWidth;
+    H = window.innerHeight;
+
+    canvas.width = W;
+    canvas.height = H;
+
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+
+
+/* =========================================================
+   WORLD
+========================================================= */
+
+const WORLD_W = 3600;
+const WORLD_H = 2800;
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+const camera = {
+
+    x: 0,
+    y: 0
+
+};
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x: 1800,
+    y: 1850,
+
+    speed: 4,
+
+    hp: 100,
+    maxHp: 100,
+
+    attack: 0,
+
+    emoji: "🧙‍♂️"
+
+};
+
+
+/* =========================================================
+   NPC
+========================================================= */
+
+const npc = {
+
+    x: 1900,
+    y: 1800,
+
+    emoji: "🧝"
+
+};
+
+
+/* =========================================================
+   OBJECT LISTS
+========================================================= */
+
+let trees = [];
+let graves = [];
+let rocks = [];
+let houses = [];
+let enemies = [];
+
+
+/* =========================================================
+   GAME
+========================================================= */
+
+let running = false;
+let souls = 0;
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+const keys = {};
+
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        keys[
+            e.key.toLowerCase()
+        ] = true;
+
+
+        if(e.code === "Space") {
+
+            e.preventDefault();
+
+            attack();
+
         }
-    };
 
-    function updatePage(nodeKey) {
-        if (nodeKey === 'restart') {
-            gameState = { souls: 0, metElf: false, hasAncientRelic: false };
-            nodeKey = 'start';
+
+        if(e.key.toLowerCase() === "e") {
+
+            interact();
+
         }
 
-        const node = storyNodes[nodeKey];
-        
-        // Chạy hàm bổ trợ nếu có
-        if (node.onEnter) {
-            node.onEnter();
-        }
+    }
+);
 
-        // Cập nhật giao diện
-        document.getElementById('location-text').innerText = node.location;
-        document.getElementById('souls-count').innerText = gameState.souls;
-        
-        // Cập nhật văn bản câu chuyện
-        const storyBox = document.getElementById('story-box');
-        storyBox.innerHTML = node.text;
-        
-        // Reset animation
-        storyBox.style.animation = 'none';
-        storyBox.offsetHeight; /* trigger reflow */
-        storyBox.style.animation = 'fadeIn 0.5s ease-in-out';
 
-        // Cập nhật các lựa chọn
-        const choicesContainer = document.getElementById('choices-container');
-        choicesContainer.innerHTML = '';
+document.addEventListener(
+    "keyup",
+    function(e) {
 
-        node.choices.forEach(choice => {
-            // Kiểm tra điều kiện mở nút (nếu có)
-            if (choice.condition && !choice.condition()) {
-                return;
-            }
+        keys[
+            e.key.toLowerCase()
+        ] = false;
 
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerHTML = `<span>${choice.text}</span> <span>➔</span>`;
-            btn.onclick = () => updatePage(choice.target);
-            choicesContainer.appendChild(btn);
+    }
+);
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+document
+.getElementById("start")
+.addEventListener(
+    "click",
+    function() {
+
+        document
+        .getElementById("menu")
+        .style.display = "none";
+
+        document
+        .getElementById("ui")
+        .style.display = "block";
+
+        running = true;
+
+        createWorld();
+
+        gameLoop();
+
+        setTimeout(
+            startDialogue,
+            800
+        );
+
+    }
+);
+
+
+/* =========================================================
+   LORE
+========================================================= */
+
+document
+.getElementById("showLore")
+.addEventListener(
+    "click",
+    function() {
+
+        document
+        .getElementById("menu")
+        .style.display = "none";
+
+        document
+        .getElementById("lore")
+        .style.display = "flex";
+
+    }
+);
+
+
+document
+.getElementById("closeLore")
+.addEventListener(
+    "click",
+    function() {
+
+        document
+        .getElementById("lore")
+        .style.display = "none";
+
+        document
+        .getElementById("menu")
+        .style.display = "flex";
+
+    }
+);
+
+
+/* =========================================================
+   CREATE WORLD
+========================================================= */
+
+function createWorld() {
+
+    trees = [];
+    graves = [];
+    rocks = [];
+    houses = [];
+    enemies = [];
+
+
+    /* TREES */
+
+    for(let i = 0; i < 180; i++) {
+
+        trees.push({
+
+            x: Math.random() * WORLD_W,
+            y: Math.random() * WORLD_H,
+
+            size:
+                25 +
+                Math.random() * 30
+
         });
+
     }
 
-    // Bắt đầu game khi tải trang
-    window.onload = () => {
-        updatePage('start');
-    };
+
+    /* ROCKS */
+
+    for(let i = 0; i < 100; i++) {
+
+        rocks.push({
+
+            x: Math.random() * WORLD_W,
+            y: Math.random() * WORLD_H,
+
+            size:
+                6 +
+                Math.random() * 14
+
+        });
+
+    }
+
+
+    /* GRAVES */
+
+    for(let i = 0; i < 50; i++) {
+
+        graves.push({
+
+            x:
+                650 +
+                Math.random() * 900,
+
+            y:
+                1100 +
+                Math.random() * 900
+
+        });
+
+    }
+
+
+    /* HOUSES */
+
+    for(let i = 0; i < 15; i++) {
+
+        houses.push({
+
+            x:
+                Math.random() *
+                WORLD_W,
+
+            y:
+                Math.random() *
+                WORLD_H
+
+        });
+
+    }
+
+
+    /* ENEMIES */
+
+    for(let i = 0; i < 20; i++) {
+
+        createEnemy();
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE ENEMY
+========================================================= */
+
+function createEnemy() {
+
+    let x;
+    let y;
+
+
+    do {
+
+        x =
+            Math.random() *
+            WORLD_W;
+
+        y =
+            Math.random() *
+            WORLD_H;
+
+    }
+    while(
+        distance(
+            x,
+            y,
+            player.x,
+            player.y
+        ) < 500
+    );
+
+
+    enemies.push({
+
+        x: x,
+        y: y,
+
+        speed:
+            .5 +
+            Math.random() * .7,
+
+        hp: 2,
+
+        emoji:
+            Math.random() > .5
+            ? "👹"
+            : "💀"
+
+    });
+
+}
+
+
+/* =========================================================
+   DISTANCE
+========================================================= */
+
+function distance(
+    x1,
+    y1,
+    x2,
+    y2
+) {
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE PLAYER
+========================================================= */
+
+function updatePlayer() {
+
+    if(dialogueOpen)
+        return;
+
+
+    let dx = 0;
+    let dy = 0;
+
+
+    if(keys["w"])
+        dy -= 1;
+
+    if(keys["s"])
+        dy += 1;
+
+    if(keys["a"])
+        dx -= 1;
+
+    if(keys["d"])
+        dx += 1;
+
+
+    if(dx !== 0 || dy !== 0) {
+
+        const length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        dx /= length;
+        dy /= length;
+
+
+        player.x +=
+            dx * player.speed;
+
+        player.y +=
+            dy * player.speed;
+
+    }
+
+
+    /* WORLD LIMIT */
+
+    player.x =
+        Math.max(
+            40,
+            Math.min(
+                WORLD_W - 40,
+                player.x
+            )
+        );
+
+
+    player.y =
+        Math.max(
+            40,
+            Math.min(
+                WORLD_H - 40,
+                player.y
+            )
+        );
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera() {
+
+    camera.x =
+        player.x -
+        W / 2;
+
+    camera.y =
+        player.y -
+        H / 2;
+
+
+    camera.x =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_W - W,
+                camera.x
+            )
+        );
+
+
+    camera.y =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_H - H,
+                camera.y
+            )
+        );
+
+}
+
+
+/* =========================================================
+   ENEMY AI
+========================================================= */
+
+function updateEnemies() {
+
+    if(dialogueOpen)
+        return;
+
+
+    for(const enemy of enemies) {
+
+        const d =
+            distance(
+                player.x,
+                player.y,
+                enemy.x,
+                enemy.y
+            );
+
+
+        if(
+            d < 600 &&
+            d > 45
+        ) {
+
+            const dx =
+                player.x -
+                enemy.x;
+
+            const dy =
+                player.y -
+                enemy.y;
+
+
+            enemy.x +=
+                dx / d *
+                enemy.speed;
+
+            enemy.y +=
+                dy / d *
+                enemy.speed;
+
+        }
+
+
+        if(d < 45) {
+
+            player.hp -= .1;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ATTACK
+========================================================= */
+
+function attack() {
+
+    if(!running)
+        return;
+
+    if(dialogueOpen)
+        return;
+
+    if(player.attack > 0)
+        return;
+
+
+    player.attack = 12;
+
+
+    for(
+        let i =
+            enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const enemy =
+            enemies[i];
+
+
+        if(
+            distance(
+                player.x,
+                player.y,
+                enemy.x,
+                enemy.y
+            ) < 100
+        ) {
+
+            enemy.hp--;
+
+
+            if(enemy.hp <= 0) {
+
+                enemies.splice(
+                    i,
+                    1
+                );
+
+                souls++;
+
+                createEnemy();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   DIALOGUE
+========================================================= */
+
+let dialogueOpen = false;
+let dialogueIndex = 0;
+
+
+const dialogues = [
+
+    [
+        "MYSTERIOUS NPC",
+        "Ngươi cuối cùng cũng tỉnh lại."
+    ],
+
+    [
+        "WANDERER",
+        "Đây là đâu?"
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Vương quốc đã bị xóa khỏi lịch sử."
+    ],
+
+    [
+        "WANDERER",
+        "Ai đã làm điều đó?"
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Một vị thần mà con người đã quên."
+    ],
+
+    [
+        "WANDERER",
+        "Forgotten God..."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Hắn đang ở trong lâu đài."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Nếu muốn biết mình là ai..."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Hãy đi tìm hắn."
+    ]
+
+];
+
+
+function startDialogue() {
+
+    dialogueOpen = true;
+
+    dialogueIndex = 0;
+
+    showDialogue();
+
+}
+
+
+function showDialogue() {
+
+    const d =
+        dialogues[
+            dialogueIndex
+        ];
+
+
+    document
+    .getElementById("dialogue")
+    .style.display = "block";
+
+
+    document
+    .getElementById("speaker")
+    .textContent = d[0];
+
+
+    document
+    .getElementById("dialogueText")
+    .textContent = d[1];
+
+}
+
+
+function nextDialogue() {
+
+    dialogueIndex++;
+
+
+    if(
+        dialogueIndex >=
+        dialogues.length
+    ) {
+
+        dialogueOpen = false;
+
+        document
+        .getElementById("dialogue")
+        .style.display = "none";
+
+        return;
+
+    }
+
+
+    showDialogue();
+
+}
+
+
+function interact() {
+
+    if(
+        distance(
+            player.x,
+            player.y,
+            npc.x,
+            npc.y
+        ) < 150
+    ) {
+
+        if(dialogueOpen) {
+
+            nextDialogue();
+
+        }
+        else {
+
+            startDialogue();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW BACKGROUND
+========================================================= */
+
+function drawBackground() {
+
+    ctx.fillStyle = "#111119";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* GROUND GRID */
+
+    ctx.strokeStyle =
+        "rgba(130,120,130,.05)";
+
+    const grid = 100;
+
+
+    for(
+        let x =
+            -camera.x % grid;
+        x < W;
+        x += grid
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            H
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    for(
+        let y =
+            -camera.y % grid;
+        y < H;
+        y += grid
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            W,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW FOREST
+========================================================= */
+
+function drawTrees() {
+
+    for(const tree of trees) {
+
+        const x =
+            tree.x -
+            camera.x;
+
+        const y =
+            tree.y -
+            camera.y;
+
+
+        if(
+            x < -100 ||
+            x > W + 100 ||
+            y < -100 ||
+            y > H + 100
+        )
+            continue;
+
+
+        ctx.strokeStyle =
+            "#211820";
+
+        ctx.lineWidth = 9;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            y + tree.size
+        );
+
+        ctx.lineTo(
+            x,
+            y - tree.size
+        );
+
+        ctx.stroke();
+
+
+        ctx.lineWidth = 5;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            y
+        );
+
+        ctx.lineTo(
+            x - tree.size,
+            y - tree.size * .7
+        );
+
+        ctx.moveTo(
+            x,
+            y - 10
+        );
+
+        ctx.lineTo(
+            x + tree.size,
+            y - tree.size * .8
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW ROCKS
+========================================================= */
+
+function drawRocks() {
+
+    for(const rock of rocks) {
+
+        const x =
+            rock.x -
+            camera.x;
+
+        const y =
+            rock.y -
+            camera.y;
+
+
+        ctx.fillStyle =
+            "#29272d";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            rock.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW GRAVES
+========================================================= */
+
+function drawGraves() {
+
+    for(const grave of graves) {
+
+        const x =
+            grave.x -
+            camera.x;
+
+        const y =
+            grave.y -
+            camera.y;
+
+
+        ctx.font =
+            "30px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.fillText(
+            "🪦",
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW HOUSES
+========================================================= */
+
+function drawHouses() {
+
+    for(const house of houses) {
+
+        const x =
+            house.x -
+            camera.x;
+
+        const y =
+            house.y -
+            camera.y;
+
+
+        ctx.fillStyle =
+            "#252027";
+
+
+        ctx.fillRect(
+            x,
+            y,
+            130,
+            90
+        );
+
+
+        ctx.fillStyle =
+            "#120c12";
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x - 15,
+            y
+        );
+
+        ctx.lineTo(
+            x + 65,
+            y - 50
+        );
+
+        ctx.lineTo(
+            x + 145,
+            y
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        ctx.fillStyle =
+            "#54342a";
+
+        ctx.fillRect(
+            x + 55,
+            y + 50,
+            20,
+            40
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW CASTLE
+========================================================= */
+
+function drawCastle() {
+
+    const x =
+        1600 -
+        camera.x;
+
+    const y =
+        300 -
+        camera.y;
+
+
+    /* WALL */
+
+    ctx.fillStyle =
+        "#28232b";
+
+
+    ctx.fillRect(
+        x,
+        y,
+        500,
+        320
+    );
+
+
+    /* TOWERS */
+
+    ctx.fillRect(
+        x - 80,
+        y - 100,
+        120,
+        420
+    );
+
+    ctx.fillRect(
+        x + 460,
+        y - 100,
+        120,
+        420
+    );
+
+
+    /* ROOFS */
+
+    ctx.fillStyle =
+        "#100b11";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x - 100,
+        y - 100
+    );
+
+    ctx.lineTo(
+        x - 20,
+        y - 175
+    );
+
+    ctx.lineTo(
+        x + 60,
+        y - 100
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 440,
+        y - 100
+    );
+
+    ctx.lineTo(
+        x + 520,
+        y - 175
+    );
+
+    ctx.lineTo(
+        x + 600,
+        y - 100
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* GATE */
+
+    ctx.fillStyle =
+        "#08060a";
+
+
+    ctx.fillRect(
+        x + 195,
+        y + 165,
+        110,
+        155
+    );
+
+
+    /* WINDOWS */
+
+    ctx.fillStyle =
+        "#aa7946";
+
+
+    for(let i = 0; i < 5; i++) {
+
+        ctx.fillRect(
+            x + 70 + i * 85,
+            y + 70,
+            20,
+            45
+        );
+
+    }
+
+
+    /* NAME */
+
+    ctx.font =
+        "bold 20px Georgia";
+
+    ctx.fillStyle =
+        "#d0ae70";
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillText(
+        "THE FORGOTTEN CASTLE",
+        x + 250,
+        y + 360
+    );
+
+}
+
+
+/* =========================================================
+   DRAW NPC
+========================================================= */
+
+function drawNPC() {
+
+    const x =
+        npc.x -
+        camera.x;
+
+    const y =
+        npc.y -
+        camera.y;
+
+
+    ctx.font =
+        "60px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+
+    ctx.fillText(
+        npc.emoji,
+        x,
+        y
+    );
+
+
+    ctx.font =
+        "13px Georgia";
+
+    ctx.fillStyle =
+        "#d0af73";
+
+
+    ctx.fillText(
+        "MYSTERIOUS NPC",
+        x,
+        y - 50
+    );
+
+}
+
+
+/* =========================================================
+   DRAW ENEMIES
+========================================================= */
+
+function drawEnemies() {
+
+    for(const enemy of enemies) {
+
+        const x =
+            enemy.x -
+            camera.x;
+
+        const y =
+            enemy.y -
+            camera.y;
+
+
+        if(
+            x < -80 ||
+            x > W + 80 ||
+            y < -80 ||
+            y > H + 80
+        )
+            continue;
+
+
+        ctx.font =
+            "48px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+
+        ctx.fillText(
+            enemy.emoji,
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW PLAYER
+========================================================= */
+
+function drawPlayer() {
+
+    const x =
+        player.x -
+        camera.x;
+
+    const y =
+        player.y -
+        camera.y;
+
+
+    /* SHADOW */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,.5)";
+
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y + 28,
+        30,
+        10,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* PLAYER */
+
+    ctx.font =
+        "65px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+
+    ctx.fillText(
+        player.emoji,
+        x,
+        y
+    );
+
+
+    /* ATTACK */
+
+    if(player.attack > 0) {
+
+        ctx.strokeStyle =
+            "#d7b978";
+
+        ctx.lineWidth = 4;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            75,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================================================
+   LIGHT EFFECT
+========================================================= */
+
+function drawDarkness() {
+
+    const gradient =
+        ctx.createRadialGradient(
+            W / 2,
+            H / 2,
+            100,
+            W / 2,
+            H / 2,
+            Math.max(W, H) * .75
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+    gradient.addColorStop(
+        .65,
+        "rgba(0,0,0,.15)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,.75)"
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updateUI() {
+
+    document
+    .getElementById("hp")
+    .style.width =
+        Math.max(
+            0,
+            player.hp
+        ) + "%";
+
+
+    document
+    .getElementById("souls")
+    .textContent =
+        souls;
+
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop() {
+
+    if(!running)
+        return;
+
+
+    updatePlayer();
+
+    updateEnemies();
+
+    updateCamera();
+
+
+    if(player.attack > 0) {
+
+        player.attack--;
+
+    }
+
+
+    if(player.hp <= 0) {
+
+        player.hp =
+            player.maxHp;
+
+        player.x =
+            1800;
+
+        player.y =
+            1850;
+
+    }
+
+
+    updateUI();
+
+
+    drawBackground();
+
+    drawTrees();
+
+    drawRocks();
+
+    drawHouses();
+
+    drawGraves();
+
+    drawCastle();
+
+    drawNPC();
+
+    drawEnemies();
+
+    drawPlayer();
+
+    drawDarkness();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
 </script>
 
 </body>
