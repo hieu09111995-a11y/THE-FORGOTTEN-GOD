@@ -3,6362 +3,1678 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no,
-               viewport-fit=cover">
+      content="width=device-width,initial-scale=1.0,user-scalable=no">
 
-<title>The Forgotten God V6</title>
+<title>WAKE UP — Dark Fantasy V7</title>
 
 <style>
-
 *{
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+    margin:0;
+    padding:0;
+    user-select:none;
+    -webkit-user-select:none;
 }
 
 html,body{
-    margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#030306;
-    font-family:Georgia,serif;
+    background:#050509;
+    font-family:Arial,sans-serif;
+}
+
+body{
     touch-action:none;
 }
 
 canvas{
     display:block;
-    width:100%;
-    height:100%;
+    width:100vw;
+    height:100vh;
+    background:#08070d;
 }
 
-/* =========================
-   SCREEN
-========================= */
+/* ================= UI ================= */
 
-.screen{
+#startScreen,
+#deathScreen,
+#endingScreen{
     position:fixed;
     inset:0;
-    z-index:1000;
-
+    z-index:100;
     display:flex;
-    flex-direction:column;
-    justify-content:center;
     align-items:center;
-
+    justify-content:center;
+    flex-direction:column;
     text-align:center;
-
-    color:#d8bd88;
-
     background:
-        radial-gradient(
-            circle at center,
-            #351625 0%,
-            #120a13 45%,
-            #020205 100%
-        );
+        radial-gradient(circle at center,#241b35 0%,#09080e 45%,#020205 100%);
+    color:white;
+}
 
-    padding:25px;
+#startScreen h1{
+    font-size:clamp(42px,9vw,100px);
+    letter-spacing:10px;
+    text-shadow:0 0 20px #9d7cff,0 0 50px #6b42ff;
+}
+
+#startScreen p{
+    margin:20px;
+    color:#bdb6cf;
+}
+
+button{
+    border:1px solid #9c7aff;
+    background:#171323;
+    color:white;
+    padding:14px 28px;
+    border-radius:10px;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 0 15px #573ca8;
+}
+
+button:active{
+    transform:scale(.95);
 }
 
 .hidden{
-    display:none !important;
+    display:none!important;
 }
 
-.title{
-    margin:0;
+/* ================= HUD ================= */
 
-    font-size:
-        clamp(45px,9vw,105px);
-
-    line-height:.82;
-
-    letter-spacing:8px;
-
-    text-shadow:
-        0 0 15px #9b4659,
-        0 0 45px #431522;
-}
-
-.subtitle{
-    margin:30px 0;
-
-    color:#8e817d;
-
-    letter-spacing:5px;
-}
-
-.button{
-    width:min(300px,90vw);
-
-    min-height:55px;
-
-    margin:8px;
-
-    border:
-        1px solid #80694e;
-
-    background:#0b080c;
-
-    color:#d9bd87;
-
-    font-family:Georgia,serif;
-
-    letter-spacing:3px;
-
-    cursor:pointer;
-
-    border-radius:5px;
-}
-
-.button:hover{
-    background:#351924;
-
-    box-shadow:
-        0 0 25px #69283a;
-}
-
-/* =========================
-   UI
-========================= */
-
-#ui{
-    display:none;
-
+#hud{
     position:fixed;
-    inset:0;
-
+    left:15px;
+    top:15px;
     z-index:20;
-
+    color:white;
     pointer-events:none;
-}
-
-#location{
-    position:absolute;
-
-    top:
-        max(15px,env(safe-area-inset-top));
-
-    left:50%;
-
-    transform:
-        translateX(-50%);
-
-    color:#d8bd88;
-
-    letter-spacing:4px;
-
-    font-size:14px;
-
-    text-shadow:
-        0 2px 8px black;
-
-    white-space:nowrap;
-}
-
-#level{
-    position:absolute;
-
-    right:20px;
-
-    top:
-        max(18px,env(safe-area-inset-top));
-
-    color:#bfa87a;
-
-    font-family:Arial,sans-serif;
-}
-
-#status{
-    position:absolute;
-
-    top:
-        max(18px,env(safe-area-inset-top));
-
-    left:20px;
-
-    width:250px;
-
-    color:#d0c0a8;
-
-    font-family:Arial,sans-serif;
-
-    font-size:13px;
 }
 
 .bar{
-    width:225px;
-
-    height:15px;
-
-    margin-top:7px;
-
-    border:
-        1px solid #795c4b;
-
-    background:#18080c;
+    width:240px;
+    height:22px;
+    background:#251d2b;
+    border:2px solid #aaa;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:7px;
 }
 
-.barFill{
+#hpFill{
     width:100%;
-
     height:100%;
-
-    transition:.12s;
+    background:linear-gradient(90deg,#d71945,#ff526e);
 }
 
-#hp{
-    background:#a72d43;
-}
-
-#mana{
-    background:#58459c;
-}
-
-/* =========================
-   BOSS
-========================= */
-
-#bossUI{
-    display:none;
-
-    position:absolute;
-
-    top:
-        max(18px,env(safe-area-inset-top));
-
+#bossHud{
+    position:fixed;
+    top:18px;
     left:50%;
-
-    transform:
-        translateX(-50%);
-
-    width:min(600px,65vw);
-
+    transform:translateX(-50%);
+    z-index:20;
+    width:min(500px,70vw);
     text-align:center;
-
-    color:#d9bd87;
+    color:white;
+    display:none;
 }
 
 #bossName{
-    letter-spacing:4px;
-
-    margin-bottom:5px;
-}
-
-#bossBar{
-    height:18px;
-
-    border:
-        1px solid #9d7653;
-
-    background:#16060b;
-}
-
-#bossHP{
-    width:100%;
-
-    height:100%;
-
-    background:#8f243e;
-
-    transition:.1s;
-}
-
-/* =========================
-   QUEST
-========================= */
-
-#quest{
-    position:absolute;
-
-    top:80px;
-
-    left:20px;
-
-    width:315px;
-
-    padding:14px;
-
-    background:
-        rgba(8,6,10,.88);
-
-    border-left:
-        3px solid #9c794d;
-
-    color:#bdb09d;
-
-    font-family:Arial,sans-serif;
-
-    font-size:13px;
-}
-
-#questTitle{
-    color:#d9bd87;
-
-    font-weight:bold;
-
-    letter-spacing:2px;
-
-    margin-bottom:8px;
-}
-
-#questText{
-    line-height:1.5;
-}
-
-#distance{
-    margin-top:8px;
-
-    color:#8f817c;
-
-    font-size:11px;
-}
-
-/* =========================
-   CONTROLS PC
-========================= */
-
-#controls{
-    position:absolute;
-
-    left:20px;
-
-    bottom:
-        max(18px,env(safe-area-inset-bottom));
-
-    padding:10px 13px;
-
-    background:
-        rgba(5,4,7,.85);
-
-    color:#8b807d;
-
-    font-family:Arial,sans-serif;
-
-    font-size:11px;
-}
-
-/* =========================
-   MESSAGE
-========================= */
-
-#message{
-    position:absolute;
-
-    top:50%;
-    left:50%;
-
-    transform:
-        translate(-50%,-50%);
-
-    padding:15px 25px;
-
-    background:
-        rgba(8,5,10,.96);
-
-    border:
-        1px solid #8d704d;
-
-    color:#d7bd8c;
-
-    font-size:15px;
-
-    letter-spacing:2px;
-
-    opacity:0;
-
-    transition:.25s;
-
-    white-space:nowrap;
-}
-
-/* =========================
-   DIALOGUE
-========================= */
-
-#dialogue{
-    display:none;
-
-    position:absolute;
-
-    left:50%;
-
-    bottom:25px;
-
-    transform:
-        translateX(-50%);
-
-    width:min(760px,90%);
-
-    min-height:135px;
-
-    padding:20px;
-
-    background:
-        rgba(7,5,9,.97);
-
-    border:
-        1px solid #80694e;
-
-    box-shadow:
-        0 0 30px black;
-
-    color:#cfc0aa;
-
-    pointer-events:auto;
-}
-
-#speaker{
-    margin-bottom:10px;
-
-    color:#d8b36d;
-
+    font-size:20px;
+    margin-bottom:6px;
     letter-spacing:3px;
 }
 
-#dialogueText{
-    line-height:1.6;
+#bossBar{
+    width:100%;
+    height:20px;
+    border:2px solid #ddd;
+    background:#21151a;
+    border-radius:20px;
+    overflow:hidden;
 }
 
-#dialogueHint{
-    position:absolute;
-
-    right:15px;
-    bottom:10px;
-
-    color:#70666a;
-
-    font-size:10px;
+#bossFill{
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg,#720018,#ff244d);
 }
 
-/* =========================
-   INTERACT PROMPT
-========================= */
-
-#interactButton{
-    display:none;
-
+#floorText{
     position:fixed;
-
-    left:50%;
-
-    bottom:125px;
-
-    transform:
-        translateX(-50%);
-
-    z-index:100;
-
-    padding:
-        12px 22px;
-
-    background:
-        rgba(8,6,10,.94);
-
-    border:
-        1px solid #b99b65;
-
-    border-radius:8px;
-
-    color:#d9bd87;
-
-    font-family:Georgia,serif;
-
-    letter-spacing:2px;
-
-    box-shadow:
-        0 0 25px
-        rgba(160,100,50,.25);
-
-    animation:
-        interactPulse 1.2s infinite;
-
-    pointer-events:auto;
-
-    white-space:nowrap;
-}
-
-#interactButton.show{
-    display:flex;
-    align-items:center;
-    gap:9px;
-}
-
-#interactIcon{
-    font-size:25px;
-}
-
-#interactKey{
-    color:#fff0bd;
-
+    right:15px;
+    top:15px;
+    z-index:20;
+    color:#d8cff2;
     font-weight:bold;
 }
 
-@keyframes interactPulse{
-
-    0%,100%{
-        transform:
-            translateX(-50%)
-            scale(1);
-    }
-
-    50%{
-        transform:
-            translateX(-50%)
-            scale(1.04);
-    }
-
-}
-
-/* =========================
-   WAKE UP
-========================= */
-
-#reviveScreen{
-    display:none;
-
+#message{
     position:fixed;
-
-    inset:0;
-
-    z-index:2000;
-
-    background:#000;
-
-    justify-content:center;
-
-    align-items:center;
-
-    flex-direction:column;
-
-    color:#d8bd87;
-
+    left:50%;
+    bottom:16%;
+    transform:translateX(-50%);
+    z-index:30;
+    color:white;
+    font-size:18px;
     text-align:center;
-}
-
-#wakeUp{
-    font-size:
-        clamp(55px,11vw,130px);
-
-    letter-spacing:16px;
-
-    text-shadow:
-        0 0 15px #9b4659,
-        0 0 50px #401421;
-
-    animation:
-        pulse 2s infinite;
-}
-
-#reviveText{
-    margin-top:20px;
-
-    color:#6f6669;
-
-    letter-spacing:4px;
-}
-
-#reviveTimer{
-    margin-top:20px;
-
-    font-size:35px;
-}
-
-@keyframes pulse{
-
-    0%,100%{
-        opacity:.4;
-    }
-
-    50%{
-        opacity:1;
-    }
-
-}
-
-/* =========================
-   ENDING
-========================= */
-
-#ending{
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:3000;
-
-    background:
-        radial-gradient(
-            circle,
-            #351b27,
-            #09070c 65%,
-            #020204
-        );
-
-    color:#cdb78e;
-
-    justify-content:center;
-
-    align-items:center;
-
-    flex-direction:column;
-
-    text-align:center;
-
-    padding:30px;
-}
-
-#ending h1{
-    font-size:
-        clamp(40px,7vw,80px);
-
-    letter-spacing:8px;
-
-    margin:
-        0 0 25px;
-
-    text-shadow:
-        0 0 20px #8d4052;
-}
-
-#endingText{
-    max-width:700px;
-
-    line-height:1.9;
-
-    color:#aaa09b;
-}
-
-#thanks{
-    margin:25px;
-
-    color:#d8bd88;
-
-    letter-spacing:4px;
-}
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-#mobileControls{
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:200;
-
+    text-shadow:0 0 10px #000;
+    opacity:0;
+    transition:.3s;
     pointer-events:none;
 }
 
-/* JOYSTICK */
+#interactHint{
+    position:fixed;
+    left:50%;
+    bottom:9%;
+    transform:translateX(-50%);
+    z-index:30;
+    color:#eee;
+    background:rgba(10,8,20,.75);
+    border:1px solid #8d72c9;
+    border-radius:12px;
+    padding:10px 18px;
+    display:none;
+}
 
-#joystick{
+/* ================= MOBILE ================= */
+
+#mobileUI{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:40;
+    pointer-events:none;
+}
+
+.joystick{
     position:absolute;
-
-    left:
-        max(25px,env(safe-area-inset-left));
-
-    bottom:
-        max(25px,env(safe-area-inset-bottom));
-
-    width:145px;
-    height:145px;
-
-    border:
-        2px solid
-        rgba(220,190,130,.3);
-
+    width:130px;
+    height:130px;
     border-radius:50%;
-
-    background:
-        rgba(20,15,25,.35);
-
+    background:rgba(120,100,160,.15);
+    border:2px solid rgba(190,170,230,.35);
     pointer-events:auto;
 }
 
-#joystickKnob{
-    position:absolute;
+#moveStick{
+    left:25px;
+    bottom:30px;
+}
 
+#aimStick{
+    right:25px;
+    bottom:30px;
+}
+
+.stick{
+    position:absolute;
+    width:54px;
+    height:54px;
     left:50%;
     top:50%;
-
-    width:62px;
-    height:62px;
-
-    transform:
-        translate(-50%,-50%);
-
-    border:
-        2px solid
-        rgba(220,190,130,.55);
-
+    transform:translate(-50%,-50%);
     border-radius:50%;
-
-    background:
-        rgba(120,70,100,.5);
-
-    box-shadow:
-        0 0 20px
-        rgba(150,80,120,.3);
+    background:rgba(220,210,255,.35);
+    border:2px solid rgba(255,255,255,.5);
 }
 
-/* ACTION BUTTONS */
-
-.mobileAction{
+.mobileButton{
     position:absolute;
-
-    border:
-        2px solid
-        rgba(220,190,130,.5);
-
-    background:
-        rgba(20,10,20,.72);
-
-    color:#e0c58d;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-family:Arial,sans-serif;
-
-    font-weight:bold;
-
     pointer-events:auto;
-
-    user-select:none;
-
-    -webkit-user-select:none;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-weight:bold;
+    background:rgba(55,35,80,.75);
+    border:2px solid #9b7cff;
+    box-shadow:0 0 15px #6042a5;
 }
 
-#attackButton{
-    right:
-        max(30px,env(safe-area-inset-right));
-
-    bottom:
-        max(45px,env(safe-area-inset-bottom));
-
-    width:90px;
-    height:90px;
-
-    font-size:36px;
-
-    box-shadow:
-        0 0 20px
-        rgba(100,50,160,.3);
+#shootBtn{
+    right:175px;
+    bottom:55px;
 }
 
-#mobileE{
-    right:
-        max(145px,calc(145px + env(safe-area-inset-right)));
-
-    bottom:
-        max(115px,calc(115px + env(safe-area-inset-bottom)));
-
-    width:65px;
-    height:65px;
-
-    font-size:18px;
+#eBtn{
+    right:100px;
+    bottom:150px;
 }
 
-#mobileHint{
-    position:absolute;
-
-    right:25px;
-
-    bottom:145px;
-
-    color:
-        rgba(220,200,170,.55);
-
-    font-family:Arial,sans-serif;
-
-    font-size:10px;
+#lockBtn{
+    right:35px;
+    bottom:160px;
 }
 
-/* MOBILE DIALOGUE TAP */
+/* mobile */
 
-#dialogue.mobileDialogue{
-    bottom:145px;
-}
-
-/* ==========================================================
-   MOBILE MEDIA
-========================================================== */
-
-@media (pointer:coarse){
-
-    #mobileControls{
+@media(max-width:800px){
+    #mobileUI{
         display:block;
     }
 
-    #controls{
-        display:none;
+    #hud .bar{
+        width:160px;
+        height:17px;
     }
 
-    #quest{
-        width:270px;
-
-        top:70px;
-
-        font-size:11px;
-
-        opacity:.9;
-    }
-
-    #status{
-        width:190px;
-
-        font-size:11px;
-    }
-
-    .bar{
-        width:170px;
-    }
-
-    #location{
-        font-size:10px;
-
-        letter-spacing:2px;
-    }
-
-    #level{
-        font-size:11px;
-    }
-
-    #bossUI{
-        width:70vw;
+    #floorText{
+        font-size:13px;
     }
 
     #message{
-        font-size:12px;
-
-        max-width:90%;
-
-        white-space:normal;
-
-        text-align:center;
+        bottom:27%;
+        width:80%;
+        font-size:15px;
     }
-
 }
 
-/* MOBILE LANDSCAPE */
+/* ================= DEATH ================= */
 
-@media
-(pointer:coarse)
-and
-(orientation:landscape){
-
-    #joystick{
-        width:125px;
-        height:125px;
-    }
-
-    #joystickKnob{
-        width:55px;
-        height:55px;
-    }
-
-    #attackButton{
-        width:80px;
-        height:80px;
-
-        bottom:30px;
-    }
-
-    #mobileE{
-        bottom:105px;
-    }
-
-    #mobileHint{
-        bottom:125px;
-    }
-
+#deathScreen{
+    background:#000;
+    opacity:0;
+    transition:opacity 1.5s;
 }
 
-/* PORTRAIT WARNING */
-
-#rotateWarning{
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:5000;
-
-    background:#050407;
-
-    color:#d9bd87;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    flex-direction:column;
-
-    padding:30px;
+#deathTitle{
+    font-size:clamp(45px,10vw,100px);
+    letter-spacing:12px;
+    text-shadow:0 0 20px white;
 }
 
-@media
-(pointer:coarse)
-and
-(orientation:portrait){
-
-    #rotateWarning{
-        display:flex;
-    }
-
+#countdown{
+    margin-top:20px;
+    font-size:40px;
 }
 
+/* ================= ENDING ================= */
+
+#endingScreen{
+    background:
+      radial-gradient(circle,#33204b 0%,#09070d 45%,#000 100%);
+}
+
+#endingScreen h1{
+    color:#d9c8ff;
+    font-size:clamp(35px,7vw,75px);
+    margin-bottom:25px;
+    text-shadow:0 0 20px #9a72ff;
+}
+
+#story{
+    width:min(700px,85%);
+    line-height:1.7;
+    color:#d6d0df;
+    margin-bottom:30px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-MENU
-===================================================== -->
-
-<div id="menu" class="screen">
-
-    <h1 class="title">
-        THE<br>
-        FORGOTTEN<br>
-        GOD
-    </h1>
-
-    <div class="subtitle">
-        HE REMEMBERS YOU
-    </div>
-
-    <button
-        class="button"
-        id="startButton">
-        ENTER THE WORLD
-    </button>
-
-    <button
-        class="button"
-        id="loreButton">
-        THE LORE
-    </button>
-
-</div>
-
-
-<!-- =====================================================
-LORE
-===================================================== -->
-
-<div
-    id="lore"
-    class="screen hidden">
-
-    <h2>THE LORE</h2>
-
-    <p>
-        Hàng trăm năm trước, một vương quốc
-        từng được bảo vệ bởi các vị thần.
-    </p>
-
-    <p>
-        Nhưng con người dần quên tên của họ.
-        Vương quốc sụp đổ.
-    </p>
-
-    <p>
-        Chỉ còn một vị thần vẫn tồn tại.
-    </p>
-
-    <p>
-        <strong>FORGOTTEN GOD.</strong>
-    </p>
-
-    <p>
-        Một phù thủy tỉnh dậy mà không nhớ mình là ai.
-    </p>
-
-    <button
-        class="button"
-        id="closeLore">
-        QUAY LẠI
-    </button>
-
-</div>
-
-
-<!-- =====================================================
-CANVAS
-===================================================== -->
-
 <canvas id="game"></canvas>
 
+<!-- START -->
 
-<!-- =====================================================
-UI
-===================================================== -->
+<div id="startScreen">
+    <h1>WAKE UP</h1>
+    <p>THE FORGOTTEN GOD IS WAITING...</p>
+    <button id="startBtn">BẮT ĐẦU</button>
+</div>
 
-<div id="ui">
+<!-- HUD -->
 
-    <div id="location">
-        THE LOST KINGDOM
+<div id="hud">
+    <div>❤️ <span id="hpText">100</span>/100</div>
+    <div class="bar">
+        <div id="hpFill"></div>
+    </div>
+</div>
+
+<div id="bossHud">
+    <div id="bossName">👑 FORGOTTEN GOD</div>
+    <div id="bossBar">
+        <div id="bossFill"></div>
+    </div>
+</div>
+
+<div id="floorText">Tầng 1 — Rừng Hắc Ám</div>
+
+<div id="message"></div>
+<div id="interactHint">⌨️ Nhấn E để tương tác</div>
+
+<!-- MOBILE -->
+
+<div id="mobileUI">
+
+    <div id="moveStick" class="joystick">
+        <div class="stick"></div>
     </div>
 
-    <div id="level">
-        LEVEL 1
+    <div id="aimStick" class="joystick">
+        <div class="stick"></div>
     </div>
 
-
-    <!-- PLAYER STATUS -->
-
-    <div id="status">
-
-        🧙‍♂️ WANDERER
-
-        <div class="bar">
-            <div
-                id="hp"
-                class="barFill">
-            </div>
-        </div>
-
-        <div style="margin-top:5px">
-            🔮 MANA
-        </div>
-
-        <div class="bar">
-            <div
-                id="mana"
-                class="barFill">
-            </div>
-        </div>
-
-        <div style="margin-top:8px">
-            👻 SOULS:
-            <span id="souls">0</span>
-        </div>
-
-    </div>
-
-
-    <!-- BOSS -->
-
-    <div id="bossUI">
-
-        <div id="bossName">
-            👑 FORGOTTEN GOD
-        </div>
-
-        <div id="bossBar">
-            <div id="bossHP"></div>
-        </div>
-
-    </div>
-
-
-    <!-- QUEST -->
-
-    <div id="quest">
-
-        <div id="questTitle">
-            📜 NHIỆM VỤ
-        </div>
-
-        <div id="questText">
-            Tìm NPC bí ẩn.
-        </div>
-
-        <div id="distance">
-            📍 Đang tìm mục tiêu...
-        </div>
-
-    </div>
-
-
-    <!-- PC CONTROLS -->
-
-    <div id="controls">
-
-        🎮 <b>ĐIỀU KHIỂN</b>
-        <br><br>
-
-        W A S D → Di chuyển
-        <br>
-
-        🖱️ Chuột → Ngắm phép
-        <br>
-
-        SPACE → Bắn 🔮
-        <br>
-
-        E → Tương tác
-
-    </div>
-
-
-    <!-- DIALOGUE -->
-
-    <div id="dialogue">
-
-        <div id="speaker"></div>
-
-        <div id="dialogueText"></div>
-
-        <div id="dialogueHint">
-            NHẤN E ĐỂ TIẾP TỤC
-        </div>
-
-    </div>
-
-
-    <!-- MESSAGE -->
-
-    <div id="message"></div>
-
-
-    <!-- INTERACTION -->
-
-    <div id="interactButton">
-
-        <span id="interactIcon">
-            🚪
-        </span>
-
-        <span id="interactKey">
-            [ E ]
-        </span>
-
-        <span id="interactText">
-            VÀO LÂU ĐÀI
-        </span>
-
-    </div>
+    <div id="shootBtn" class="mobileButton">🔮</div>
+    <div id="eBtn" class="mobileButton">E</div>
+    <div id="lockBtn" class="mobileButton">🎯</div>
 
 </div>
 
+<!-- DEATH -->
 
-<!-- =====================================================
-MOBILE
-===================================================== -->
-
-<div id="mobileControls">
-
-    <!-- JOYSTICK -->
-
-    <div id="joystick">
-
-        <div id="joystickKnob"></div>
-
-    </div>
-
-
-    <!-- ATTACK -->
-
-    <div
-        id="attackButton"
-        class="mobileAction">
-
-        🔮
-
-    </div>
-
-
-    <!-- E -->
-
-    <div
-        id="mobileE"
-        class="mobileAction">
-
-        E
-
-    </div>
-
-    <div id="mobileHint">
-        TƯƠNG TÁC
-    </div>
-
+<div id="deathScreen">
+    <div id="deathTitle">WAKE UP</div>
+    <div> linh hồn đang trở về...</div>
+    <div id="countdown">5</div>
 </div>
 
+<!-- ENDING -->
 
-<!-- =====================================================
-WAKE UP
-===================================================== -->
+<div id="endingScreen" class="hidden">
+    <h1>👑 THE END</h1>
 
-<div id="reviveScreen">
+    <div id="story">
+        Forgotten God đã bị đánh bại.<br><br>
 
-    <div id="wakeUp">
-        WAKE UP
+        Khi thanh kiếm cuối cùng của bóng tối tan biến,
+        lâu đài cổ bắt đầu sụp đổ.
+        Những linh hồn bị nguyền rủa được giải thoát
+        khỏi hàng thế kỷ bóng tối.<br><br>
+
+        Nhưng trước khi biến mất,
+        Forgotten God chỉ để lại một câu nói:<br><br>
+
+        <i>“Ngươi đã đánh thức ta... nhưng ai sẽ đánh thức ngươi?”</i><br><br>
+
+        Màn đêm im lặng.<br>
+        Một cánh cửa bí mật mở ra...
     </div>
 
-    <div id="reviveText">
-        THE DARKNESS HAS NOT CLAIMED YOU
-    </div>
+    <button onclick="location.reload()">🔄 CHƠI LẠI</button>
 
-    <div id="reviveTimer">
-        5
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-ENDING
-===================================================== -->
-
-<div id="ending">
-
-    <h1>
-        THE END
-    </h1>
-
-    <div id="endingText">
-
-        Forgotten God đã bị đánh bại.
-
-        <br><br>
-
-        Vương quốc cuối cùng cũng được giải thoát
-        khỏi lời nguyền của bóng tối.
-
-        <br><br>
-
-        Nhưng khi vị thần biến mất,
-        ký ức của người phù thủy cũng trở lại.
-
-        <br><br>
-
-        Ngươi không phải người được chọn.
-
-        <br><br>
-
-        Ngươi chính là người đã tạo ra lời nguyền
-        từ hàng trăm năm trước.
-
-        <br><br>
-
-        Và cuộc chiến này...
-
-        <br><br>
-
-        <strong>
-            chỉ là sự thức tỉnh.
-        </strong>
-
-    </div>
-
-    <div id="thanks">
-        CẢM ƠN BẠN ĐÃ CHƠI
-    </div>
-
-    <button
-        class="button"
-        id="restartButton">
-
-        CHƠI LẠI
-
-    </button>
-
-</div>
-
-
-<!-- =====================================================
-ROTATE
-===================================================== -->
-
-<div id="rotateWarning">
-
-    <div style="font-size:60px">
-        📱
-    </div>
-
-    <h2>
-        XOAY ĐIỆN THOẠI
-    </h2>
-
-    <p>
-        Vui lòng xoay điện thoại sang
-        <b>màn hình ngang</b> để chơi.
+    <p style="margin-top:20px;color:#aaa">
+        Cảm ơn bạn đã chơi ❤️
     </p>
-
 </div>
-
 
 <script>
+/* =========================================================
+   DARK FANTASY V7
+   ========================================================= */
 
-/* =====================================================
-CANVAS
-===================================================== */
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-const canvas =
-    document.getElementById("game");
-
-const ctx =
-    canvas.getContext("2d");
-
-let W =
-    innerWidth;
-
-let H =
-    innerHeight;
-
-
+let W,H;
 function resize(){
-
-    W =
-        innerWidth;
-
-    H =
-        innerHeight;
-
-    canvas.width =
-        W;
-
-    canvas.height =
-        H;
-
+    W=canvas.width=innerWidth;
+    H=canvas.height=innerHeight;
 }
-
-addEventListener(
-    "resize",
-    resize
-);
-
+addEventListener("resize",resize);
 resize();
 
-
-/* =====================================================
-GAME STATE
-===================================================== */
-
-let running =
-    false;
-
-let area =
-    "outside";
-
-let castleFloor =
-    0;
-
-let souls =
-    0;
-
-let questStage =
-    0;
-
-let dialogueOpen =
-    false;
-
-let dialogueIndex =
-    0;
-
-let messageTimer =
-    0;
-
-let reviving =
-    false;
-
-let gameFinished =
-    false;
-
-
-/* =====================================================
-WORLD
-===================================================== */
-
-const WORLD_W =
-    4200;
-
-const WORLD_H =
-    3200;
-
-
-/* =====================================================
-PLAYER
-===================================================== */
-
-const player = {
-
-    x:2100,
-
-    y:2200,
-
-    speed:8,
-
-    hp:100,
-
-    maxHp:100,
-
-    mana:100,
-
-    maxMana:100,
-
-    cooldown:0,
-
-    damageCooldown:0,
-
-    footTimer:0,
-
-    emoji:"🧙‍♂️"
-
-};
-
-
-/* =====================================================
-CAMERA
-===================================================== */
-
-const camera = {
-
-    x:0,
-
-    y:0,
-
-    smooth:.12
-
-};
-
-
-/* =====================================================
-MOUSE
-===================================================== */
-
-const mouse = {
-
-    x:W/2,
-
-    y:H/2
-
-};
-
-canvas.addEventListener(
-    "mousemove",
-    e=>{
-
-        mouse.x =
-            e.clientX;
-
-        mouse.y =
-            e.clientY;
-
-    }
-);
-
-
-/* =====================================================
-KEYBOARD
-===================================================== */
-
-const keys = {};
-
-
-addEventListener(
-    "keydown",
-    e=>{
-
-        keys[
-            e.key.toLowerCase()
-        ] = true;
-
-
-        if(e.code === "Space"){
-
-            e.preventDefault();
-
-            keys.space =
-                true;
-
-        }
-
-
-        if(
-            e.key.toLowerCase()
-            === "e"
-        ){
-
-            interact();
-
-        }
-
-    }
-);
-
-
-addEventListener(
-    "keyup",
-    e=>{
-
-        keys[
-            e.key.toLowerCase()
-        ] = false;
-
-
-        if(e.code === "Space"){
-
-            keys.space =
-                false;
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-TOUCH JOYSTICK
-===================================================== */
-
-const joystick =
-    document.getElementById(
-        "joystick"
-    );
-
-const knob =
-    document.getElementById(
-        "joystickKnob"
-    );
-
-let joystickActive =
-    false;
-
-let joystickX =
-    0;
-
-let joystickY =
-    0;
-
-let joystickPointer =
-    null;
-
-
-function setJoystick(
-    clientX,
-    clientY
-){
-
-    const rect =
-        joystick.getBoundingClientRect();
-
-    const centerX =
-        rect.left+
-        rect.width/2;
-
-    const centerY =
-        rect.top+
-        rect.height/2;
-
-    let dx =
-        clientX-centerX;
-
-    let dy =
-        clientY-centerY;
-
-
-    const max =
-        rect.width/2-
-        knob.offsetWidth/2;
-
-
-    const len =
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
-
-
-    if(len>max){
-
-        dx =
-            dx/len*max;
-
-        dy =
-            dy/len*max;
-
-    }
-
-
-    joystickX =
-        dx/max;
-
-    joystickY =
-        dy/max;
-
-
-    knob.style.left =
-        `calc(50% + ${dx}px)`;
-
-    knob.style.top =
-        `calc(50% + ${dy}px)`;
-
-}
-
-
-function resetJoystick(){
-
-    joystickActive =
-        false;
-
-    joystickX =
-        0;
-
-    joystickY =
-        0;
-
-    knob.style.left =
-        "50%";
-
-    knob.style.top =
-        "50%";
-
-}
-
-
-joystick.addEventListener(
-    "pointerdown",
-    e=>{
-
-        joystickActive =
-            true;
-
-        joystickPointer =
-            e.pointerId;
-
-        joystick.setPointerCapture(
-            e.pointerId
-        );
-
-        setJoystick(
-            e.clientX,
-            e.clientY
-        );
-
-    }
-);
-
-
-joystick.addEventListener(
-    "pointermove",
-    e=>{
-
-        if(
-            joystickActive &&
-            e.pointerId === joystickPointer
-        ){
-
-            setJoystick(
-                e.clientX,
-                e.clientY
-            );
-
-        }
-
-    }
-);
-
-
-joystick.addEventListener(
-    "pointerup",
-    resetJoystick
-);
-
-
-joystick.addEventListener(
-    "pointercancel",
-    resetJoystick
-);
-
-
-/* =====================================================
-MOBILE ATTACK
-===================================================== */
-
-const attackButton =
-    document.getElementById(
-        "attackButton"
-    );
-
-
-let mobileAttacking =
-    false;
-
-
-attackButton.addEventListener(
-    "pointerdown",
-    e=>{
-
-        e.preventDefault();
-
-        mobileAttacking =
-            true;
-
-        rangedAttack();
-
-    }
-);
-
-
-attackButton.addEventListener(
-    "pointerup",
-    ()=>{
-
-        mobileAttacking =
-            false;
-
-    }
-);
-
-
-attackButton.addEventListener(
-    "pointercancel",
-    ()=>{
-
-        mobileAttacking =
-            false;
-
-    }
-);
-
-
-/* =====================================================
-MOBILE E
-===================================================== */
-
-document
-    .getElementById("mobileE")
-    .addEventListener(
-        "pointerdown",
-        e=>{
-
-            e.preventDefault();
-
-            interact();
-
-        }
-    );
-
-
-/* =====================================================
-AUDIO
-===================================================== */
-
-let audioCtx =
-    null;
-
-let master =
-    null;
-
-let musicTimer =
-    null;
-
-let bossMusic =
-    false;
-
+/* =========================================================
+   AUDIO
+   ========================================================= */
+
+let audioCtx;
+let musicTimer;
+let bossMusic=false;
 
 function initAudio(){
 
-    if(audioCtx)
-        return;
+    if(audioCtx) return;
 
-
-    audioCtx =
-        new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
-
-
-    master =
-        audioCtx.createGain();
-
-
-    master.gain.value =
-        .20;
-
-
-    master.connect(
-        audioCtx.destination
-    );
+    audioCtx=new (window.AudioContext||window.webkitAudioContext)();
 
 }
 
+function tone(freq,duration,type="sine",volume=.04){
 
-function tone(
-    frequency,
-    duration,
-    type="sine",
-    volume=.08
-){
+    if(!audioCtx) return;
 
-    if(!audioCtx)
-        return;
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
 
+    osc.type=type;
+    osc.frequency.value=freq;
 
-    const osc =
-        audioCtx.createOscillator();
-
-
-    const gain =
-        audioCtx.createGain();
-
-
-    osc.type =
-        type;
-
-
-    osc.frequency.setValueAtTime(
-        frequency,
-        audioCtx.currentTime
-    );
-
-
-    gain.gain.setValueAtTime(
-        volume,
-        audioCtx.currentTime
-    );
-
-
+    gain.gain.setValueAtTime(volume,audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         .001,
-        audioCtx.currentTime+
-        duration
+        audioCtx.currentTime+duration
     );
-
 
     osc.connect(gain);
-
-    gain.connect(master);
-
+    gain.connect(audioCtx.destination);
 
     osc.start();
-
-    osc.stop(
-        audioCtx.currentTime+
-        duration
-    );
-
+    osc.stop(audioCtx.currentTime+duration);
 }
 
-
-function noise(
-    duration=.1,
-    volume=.05
-){
-
-    if(!audioCtx)
-        return;
-
-
-    const buffer =
-        audioCtx.createBuffer(
-            1,
-            audioCtx.sampleRate*
-            duration,
-            audioCtx.sampleRate
-        );
-
-
-    const data =
-        buffer.getChannelData(0);
-
-
-    for(
-        let i=0;
-        i<data.length;
-        i++
-    ){
-
-        data[i] =
-            Math.random()*2-1;
-
-    }
-
-
-    const source =
-        audioCtx.createBufferSource();
-
-
-    const gain =
-        audioCtx.createGain();
-
-
-    source.buffer =
-        buffer;
-
-
-    gain.gain.value =
-        volume;
-
-
-    source.connect(gain);
-
-    gain.connect(master);
-
-    source.start();
-
+function soundShoot(){
+    tone(700,.08,"sawtooth",.06);
+    setTimeout(()=>tone(1100,.12,"sine",.04),30);
 }
 
-
-/* =====================================================
-SOUNDS
-===================================================== */
-
-function footstep(){
-
-    tone(
-        65+
-        Math.random()*20,
-        .07,
-        "sine",
-        .035
-    );
-
+function soundHit(){
+    tone(120,.18,"square",.07);
 }
 
-
-function castSound(){
-
-    tone(
-        180,
-        .08,
-        "triangle",
-        .08
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                380,
-                .12,
-                "sine",
-                .06
-            );
-        },
-        50
-    );
-
+function soundDamage(){
+    tone(80,.25,"sawtooth",.08);
 }
 
-
-function shootSound(){
-
-    tone(
-        250,
-        .07,
-        "sawtooth",
-        .08
-    );
-
-
-    tone(
-        600,
-        .15,
-        "sine",
-        .06
-    );
-
+function soundBoss(){
+    tone(55,.8,"sawtooth",.09);
+    setTimeout(()=>tone(40,1,"square",.06),300);
 }
 
-
-function hurtSound(){
-
-    tone(
-        100,
-        .2,
-        "sawtooth",
-        .1
-    );
-
-
-    noise(
-        .12,
-        .04
-    );
-
+function soundStep(){
+    tone(90,.05,"square",.015);
 }
 
-
-function deathSound(){
-
-    tone(
-        90,
-        .6,
-        "sine",
-        .1
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                55,
-                .8,
-                "sine",
-                .08
-            );
-        },
-        250
-    );
-
+function soundRevive(){
+    tone(300,.15,"sine",.04);
+    setTimeout(()=>tone(500,.2,"sine",.04),150);
+    setTimeout(()=>tone(800,.3,"sine",.05),300);
 }
 
-
-function reviveSound(){
-
-    tone(
-        110,
-        .15,
-        "sine",
-        .06
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                220,
-                .15,
-                "sine",
-                .07
-            );
-        },
-        150
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                440,
-                .35,
-                "sine",
-                .09
-            );
-        },
-        300
-    );
-
+function soundStairs(){
+    tone(250,.1,"triangle",.04);
+    setTimeout(()=>tone(400,.15,"triangle",.04),100);
 }
 
-
-function npcSound(){
-
-    tone(
-        300,
-        .12,
-        "triangle",
-        .05
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                450,
-                .15,
-                "triangle",
-                .04
-            );
-        },
-        100
-    );
-
+function soundBossAttack(){
+    tone(70,.3,"sawtooth",.07);
 }
 
-
-function levelSound(){
-
-    tone(
-        220,
-        .15,
-        "sine",
-        .07
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                330,
-                .15,
-                "sine",
-                .07
-            );
-        },
-        120
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                440,
-                .3,
-                "sine",
-                .08
-            );
-        },
-        240
-    );
-
-}
-
-
-function bossAttackSound(){
-
-    tone(
-        75,
-        .25,
-        "sawtooth",
-        .12
-    );
-
-
-    noise(
-        .18,
-        .06
-    );
-
-}
-
-
-function bossHitSound(){
-
-    tone(
-        55,
-        .18,
-        "square",
-        .1
-    );
-
-}
-
-
-function bossDeathSound(){
-
-    tone(
-        70,
-        .4,
-        "sawtooth",
-        .1
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                180,
-                .4,
-                "sine",
-                .08
-            );
-        },
-        250
-    );
-
-
-    setTimeout(
-        ()=>{
-            tone(
-                440,
-                .8,
-                "sine",
-                .1
-            );
-        },
-        500
-    );
-
-}
-
-
-/* =====================================================
-MUSIC
-===================================================== */
+/* Dark fantasy procedural music */
 
 function startMusic(){
 
-    if(musicTimer)
-        return;
+    if(!audioCtx) return;
 
+    clearInterval(musicTimer);
 
-    let index =
-        0;
+    let notes = bossMusic
+        ? [55,65,73,82,65,55,49]
+        : [73,65,55,61,49,55,65];
 
+    let i=0;
 
-    const notes = [
+    musicTimer=setInterval(()=>{
 
-        55,
-        65.41,
-        73.42,
-        61.74,
-        49
-
-    ];
-
-
-    musicTimer =
-        setInterval(
-            ()=>{
-
-                if(!audioCtx)
-                    return;
-
-
-                if(bossMusic)
-                    return;
-
-
-                tone(
-                    notes[
-                        index %
-                        notes.length
-                    ],
-                    1.1,
-                    "triangle",
-                    .025
-                );
-
-
-                index++;
-
-            },
-            1000
+        tone(
+            notes[i%notes.length],
+            bossMusic?.65:1.1,
+            "triangle",
+            bossMusic?.025:.018
         );
 
+        i++;
+
+    },bossMusic?650:1000);
 }
 
+function changeMusic(isBoss){
 
-function startBossMusic(){
+    bossMusic=isBoss;
 
-    bossMusic =
-        true;
-
-
-    let index =
-        0;
-
-
-    const notes = [
-
-        55,
-        55,
-        73.42,
-        49,
-        65.41,
-        41.20
-
-    ];
-
-
-    const timer =
-        setInterval(
-            ()=>{
-
-                if(!bossMusic){
-
-                    clearInterval(
-                        timer
-                    );
-
-                    return;
-
-                }
-
-
-                tone(
-                    notes[
-                        index %
-                        notes.length
-                    ],
-                    .7,
-                    "sawtooth",
-                    .035
-                );
-
-
-                index++;
-
-            },
-            650
-        );
+    startMusic();
 
 }
 
+/* =========================================================
+   PLAYER
+   ========================================================= */
 
-/* =====================================================
-WORLD OBJECTS
-===================================================== */
+const player={
 
-let trees = [];
+    x:500,
+    y:500,
 
-let rocks = [];
+    speed:4.5,
 
-let graves = [];
+    hp:100,
+    maxHp:100,
 
-let enemies = [];
+    angle:0,
 
+    fireCooldown:0,
 
-const npc = {
-
-    x:2200,
-
-    y:2150,
-
-    emoji:"🧝"
-
-};
-
-
-const castle = {
-
-    x:1850,
-
-    y:350,
-
-    width:500,
-
-    height:320
+    spawnX:500,
+    spawnY:500
 
 };
 
+/* =========================================================
+   CAMERA
+   ========================================================= */
 
-const gate = {
-
-    x:2100,
-
-    y:670
-
+const camera={
+    x:0,
+    y:0
 };
 
+/* =========================================================
+   WORLD
+   ========================================================= */
 
-const castleNPC = {
-
-    x:750,
-
-    y:550,
-
-    emoji:"🧙"
-
+const world={
+    width:5000,
+    height:4000
 };
 
+let floor=1;
 
-/* =====================================================
-BOSS
-===================================================== */
-
-const boss = {
-
-    x:750,
-
-    y:220,
-
-    hp:150,
-
-    maxHp:150,
-
-    speed:1.35,
-
-    attackCooldown:0,
-
-    active:false,
-
-    defeated:false
-
+const castle={
+    x:3900,
+    y:280,
+    w:800,
+    h:800
 };
 
+const graveyard={
+    x:2500,
+    y:2500,
+    w:1000,
+    h:700
+};
 
-let projectiles = [];
+/* =========================================================
+   NPC
+   ========================================================= */
 
-let bossProjectiles = [];
+const npcs=[
 
+    {
+        x:850,
+        y:600,
+        emoji:"🧙",
+        name:"Phù thủy già",
+        text:"Ngươi đã đến... Forgotten God đang ngủ dưới lâu đài."
+    },
 
-/* =====================================================
-DISTANCE
-===================================================== */
+    {
+        x:1600,
+        y:1100,
+        emoji:"🧝",
+        name:"Người canh rừng",
+        text:"Hãy cẩn thận. Những sinh vật trong rừng không còn là con người."
+    },
 
-function distance(
-    x1,y1,
-    x2,y2
-){
-
-    const dx =
-        x2-x1;
-
-    const dy =
-        y2-y1;
-
-
-    return Math.sqrt(
-        dx*dx+
-        dy*dy
-    );
-
-}
-
-
-/* =====================================================
-CREATE WORLD
-===================================================== */
-
-function createWorld(){
-
-    trees = [];
-
-    rocks = [];
-
-    graves = [];
-
-    enemies = [];
-
-
-    for(
-        let i=0;
-        i<250;
-        i++
-    ){
-
-        trees.push({
-
-            x:
-                Math.random()*
-                WORLD_W,
-
-            y:
-                Math.random()*
-                WORLD_H,
-
-            size:
-                25+
-                Math.random()*35
-
-        });
-
+    {
+        x:3000,
+        y:2700,
+        emoji:"👻",
+        name:"Linh hồn",
+        text:"Muốn đến gặp vị thần bị lãng quên, ngươi phải vượt qua nghĩa địa."
     }
 
+];
 
-    for(
-        let i=0;
-        i<130;
-        i++
-    ){
+/* =========================================================
+   ENEMIES
+   ========================================================= */
 
-        rocks.push({
+let enemies=[];
 
-            x:
-                Math.random()*
-                WORLD_W,
-
-            y:
-                Math.random()*
-                WORLD_H,
-
-            size:
-                5+
-                Math.random()*13
-
-        });
-
-    }
-
-
-    for(
-        let i=0;
-        i<70;
-        i++
-    ){
-
-        graves.push({
-
-            x:
-                700+
-                Math.random()*
-                1000,
-
-            y:
-                1200+
-                Math.random()*
-                1000
-
-        });
-
-    }
-
-
-    for(
-        let i=0;
-        i<20;
-        i++
-    ){
-
-        createEnemy();
-
-    }
-
-}
-
-
-/* =====================================================
-CREATE ENEMY
-===================================================== */
-
-function createEnemy(){
-
-    let x;
-    let y;
-
-
-    do{
-
-        x =
-            Math.random()*
-            WORLD_W;
-
-        y =
-            Math.random()*
-            WORLD_H;
-
-    }
-    while(
-        distance(
-            x,y,
-            player.x,
-            player.y
-        )<500
-    );
-
+function createEnemy(x,y){
 
     enemies.push({
 
-        x:x,
+        x,
+        y,
 
-        y:y,
+        hp:50,
+        maxHp:50,
 
-        speed:
-            .6+
-            Math.random()*.7,
+        speed:1.1,
 
-        hp:3,
+        emoji:"👹",
 
-        maxHp:3,
-
-        emoji:
-            Math.random()>.5
-            ?"👹"
-            :"💀"
+        attackCooldown:0
 
     });
 
 }
 
-
-/* =====================================================
-PLAYER UPDATE
-===================================================== */
-
-function updatePlayer(){
-
-    if(dialogueOpen)
-        return;
-
-
-    let dx =
-        0;
-
-    let dy =
-        0;
-
-
-    if(keys.w)
-        dy--;
-
-
-    if(keys.s)
-        dy++;
-
-
-    if(keys.a)
-        dx--;
-
-
-    if(keys.d)
-        dx++;
-
-
-    /* MOBILE */
-
-    if(
-        Math.abs(joystickX)>.05 ||
-        Math.abs(joystickY)>.05
-    ){
-
-        dx +=
-            joystickX;
-
-        dy +=
-            joystickY;
-
-    }
-
-
-    const moving =
-        dx!==0 ||
-        dy!==0;
-
-
-    if(moving){
-
-        const len =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
-
-
-        if(len>0){
-
-            dx/=len;
-
-            dy/=len;
-
-        }
-
-
-        player.x +=
-            dx*
-            player.speed;
-
-
-        player.y +=
-            dy*
-            player.speed;
-
-
-        player.footTimer--;
-
-
-        if(
-            player.footTimer<=0
-        ){
-
-            footstep();
-
-            player.footTimer =
-                18;
-
-        }
-
-    }
-    else{
-
-        player.footTimer =
-            0;
-
-    }
-
-
-    if(area==="outside"){
-
-        player.x =
-            Math.max(
-                40,
-                Math.min(
-                    WORLD_W-40,
-                    player.x
-                )
-            );
-
-
-        player.y =
-            Math.max(
-                40,
-                Math.min(
-                    WORLD_H-40,
-                    player.y
-                )
-            );
-
-    }
-    else{
-
-        player.x =
-            Math.max(
-                80,
-                Math.min(
-                    1420,
-                    player.x
-                )
-            );
-
-
-        player.y =
-            Math.max(
-                80,
-                Math.min(
-                    920,
-                    player.y
-                )
-            );
-
-    }
-
-}
-
-
-/* =====================================================
-CAMERA
-===================================================== */
-
-function updateCamera(){
-
-    const targetX =
-        player.x-
-        W/2;
-
-
-    const targetY =
-        player.y-
-        H/2;
-
-
-    camera.x +=
-        (
-            targetX-
-            camera.x
-        )*
-        camera.smooth;
-
-
-    camera.y +=
-        (
-            targetY-
-            camera.y
-        )*
-        camera.smooth;
-
-
-    const maxX =
-        area==="outside"
-        ?WORLD_W-W
-        :1500-W;
-
-
-    const maxY =
-        area==="outside"
-        ?WORLD_H-H
-        :1000-H;
-
-
-    camera.x =
-        Math.max(
-            0,
-            Math.min(
-                Math.max(
-                    0,
-                    maxX
-                ),
-                camera.x
-            )
-        );
-
-
-    camera.y =
-        Math.max(
-            0,
-            Math.min(
-                Math.max(
-                    0,
-                    maxY
-                ),
-                camera.y
-            )
-        );
-
-}
-
-
-/* =====================================================
-RANGED ATTACK
-===================================================== */
-
-function rangedAttack(){
-
-    if(!running)
-        return;
-
-
-    if(dialogueOpen)
-        return;
-
-
-    if(player.cooldown>0)
-        return;
-
-
-    if(player.mana<8){
-
-        showMessage(
-            "🔮 KHÔNG ĐỦ MANA"
-        );
-
-        return;
-
-    }
-
-
-    player.cooldown =
-        9;
-
-
-    player.mana -=
-        8;
-
-
-    castSound();
-
-
-    setTimeout(
-        shootSound,
-        60
+for(let i=0;i<30;i++){
+
+    createEnemy(
+        500+Math.random()*3200,
+        400+Math.random()*3000
     );
 
+}
 
-    let targetX;
-    let targetY;
+/* =========================================================
+   BOSS
+   ========================================================= */
 
+let boss={
 
-    /* PC */
+    active:false,
 
-    targetX =
-        mouse.x+
-        camera.x;
+    x:4300,
+    y:700,
 
+    hp:1000,
+    maxHp:1000,
 
-    targetY =
-        mouse.y+
-        camera.y;
+    speed:1.25,
 
+    attackCooldown:0,
 
-    const dx =
-        targetX-
-        player.x;
+    emoji:"👑"
 
+};
 
-    const dy =
-        targetY-
-        player.y;
+/* =========================================================
+   PROJECTILES
+   ========================================================= */
 
+let projectiles=[];
+let enemyProjectiles=[];
 
-    const len =
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
+function shoot(){
 
+    if(player.fireCooldown>0) return;
 
-    if(len===0)
-        return;
-
+    player.fireCooldown=12;
 
     projectiles.push({
 
-        x:
-            player.x,
+        x:player.x+Math.cos(player.angle)*35,
+        y:player.y+Math.sin(player.angle)*35,
 
-        y:
-            player.y,
+        vx:Math.cos(player.angle)*10,
+        vy:Math.sin(player.angle)*10,
 
-        vx:
-            dx/len*17,
-
-        vy:
-            dy/len*17,
-
-        life:
-            90,
-
-        damage:
-            2
+        life:100
 
     });
 
-}
-
-
-/* =====================================================
-ATTACK UPDATE
-===================================================== */
-
-function updateAttack(){
-
-    if(
-        keys.space ||
-        mobileAttacking
-    ){
-
-        rangedAttack();
-
-    }
-
-
-    if(player.cooldown>0)
-        player.cooldown--;
-
-
-    if(
-        player.mana<
-        player.maxMana
-    ){
-
-        player.mana +=
-            .08;
-
-    }
+    soundShoot();
 
 }
 
+/* =========================================================
+   INPUT PC
+   ========================================================= */
 
-/* =====================================================
-PROJECTILES
-===================================================== */
+const keys={};
 
-function updateProjectiles(){
+addEventListener("keydown",e=>{
 
-    for(
-        let i=
-            projectiles.length-1;
-        i>=0;
-        i--
-    ){
+    keys[e.key.toLowerCase()]=true;
 
-        const p =
-            projectiles[i];
-
-
-        p.x +=
-            p.vx;
-
-
-        p.y +=
-            p.vy;
-
-
-        p.life--;
-
-
-        /* BOSS */
-
-        if(
-            boss.active &&
-            !boss.defeated &&
-            castleFloor===3 &&
-            distance(
-                p.x,
-                p.y,
-                boss.x,
-                boss.y
-            )<60
-        ){
-
-            boss.hp -=
-                p.damage;
-
-
-            projectiles.splice(
-                i,
-                1
-            );
-
-
-            bossHitSound();
-
-
-            if(
-                boss.hp<=0
-            ){
-
-                boss.hp=0;
-
-                defeatBoss();
-
-            }
-
-
-            continue;
-
-        }
-
-
-        /* ENEMIES */
-
-        for(
-            let j=
-                enemies.length-1;
-            j>=0;
-            j--
-        ){
-
-            const e =
-                enemies[j];
-
-
-            if(
-                distance(
-                    p.x,
-                    p.y,
-                    e.x,
-                    e.y
-                )<40
-            ){
-
-                e.hp -=
-                    p.damage;
-
-
-                projectiles.splice(
-                    i,
-                    1
-                );
-
-
-                bossHitSound();
-
-
-                if(e.hp<=0){
-
-                    enemies.splice(
-                        j,
-                        1
-                    );
-
-
-                    souls++;
-
-
-                    createEnemy();
-
-                }
-
-
-                break;
-
-            }
-
-        }
-
-
-        if(
-            p.life<=0
-        ){
-
-            projectiles.splice(
-                i,
-                1
-            );
-
-        }
-
+    if(e.key.toLowerCase()==="e"){
+        interact();
     }
 
-}
-
-
-/* =====================================================
-ENEMIES
-===================================================== */
-
-function updateEnemies(){
-
-    if(dialogueOpen)
-        return;
-
-
-    for(
-        const e of enemies
-    ){
-
-        const d =
-            distance(
-                player.x,
-                player.y,
-                e.x,
-                e.y
-            );
-
-
-        if(
-            d<650 &&
-            d>45
-        ){
-
-            const dx =
-                player.x-
-                e.x;
-
-
-            const dy =
-                player.y-
-                e.y;
-
-
-            e.x +=
-                dx/d*
-                e.speed;
-
-
-            e.y +=
-                dy/d*
-                e.speed;
-
-        }
-
-
-        if(
-            d<45
-        ){
-
-            damagePlayer(
-                .12
-            );
-
-        }
-
+    if(e.code==="Space"){
+        shoot();
     }
 
-}
+});
 
+addEventListener("keyup",e=>{
+    keys[e.key.toLowerCase()]=false;
+});
 
-/* =====================================================
-PLAYER DAMAGE
-===================================================== */
+/* =========================================================
+   MOUSE AIM
+   ========================================================= */
 
-function damagePlayer(
-    amount
-){
+addEventListener("mousemove",e=>{
 
-    if(
-        player.damageCooldown>0
-    )
-        return;
+    if(!gameStarted) return;
 
+    const wx=e.clientX-camera.x;
+    const wy=e.clientY-camera.y;
 
-    player.damageCooldown =
-        25;
-
-
-    player.hp -=
-        amount;
-
-
-    hurtSound();
-
-
-    if(
-        player.hp<=0
-    ){
-
-        player.hp=0;
-
-        playerDeath();
-
-    }
-
-}
-
-
-/* =====================================================
-DEATH
-===================================================== */
-
-function playerDeath(){
-
-    if(reviving)
-        return;
-
-
-    reviving =
-        true;
-
-
-    running =
-        false;
-
-
-    mobileAttacking =
-        false;
-
-
-    deathSound();
-
-
-    const screen =
-        document.getElementById(
-            "reviveScreen"
-        );
-
-
-    const timer =
-        document.getElementById(
-            "reviveTimer"
-        );
-
-
-    screen.style.display =
-        "flex";
-
-
-    let count =
-        5;
-
-
-    timer.textContent =
-        count;
-
-
-    const interval =
-        setInterval(
-            ()=>{
-
-                count--;
-
-                timer.textContent =
-                    count;
-
-
-                if(
-                    count<=0
-                ){
-
-                    clearInterval(
-                        interval
-                    );
-
-
-                    revivePlayer();
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-/* =====================================================
-REVIVE
-===================================================== */
-
-function revivePlayer(){
-
-    reviveSound();
-
-
-    player.hp =
-        player.maxHp;
-
-
-    player.mana =
-        player.maxMana;
-
-
-    projectiles =
-        [];
-
-
-    bossProjectiles =
-        [];
-
-
-    if(
-        area==="outside"
-    ){
-
-        player.x =
-            2100;
-
-        player.y =
-            2200;
-
-    }
-    else{
-
-        player.x =
-            750;
-
-        player.y =
-            800;
-
-    }
-
-
-    document
-        .getElementById(
-            "reviveScreen"
-        )
-        .style.display =
-        "none";
-
-
-    reviving =
-        false;
-
-
-    running =
-        true;
-
-
-    showMessage(
-        "✨ YOU HAVE AWAKENED"
+    player.angle=Math.atan2(
+        wy-player.y,
+        wx-player.x
     );
 
+});
 
-    gameLoop();
+addEventListener("mousedown",()=>{
+    if(gameStarted) shoot();
+});
+
+/* =========================================================
+   MOBILE JOYSTICK
+   ========================================================= */
+
+let moveX=0;
+let moveY=0;
+
+let aimX=0;
+let aimY=0;
+
+function setupJoystick(element,type){
+
+    let active=false;
+
+    const stick=element.querySelector(".stick");
+
+    function move(e){
+
+        const rect=element.getBoundingClientRect();
+
+        const p=e.touches?e.touches[0]:e;
+
+        let dx=p.clientX-(rect.left+rect.width/2);
+        let dy=p.clientY-(rect.top+rect.height/2);
+
+        const max=45;
+
+        const len=Math.hypot(dx,dy);
+
+        if(len>max){
+
+            dx=dx/len*max;
+            dy=dy/len*max;
+
+        }
+
+        stick.style.left=`calc(50% + ${dx}px)`;
+        stick.style.top=`calc(50% + ${dy}px)`;
+
+        if(type==="move"){
+
+            moveX=dx/max;
+            moveY=dy/max;
+
+        }else{
+
+            aimX=dx/max;
+            aimY=dy/max;
+
+            if(Math.hypot(aimX,aimY)>.2){
+
+                player.angle=Math.atan2(
+                    aimY,
+                    aimX
+                );
+
+            }
+
+        }
+
+    }
+
+    function end(){
+
+        active=false;
+
+        stick.style.left="50%";
+        stick.style.top="50%";
+
+        if(type==="move"){
+
+            moveX=0;
+            moveY=0;
+
+        }else{
+
+            aimX=0;
+            aimY=0;
+
+        }
+
+    }
+
+    element.addEventListener("touchstart",e=>{
+        active=true;
+        move(e);
+    },{passive:false});
+
+    element.addEventListener("touchmove",e=>{
+        if(active){
+            e.preventDefault();
+            move(e);
+        }
+    },{passive:false});
+
+    element.addEventListener("touchend",end);
 
 }
 
+setupJoystick(
+    document.getElementById("moveStick"),
+    "move"
+);
 
-/* =====================================================
-INTERACTION
-===================================================== */
+setupJoystick(
+    document.getElementById("aimStick"),
+    "aim"
+);
+
+/* mobile buttons */
+
+document.getElementById("shootBtn")
+.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    shoot();
+});
+
+document.getElementById("eBtn")
+.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    interact();
+});
+
+document.getElementById("lockBtn")
+.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    lockTarget();
+});
+
+/* =========================================================
+   TARGET LOCK
+   ========================================================= */
+
+function lockTarget(){
+
+    let target=null;
+    let best=Infinity;
+
+    const list=boss.active?[boss,...enemies]:enemies;
+
+    for(const e of list){
+
+        if(e.hp<=0) continue;
+
+        const d=Math.hypot(
+            e.x-player.x,
+            e.y-player.y
+        );
+
+        if(d<best){
+
+            best=d;
+            target=e;
+
+        }
+
+    }
+
+    if(target){
+
+        player.angle=Math.atan2(
+            target.y-player.y,
+            target.x-player.x
+        );
+
+        showMessage("🎯 Đã khóa mục tiêu");
+
+    }
+
+}
+
+/* =========================================================
+   INTERACTION
+   ========================================================= */
 
 function interact(){
 
-    if(!running)
-        return;
-
-
-    if(dialogueOpen){
-
-        nextDialogue();
-
-        return;
-
-    }
-
-
-    /* OUTSIDE */
-
-    if(
-        area==="outside"
-    ){
-
-        if(
-            distance(
-                player.x,
-                player.y,
-                npc.x,
-                npc.y
-            )<160
-        ){
-
-            startDialogue();
-
-            return;
-
-        }
-
-
-        if(
-            distance(
-                player.x,
-                player.y,
-                gate.x,
-                gate.y
-            )<180
-        ){
-
-            enterCastle();
-
-            return;
-
-        }
-
-    }
-
-
-    /* INSIDE */
-
-    if(
-        area==="inside"
-    ){
-
-        if(
-            castleFloor===1 &&
-            distance(
-                player.x,
-                player.y,
-                castleNPC.x,
-                castleNPC.y
-            )<160
-        ){
-
-            startDialogue();
-
-            return;
-
-        }
-
-
-        if(
-            distance(
-                player.x,
-                player.y,
-                1240,
-                170
-            )<180
-        ){
-
-            nextFloor();
-
-            return;
-
-        }
-
-
-        if(
-            castleFloor===1 &&
-            player.y>820 &&
-            player.x>650 &&
-            player.x<850
-        ){
-
-            exitCastle();
-
-            return;
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-ENTER CASTLE
-===================================================== */
-
-function enterCastle(){
-
-    area =
-        "inside";
-
-
-    castleFloor =
-        1;
-
-
-    player.x =
-        750;
-
-
-    player.y =
-        800;
-
-
-    questStage =
-        2;
-
-
-    levelSound();
-
-
-    showMessage(
-        "🏰 FORGOTTEN CASTLE"
-    );
-
-
-    document
-        .getElementById(
-            "location"
-        )
-        .textContent =
-        "FORGOTTEN CASTLE — FLOOR 1";
-
-
-    document
-        .getElementById(
-            "level"
-        )
-        .textContent =
-        "FLOOR 1";
-
-}
-
-
-/* =====================================================
-EXIT
-===================================================== */
-
-function exitCastle(){
-
-    area =
-        "outside";
-
-
-    castleFloor =
-        0;
-
-
-    player.x =
-        2100;
-
-
-    player.y =
-        720;
-
-
-    questStage =
-        1;
-
-
-    document
-        .getElementById(
-            "location"
-        )
-        .textContent =
-        "THE LOST KINGDOM";
-
-
-    document
-        .getElementById(
-            "level"
-        )
-        .textContent =
-        "OUTSIDE";
-
-
-    showMessage(
-        "🌲 QUAY LẠI VƯƠNG QUỐC"
-    );
-
-}
-
-
-/* =====================================================
-NEXT FLOOR
-===================================================== */
-
-function nextFloor(){
-
-    if(
-        castleFloor>=3
-    ){
-
-        if(
-            boss.defeated
-        ){
-
-            showEnding();
-
-        }
-        else{
-
-            showMessage(
-                "👑 HÃY ĐỐI MẶT FORGOTTEN GOD"
-            );
-
-        }
-
-        return;
-
-    }
-
-
-    castleFloor++;
-
-
-    levelSound();
-
-
-    player.x =
-        750;
-
-
-    player.y =
-        800;
-
-
-    document
-        .getElementById(
-            "location"
-        )
-        .textContent =
-        "FORGOTTEN CASTLE — FLOOR "+
-        castleFloor;
-
-
-    document
-        .getElementById(
-            "level"
-        )
-        .textContent =
-        "FLOOR "+
-        castleFloor;
-
-
-    if(
-        castleFloor===2
-    ){
-
-        questStage =
-            3;
-
-
-        showMessage(
-            "🪜 TẦNG 2"
+    for(const npc of npcs){
+
+        const d=Math.hypot(
+            npc.x-player.x,
+            npc.y-player.y
         );
 
+        if(d<100){
+
+            showMessage(
+                `${npc.emoji} ${npc.name}: "${npc.text}"`
+            );
+
+            return;
+
+        }
+
     }
 
+    /* Castle entrance */
 
     if(
-        castleFloor===3
+        player.x>3850 &&
+        player.x<4100 &&
+        player.y>950 &&
+        player.y<1150
     ){
 
-        questStage =
-            4;
+        floor=2;
 
+        player.x=4250;
+        player.y=1450;
 
-        activateBoss();
+        player.spawnX=player.x;
+        player.spawnY=player.y;
+
+        document.getElementById("floorText")
+        .textContent="Tầng 2 — Lâu Đài Forgotten God";
+
+        showMessage("🏰 Bạn đã bước vào lâu đài.");
+
+        soundStairs();
+
+        setTimeout(()=>{
+            activateBoss();
+        },1500);
+
+        return;
+
+    }
+
+    /* Stairs */
+
+    if(
+        floor===2 &&
+        Math.hypot(
+            player.x-4500,
+            player.y-3300
+        )<130
+    ){
+
+        showMessage("🕯️ Cầu thang dẫn lên tầng cao nhất...");
 
     }
 
 }
 
-
-/* =====================================================
-BOSS
-===================================================== */
+/* =========================================================
+   BOSS
+   ========================================================= */
 
 function activateBoss(){
 
-    boss.active =
-        true;
+    if(boss.active) return;
 
+    boss.active=true;
 
-    boss.defeated =
-        false;
+    document.getElementById("bossHud")
+    .style.display="block";
 
+    document.getElementById("floorText")
+    .textContent="⚠️ PHÒNG CỦA FORGOTTEN GOD";
 
-    boss.hp =
-        boss.maxHp;
+    changeMusic(true);
 
+    soundBoss();
 
-    boss.x =
-        750;
-
-
-    boss.y =
-        220;
-
-
-    document
-        .getElementById(
-            "bossUI"
-        )
-        .style.display =
-        "block";
-
-
-    startBossMusic();
-
-
-    bossAttackSound();
-
-
-    showMessage(
-        "👑 FORGOTTEN GOD HAS AWAKENED"
-    );
+    showMessage("👑 FORGOTTEN GOD ĐÃ THỨC TỈNH!");
 
 }
 
+/* =========================================================
+   UPDATE
+   ========================================================= */
 
-/* =====================================================
-BOSS UPDATE
-===================================================== */
+let gameStarted=false;
 
-function updateBoss(){
+function update(){
 
-    if(
-        !boss.active ||
-        boss.defeated ||
-        castleFloor!==3
-    )
-        return;
+    if(!gameStarted) return;
 
+    /* player movement */
 
-    const d =
-        distance(
-            boss.x,
-            boss.y,
-            player.x,
-            player.y
-        );
+    let dx=0;
+    let dy=0;
 
+    if(keys["w"]||keys["arrowup"]) dy-=1;
+    if(keys["s"]||keys["arrowdown"]) dy+=1;
+    if(keys["a"]||keys["arrowleft"]) dx-=1;
+    if(keys["d"]||keys["arrowright"]) dx+=1;
 
-    if(d>85){
+    dx+=moveX;
+    dy+=moveY;
 
-        const dx =
-            player.x-
-            boss.x;
+    const len=Math.hypot(dx,dy);
 
+    if(len>0){
 
-        const dy =
-            player.y-
-            boss.y;
+        dx/=len;
+        dy/=len;
 
+        player.x+=dx*player.speed;
+        player.y+=dy*player.speed;
 
-        boss.x +=
-            dx/d*
-            boss.speed;
-
-
-        boss.y +=
-            dy/d*
-            boss.speed;
+        if(Math.random()<.08){
+            soundStep();
+        }
 
     }
 
+    player.x=Math.max(30,Math.min(world.width-30,player.x));
+    player.y=Math.max(30,Math.min(world.height-30,player.y));
 
-    if(
-        boss.attackCooldown>0
-    ){
+    if(player.fireCooldown>0)
+        player.fireCooldown--;
 
-        boss.attackCooldown--;
+    /* projectiles */
 
-    }
+    for(const p of projectiles){
 
-
-    if(
-        d<650 &&
-        boss.attackCooldown<=0
-    ){
-
-        bossAttack();
-
-        boss.attackCooldown =
-            75;
-
-    }
-
-
-    if(
-        d<80
-    ){
-
-        damagePlayer(
-            .45
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-BOSS ATTACK
-===================================================== */
-
-function bossAttack(){
-
-    bossAttackSound();
-
-
-    const dx =
-        player.x-
-        boss.x;
-
-
-    const dy =
-        player.y-
-        boss.y;
-
-
-    const len =
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
-
-
-    if(len===0)
-        return;
-
-
-    bossProjectiles.push({
-
-        x:
-            boss.x,
-
-        y:
-            boss.y,
-
-        vx:
-            dx/len*7,
-
-        vy:
-            dy/len*7,
-
-        life:
-            120
-
-    });
-
-}
-
-
-/* =====================================================
-BOSS PROJECTILES
-===================================================== */
-
-function updateBossProjectiles(){
-
-    for(
-        let i=
-            bossProjectiles.length-1;
-        i>=0;
-        i--
-    ){
-
-        const p =
-            bossProjectiles[i];
-
-
-        p.x +=
-            p.vx;
-
-
-        p.y +=
-            p.vy;
-
-
+        p.x+=p.vx;
+        p.y+=p.vy;
         p.life--;
 
+        for(const e of enemies){
 
-        if(
-            distance(
-                p.x,
-                p.y,
-                player.x,
-                player.y
-            )<35
-        ){
+            if(e.hp<=0) continue;
 
-            damagePlayer(
-                12
-            );
+            if(Math.hypot(
+                p.x-e.x,
+                p.y-e.y
+            )<35){
 
+                e.hp-=25;
+                p.life=0;
 
-            bossProjectiles.splice(
-                i,
-                1
-            );
-
-
-            continue;
-
-        }
-
-
-        if(
-            p.life<=0
-        ){
-
-            bossProjectiles.splice(
-                i,
-                1
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-DEFEAT BOSS
-===================================================== */
-
-function defeatBoss(){
-
-    if(
-        boss.defeated
-    )
-        return;
-
-
-    boss.defeated =
-        true;
-
-
-    boss.active =
-        false;
-
-
-    bossDeathSound();
-
-
-    bossMusic =
-        false;
-
-
-    document
-        .getElementById(
-            "bossUI"
-        )
-        .style.display =
-        "none";
-
-
-    souls +=
-        50;
-
-
-    questStage =
-        5;
-
-
-    showMessage(
-        "👑 FORGOTTEN GOD HAS FALLEN"
-    );
-
-
-    setTimeout(
-        showEnding,
-        3500
-    );
-
-}
-
-
-/* =====================================================
-ENDING
-===================================================== */
-
-function showEnding(){
-
-    if(
-        gameFinished
-    )
-        return;
-
-
-    gameFinished =
-        true;
-
-
-    running =
-        false;
-
-
-    document
-        .getElementById(
-            "ending"
-        )
-        .style.display =
-        "flex";
-
-}
-
-
-/* =====================================================
-DIALOGUE
-===================================================== */
-
-const dialogues = [
-
-    [
-        "MYSTERIOUS NPC",
-        "Ngươi cuối cùng cũng tỉnh lại."
-    ],
-
-    [
-        "WANDERER",
-        "Đây là đâu?"
-    ],
-
-    [
-        "MYSTERIOUS NPC",
-        "Một vương quốc đã chết."
-    ],
-
-    [
-        "MYSTERIOUS NPC",
-        "Nhưng vị thần của nó vẫn còn sống."
-    ],
-
-    [
-        "WANDERER",
-        "Forgotten God?"
-    ],
-
-    [
-        "MYSTERIOUS NPC",
-        "Hắn đang ở trong lâu đài."
-    ],
-
-    [
-        "MYSTERIOUS NPC",
-        "Nếu muốn biết mình là ai..."
-    ],
-
-    [
-        "MYSTERIOUS NPC",
-        "Hãy tìm hắn."
-    ]
-
-];
-
-
-const castleDialogues = [
-
-    [
-        "KEEPER",
-        "Ngươi đã vào được lâu đài."
-    ],
-
-    [
-        "WANDERER",
-        "Forgotten God ở đâu?"
-    ],
-
-    [
-        "KEEPER",
-        "Trên tầng cao nhất."
-    ],
-
-    [
-        "KEEPER",
-        "Nhưng hắn đã chờ ngươi từ rất lâu."
-    ]
-
-];
-
-
-function startDialogue(){
-
-    dialogueOpen =
-        true;
-
-
-    dialogueIndex =
-        0;
-
-
-    npcSound();
-
-
-    document
-        .getElementById(
-            "dialogue"
-        )
-        .classList.toggle(
-            "mobileDialogue",
-            window.matchMedia(
-                "(pointer: coarse)"
-            ).matches
-        );
-
-
-    showDialogue();
-
-}
-
-
-function showDialogue(){
-
-    const list =
-        area==="outside"
-        ?dialogues
-        :castleDialogues;
-
-
-    document
-        .getElementById(
-            "dialogue"
-        )
-        .style.display =
-        "block";
-
-
-    document
-        .getElementById(
-            "speaker"
-        )
-        .textContent =
-        list[
-            dialogueIndex
-        ][0];
-
-
-    document
-        .getElementById(
-            "dialogueText"
-        )
-        .textContent =
-        list[
-            dialogueIndex
-        ][1];
-
-}
-
-
-function nextDialogue(){
-
-    dialogueIndex++;
-
-
-    const list =
-        area==="outside"
-        ?dialogues
-        :castleDialogues;
-
-
-    if(
-        dialogueIndex>=
-        list.length
-    ){
-
-        dialogueOpen =
-            false;
-
-
-        document
-            .getElementById(
-                "dialogue"
-            )
-            .style.display =
-            "none";
-
-
-        if(
-            area==="outside"
-        ){
-
-            questStage =
-                1;
-
-
-            showMessage(
-                "📜 ĐI ĐẾN LÂU ĐÀI"
-            );
-
-        }
-        else{
-
-            questStage =
-                3;
-
-
-            showMessage(
-                "📜 TÌM CẦU THANG"
-            );
-
-        }
-
-
-        return;
-
-    }
-
-
-    showDialogue();
-
-}
-
-
-/* =====================================================
-QUEST
-===================================================== */
-
-function updateQuest(){
-
-    const text =
-        document.getElementById(
-            "questText"
-        );
-
-
-    const distEl =
-        document.getElementById(
-            "distance"
-        );
-
-
-    let target =
-        null;
-
-
-    let name =
-        "";
-
-
-    if(
-        questStage===0
-    ){
-
-        target =
-            npc;
-
-        name =
-            "NPC BÍ ẨN";
-
-
-        text.innerHTML =
-            "🌲 Tìm NPC bí ẩn.<br>"+
-            "💬 Nhấn E.";
-
-    }
-    else if(
-        questStage===1
-    ){
-
-        target =
-            gate;
-
-        name =
-            "LÂU ĐÀI";
-
-
-        text.innerHTML =
-            "🏰 Đi đến lâu đài.<br>"+
-            "🚪 Nhấn E.";
-
-    }
-    else if(
-        questStage===2
-    ){
-
-        target =
-            castleNPC;
-
-        name =
-            "KEEPER";
-
-
-        text.innerHTML =
-            "🧙 Tìm Keeper.<br>"+
-            "💬 Nhấn E.";
-
-    }
-    else if(
-        questStage===3
-    ){
-
-        target = {
-            x:1240,
-            y:170
-        };
-
-
-        name =
-            "CẦU THANG";
-
-
-        text.innerHTML =
-            "🪜 Tìm cầu thang.<br>"+
-            "⬆️ Nhấn E.";
-
-    }
-    else if(
-        questStage===4
-    ){
-
-        target =
-            boss;
-
-        name =
-            "FORGOTTEN GOD";
-
-
-        text.innerHTML =
-            "👑 Đánh bại Forgotten God.";
-
-    }
-    else{
-
-        target =
-            player;
-
-        name =
-            "HOÀN THÀNH";
-
-
-        text.innerHTML =
-            "🏆 Vương quốc đã được giải thoát.";
-
-    }
-
-
-    const d =
-        Math.round(
-            distance(
-                player.x,
-                player.y,
-                target.x,
-                target.y
-            )/10
-        );
-
-
-    distEl.textContent =
-        "📍 "+
-        name+
-        " — "+
-        d+
-        "m";
-
-}
-
-
-/* =====================================================
-INTERACTION PROMPT
-===================================================== */
-
-function updateInteractionPrompt(){
-
-    const button =
-        document.getElementById(
-            "interactButton"
-        );
-
-
-    const icon =
-        document.getElementById(
-            "interactIcon"
-        );
-
-
-    const text =
-        document.getElementById(
-            "interactText"
-        );
-
-
-    button.classList.remove(
-        "show"
-    );
-
-
-    if(
-        !running ||
-        dialogueOpen
-    )
-        return;
-
-
-    /* =====================
-       OUTSIDE
-    ===================== */
-
-    if(
-        area==="outside"
-    ){
-
-        const npcDistance =
-            distance(
-                player.x,
-                player.y,
-                npc.x,
-                npc.y
-            );
-
-
-        if(
-            npcDistance<160
-        ){
-
-            icon.textContent =
-                "💬";
-
-            text.textContent =
-                "NÓI CHUYỆN";
-
-            button.classList.add(
-                "show"
-            );
-
-            return;
-
-        }
-
-
-        const castleDistance =
-            distance(
-                player.x,
-                player.y,
-                gate.x,
-                gate.y
-            );
-
-
-        if(
-            castleDistance<180
-        ){
-
-            icon.textContent =
-                "🚪";
-
-            text.textContent =
-                "VÀO LÂU ĐÀI";
-
-            button.classList.add(
-                "show"
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    /* =====================
-       INSIDE
-    ===================== */
-
-    if(
-        area==="inside"
-    ){
-
-        if(
-            castleFloor===1
-        ){
-
-            const keeperDistance =
-                distance(
-                    player.x,
-                    player.y,
-                    castleNPC.x,
-                    castleNPC.y
-                );
-
-
-            if(
-                keeperDistance<160
-            ){
-
-                icon.textContent =
-                    "💬";
-
-                text.textContent =
-                    "NÓI CHUYỆN";
-
-                button.classList.add(
-                    "show"
-                );
-
-                return;
+                soundHit();
 
             }
 
         }
 
+        if(boss.active && boss.hp>0){
 
-        const stairDistance =
-            distance(
-                player.x,
-                player.y,
-                1240,
-                170
-            );
+            if(Math.hypot(
+                p.x-boss.x,
+                p.y-boss.y
+            )<70){
 
+                boss.hp-=20;
+                p.life=0;
 
-        if(
-            stairDistance<180 &&
-            castleFloor<3
-        ){
+                soundHit();
 
-            icon.textContent =
-                "🪜";
-
-            text.textContent =
-                "LÊN TẦNG";
-
-            button.classList.add(
-                "show"
-            );
-
-            return;
-
-        }
-
-
-        if(
-            castleFloor===1 &&
-            player.y>820 &&
-            player.x>650 &&
-            player.x<850
-        ){
-
-            icon.textContent =
-                "🚪";
-
-            text.textContent =
-                "RỜI LÂU ĐÀI";
-
-            button.classList.add(
-                "show"
-            );
-
-            return;
+            }
 
         }
 
     }
 
-}
+    projectiles=projectiles.filter(p=>p.life>0);
 
+    /* enemies */
 
-/* =====================================================
-MESSAGE
-===================================================== */
+    for(const e of enemies){
 
-function showMessage(
-    text
-){
+        if(e.hp<=0) continue;
 
-    const el =
-        document.getElementById(
-            "message"
+        const angle=Math.atan2(
+            player.y-e.y,
+            player.x-e.x
         );
 
-
-    el.textContent =
-        text;
-
-
-    el.style.opacity =
-        "1";
-
-
-    messageTimer =
-        120;
-
-}
-
-
-/* =====================================================
-DRAW OUTSIDE
-===================================================== */
-
-function drawOutside(){
-
-    ctx.fillStyle =
-        "#111017";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.strokeStyle =
-        "rgba(130,120,130,.045)";
-
-
-    const grid =
-        100;
-
-
-    for(
-        let x =
-            -camera.x%grid;
-        x<W;
-        x+=grid
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            0
+        const d=Math.hypot(
+            player.x-e.x,
+            player.y-e.y
         );
 
-        ctx.lineTo(
-            x,
-            H
-        );
+        if(d<500){
 
-        ctx.stroke();
+            e.x+=Math.cos(angle)*e.speed;
+            e.y+=Math.sin(angle)*e.speed;
+
+        }
+
+        if(d<45){
+
+            e.attackCooldown--;
+
+            if(e.attackCooldown<=0){
+
+                player.hp-=5;
+
+                e.attackCooldown=50;
+
+                soundDamage();
+
+            }
+
+        }
 
     }
 
+    /* Boss AI */
 
-    for(
-        let y =
-            -camera.y%grid;
-        y<H;
-        y+=grid
-    ){
+    if(boss.active && boss.hp>0){
 
-        ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            y
+        const angle=Math.atan2(
+            player.y-boss.y,
+            player.x-boss.x
         );
 
-        ctx.lineTo(
-            W,
-            y
+        const d=Math.hypot(
+            player.x-boss.x,
+            player.y-boss.y
         );
 
-        ctx.stroke();
+        if(d>100){
+
+            boss.x+=Math.cos(angle)*boss.speed;
+            boss.y+=Math.sin(angle)*boss.speed;
+
+        }
+
+        boss.attackCooldown--;
+
+        if(boss.attackCooldown<=0){
+
+            boss.attackCooldown=80;
+
+            enemyProjectiles.push({
+
+                x:boss.x,
+                y:boss.y,
+
+                vx:Math.cos(angle)*6,
+                vy:Math.sin(angle)*6,
+
+                life:150
+
+            });
+
+            soundBossAttack();
+
+        }
 
     }
 
-}
+    /* boss projectiles */
 
+    for(const p of enemyProjectiles){
 
-/* =====================================================
-TREES
-===================================================== */
+        p.x+=p.vx;
+        p.y+=p.vy;
+        p.life--;
 
-function drawTrees(){
+        if(Math.hypot(
+            p.x-player.x,
+            p.y-player.y
+        )<25){
 
-    for(
-        const t of trees
-    ){
+            player.hp-=12;
 
-        const x =
-            t.x-
-            camera.x;
+            p.life=0;
 
+            soundDamage();
 
-        const y =
-            t.y-
-            camera.y;
-
-
-        if(
-            x<-100 ||
-            x>W+100 ||
-            y<-100 ||
-            y>H+100
-        )
-            continue;
-
-
-        ctx.strokeStyle =
-            "#241a20";
-
-
-        ctx.lineWidth =
-            9;
-
-
-        ctx.beginPath();
-
-
-        ctx.moveTo(
-            x,
-            y+t.size
-        );
-
-
-        ctx.lineTo(
-            x,
-            y-t.size
-        );
-
-
-        ctx.stroke();
-
-
-        ctx.lineWidth =
-            5;
-
-
-        ctx.beginPath();
-
-
-        ctx.moveTo(
-            x,
-            y
-        );
-
-
-        ctx.lineTo(
-            x-t.size,
-            y-t.size*.7
-        );
-
-
-        ctx.moveTo(
-            x,
-            y-10
-        );
-
-
-        ctx.lineTo(
-            x+t.size,
-            y-t.size*.8
-        );
-
-
-        ctx.stroke();
+        }
 
     }
 
-}
+    enemyProjectiles=
+        enemyProjectiles.filter(p=>p.life>0);
 
+    /* player death */
 
-/* =====================================================
-ROCKS
-===================================================== */
+    if(player.hp<=0){
 
-function drawRocks(){
+        player.hp=0;
 
-    for(
-        const r of rocks
-    ){
+        die();
 
-        const x =
-            r.x-
-            camera.x;
-
-
-        const y =
-            r.y-
-            camera.y;
-
-
-        ctx.fillStyle =
-            "#2b282e";
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-            x,
-            y,
-            r.size,
-            0,
-            Math.PI*2
-        );
-
-
-        ctx.fill();
-
-    }
-
-}
-
-
-/* =====================================================
-GRAVES
-===================================================== */
-
-function drawGraves(){
-
-    for(
-        const g of graves
-    ){
-
-        const x =
-            g.x-
-            camera.x;
-
-
-        const y =
-            g.y-
-            camera.y;
-
-
-        ctx.font =
-            "30px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.fillText(
-            "🪦",
-            x,
-            y
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-CASTLE
-===================================================== */
-
-function drawCastle(){
-
-    const x =
-        castle.x-
-        camera.x;
-
-
-    const y =
-        castle.y-
-        camera.y;
-
-
-    ctx.fillStyle =
-        "#29242d";
-
-
-    ctx.fillRect(
-        x,
-        y,
-        500,
-        320
-    );
-
-
-    ctx.fillRect(
-        x-80,
-        y-100,
-        120,
-        420
-    );
-
-
-    ctx.fillRect(
-        x+460,
-        y-100,
-        120,
-        420
-    );
-
-
-    ctx.fillStyle =
-        "#09070b";
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-100,
-        y-100
-    );
-
-    ctx.lineTo(
-        x-20,
-        y-175
-    );
-
-    ctx.lineTo(
-        x+60,
-        y-100
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+440,
-        y-100
-    );
-
-    ctx.lineTo(
-        x+520,
-        y-175
-    );
-
-    ctx.lineTo(
-        x+600,
-        y-100
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-        "#050408";
-
-
-    ctx.fillRect(
-        x+195,
-        y+165,
-        110,
-        155
-    );
-
-
-    ctx.fillStyle =
-        "#a97842";
-
-
-    for(
-        let i=0;
-        i<4;
-        i++
-    ){
-
-        ctx.fillRect(
-            x+70+i*85,
-            y+70,
-            20,
-            45
-        );
-
-    }
-
-
-    ctx.fillStyle =
-        "#d1af72";
-
-
-    ctx.font =
-        "bold 18px Georgia";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.fillText(
-        "THE FORGOTTEN CASTLE",
-        x+250,
-        y+360
-    );
-
-
-    if(
-        distance(
-            player.x,
-            player.y,
-            gate.x,
-            gate.y
-        )<180
-    ){
-
-        ctx.font =
-            "bold 16px Arial";
-
-
-        ctx.fillText(
-            "🚪 [ E ] VÀO LÂU ĐÀI",
-            x+250,
-            y+410
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-NPC
-===================================================== */
-
-function drawNPC(){
-
-    const x =
-        npc.x-
-        camera.x;
-
-
-    const y =
-        npc.y-
-        camera.y;
-
-
-    ctx.font =
-        "60px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.textBaseline =
-        "middle";
-
-
-    ctx.fillText(
-        npc.emoji,
-        x,
-        y
-    );
-
-
-    ctx.font =
-        "13px Georgia";
-
-
-    ctx.fillStyle =
-        "#d0af73";
-
-
-    ctx.fillText(
-        "MYSTERIOUS NPC",
-        x,
-        y-50
-    );
-
-}
-
-
-/* =====================================================
-ENEMIES
-===================================================== */
-
-function drawEnemies(){
-
-    for(
-        const e of enemies
-    ){
-
-        const x =
-            e.x-
-            camera.x;
-
-
-        const y =
-            e.y-
-            camera.y;
-
-
-        ctx.font =
-            "48px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        ctx.fillText(
-            e.emoji,
-            x,
-            y
-        );
-
-
-        ctx.fillStyle =
-            "#22090e";
-
-
-        ctx.fillRect(
-            x-22,
-            y-40,
-            44,
-            5
-        );
-
-
-        ctx.fillStyle =
-            "#b52f45";
-
-
-        ctx.fillRect(
-            x-22,
-            y-40,
-            44*
-            (
-                e.hp/
-                e.maxHp
-            ),
-            5
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-INTERIOR
-===================================================== */
-
-function drawInterior(){
-
-    ctx.fillStyle =
-        castleFloor===1
-        ?"#0e0a10"
-        :castleFloor===2
-        ?"#130a10"
-        :"#18070e";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.strokeStyle =
-        "rgba(170,140,100,.08)";
-
-
-    ctx.lineWidth =
-        2;
-
-
-    for(
-        let x =
-            -camera.x%100;
-        x<W;
-        x+=100
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            0
-        );
-
-        ctx.lineTo(
-            x,
-            H
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    for(
-        let y =
-            -camera.y%100;
-        y<H;
-        y+=100
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            y
-        );
-
-        ctx.lineTo(
-            W,
-            y
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    ctx.strokeStyle =
-        "#3a3038";
-
-
-    ctx.lineWidth =
-        25;
-
-
-    ctx.strokeRect(
-        -camera.x,
-        -camera.y,
-        1500,
-        1000
-    );
-
-
-    ctx.fillStyle =
-        "#321822";
-
-
-    ctx.fillRect(
-        700-camera.x,
-        -camera.y,
-        100,
-        1000
-    );
-
-
-    /* STAIRS */
-
-    ctx.fillStyle =
-        "#4b3a40";
-
-
-    for(
-        let i=0;
-        i<7;
-        i++
-    ){
-
-        ctx.fillRect(
-            1120-camera.x,
-            700-
-                i*70-
-                camera.y,
-            240,
-            50
-        );
-
-    }
-
-
-    ctx.fillStyle =
-        "#d1b477";
-
-
-    ctx.font =
-        "bold 15px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.fillText(
-        "⬆ CẦU THANG",
-        1240-camera.x,
-        170-camera.y
-    );
-
-
-    drawCandle(
-        400-camera.x,
-        250-camera.y
-    );
-
-
-    drawCandle(
-        1050-camera.x,
-        250-camera.y
-    );
-
-
-    drawCandle(
-        400-camera.x,
-        700-camera.y
-    );
-
-
-    drawCandle(
-        1050-camera.x,
-        700-camera.y
-    );
-
-
-    if(
-        castleFloor===3
-    ){
-
-        drawBossRoom();
-
-    }
-
-
-    if(
-        castleFloor===1
-    ){
-
-        ctx.fillStyle =
-            "#080609";
-
-
-        ctx.fillRect(
-            700-camera.x,
-            900-camera.y,
-            100,
-            100
-        );
-
-
-        ctx.fillStyle =
-            "#b99b65";
-
-
-        ctx.fillText(
-            "🚪 EXIT",
-            750-camera.x,
-            875-camera.y
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-BOSS ROOM
-===================================================== */
-
-function drawBossRoom(){
-
-    const pulse =
-        Math.sin(
-            Date.now()/300
-        )*.5+.5;
-
-
-    ctx.fillStyle =
-        `rgba(
-            120,
-            20,
-            45,
-            ${.03+
-            pulse*.04}
-        )`;
-
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.strokeStyle =
-        "rgba(170,30,60,.25)";
-
-
-    ctx.lineWidth =
-        4;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        750-camera.x,
-        250-camera.y,
-        170,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.font =
-        "100px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.textBaseline =
-        "middle";
-
-
-    ctx.fillText(
-        "👑",
-        boss.x-camera.x,
-        boss.y-camera.y
-    );
-
-
-    ctx.font =
-        "bold 18px Georgia";
-
-
-    ctx.fillStyle =
-        "#d9bd87";
-
-
-    ctx.fillText(
-        "FORGOTTEN GOD",
-        boss.x-camera.x,
-        boss.y-camera.y+80
-    );
-
-}
-
-
-/* =====================================================
-CASTLE NPC
-===================================================== */
-
-function drawCastleNPC(){
-
-    if(
-        castleFloor!==1
-    )
         return;
 
+    }
 
-    const x =
-        castleNPC.x-
-        camera.x;
+    /* boss health */
 
+    if(boss.active){
 
-    const y =
-        castleNPC.y-
-        camera.y;
+        const percent=
+            Math.max(0,boss.hp/boss.maxHp*100);
 
+        document.getElementById("bossFill")
+        .style.width=percent+"%";
 
-    ctx.font =
-        "60px Arial";
+        if(boss.hp<=0){
 
+            boss.hp=0;
 
-    ctx.textAlign =
-        "center";
+            ending();
 
+            return;
 
-    ctx.textBaseline =
-        "middle";
+        }
 
+    }
 
-    ctx.fillText(
-        castleNPC.emoji,
-        x,
-        y
-    );
+    /* camera */
 
-
-    ctx.font =
-        "13px Georgia";
-
-
-    ctx.fillStyle =
-        "#d0af73";
-
-
-    ctx.fillText(
-        "KEEPER",
-        x,
-        y-50
-    );
+    camera.x=W/2-player.x;
+    camera.y=H/2-player.y;
 
 }
 
+/* =========================================================
+   DRAW
+   ========================================================= */
 
-/* =====================================================
-CANDLE
-===================================================== */
+function draw(){
 
-function drawCandle(
-    x,
-    y
-){
-
-    ctx.fillStyle =
-        "#704d37";
-
-
-    ctx.fillRect(
-        x-5,
-        y,
-        10,
-        35
-    );
-
-
-    const glow =
-        ctx.createRadialGradient(
-            x,
-            y-5,
-            2,
-            x,
-            y-5,
-            45
-        );
-
-
-    glow.addColorStop(
-        0,
-        "rgba(220,160,70,.35)"
-    );
-
-
-    glow.addColorStop(
-        1,
-        "rgba(220,160,70,0)"
-    );
-
-
-    ctx.fillStyle =
-        glow;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        x,
-        y-5,
-        45,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-
-    ctx.fillStyle =
-        "#e1a24d";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        x,
-        y-5,
-        6,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-}
-
-
-/* =====================================================
-PLAYER DRAW
-===================================================== */
-
-function drawPlayer(){
-
-    const x =
-        player.x-
-        camera.x;
-
-
-    const y =
-        player.y-
-        camera.y;
-
-
-    /* SHADOW */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.5)";
-
-
-    ctx.beginPath();
-
-
-    ctx.ellipse(
-        x,
-        y+32,
-        30,
-        10,
-        0,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-
-    /* CHARACTER */
-
-    ctx.font =
-        "62px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.textBaseline =
-        "middle";
-
-
-    ctx.fillText(
-        player.emoji,
-        x,
-        y
-    );
-
-
-    /* AIM */
-
-    const worldMouseX =
-        mouse.x+
-        camera.x;
-
-
-    const worldMouseY =
-        mouse.y+
-        camera.y;
-
-
-    const angle =
-        Math.atan2(
-            worldMouseY-
-            player.y,
-            worldMouseX-
-            player.x
-        );
-
-
-    const orbX =
-        x+
-        Math.cos(angle)*
-        38;
-
-
-    const orbY =
-        y+
-        Math.sin(angle)*
-        38;
-
-
-    /* ORB GLOW */
-
-    const glow =
-        ctx.createRadialGradient(
-            orbX,
-            orbY,
-            2,
-            orbX,
-            orbY,
-            25
-        );
-
-
-    glow.addColorStop(
-        0,
-        "rgba(230,190,255,.9)"
-    );
-
-
-    glow.addColorStop(
-        .3,
-        "rgba(150,90,220,.6)"
-    );
-
-
-    glow.addColorStop(
-        1,
-        "rgba(80,30,150,0)"
-    );
-
-
-    ctx.fillStyle =
-        glow;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        orbX,
-        orbY,
-        25,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-
-    ctx.font =
-        "25px Arial";
-
-
-    ctx.fillText(
-        "🔮",
-        orbX,
-        orbY
-    );
-
-}
-
-
-/* =====================================================
-PROJECTILE DRAW
-===================================================== */
-
-function drawProjectiles(){
-
-    for(
-        const p of projectiles
-    ){
-
-        const x =
-            p.x-
-            camera.x;
-
-
-        const y =
-            p.y-
-            camera.y;
-
-
-        const glow =
-            ctx.createRadialGradient(
-                x,
-                y,
-                2,
-                x,
-                y,
-                30
-            );
-
-
-        glow.addColorStop(
-            0,
-            "rgba(240,210,255,.95)"
-        );
-
-
-        glow.addColorStop(
-            .25,
-            "rgba(170,100,255,.7)"
-        );
-
-
-        glow.addColorStop(
-            1,
-            "rgba(80,30,150,0)"
-        );
-
-
-        ctx.fillStyle =
-            glow;
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-            x,
-            y,
-            30,
-            0,
-            Math.PI*2
-        );
-
-
-        ctx.fill();
-
-
-        ctx.font =
-            "20px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.fillText(
-            "🔮",
-            x,
-            y
-        );
-
-    }
-
-
-    /* BOSS */
-
-    for(
-        const p of bossProjectiles
-    ){
-
-        const x =
-            p.x-
-            camera.x;
-
-
-        const y =
-            p.y-
-            camera.y;
-
-
-        const glow =
-            ctx.createRadialGradient(
-                x,
-                y,
-                2,
-                x,
-                y,
-                30
-            );
-
-
-        glow.addColorStop(
-            0,
-            "rgba(255,60,80,.9)"
-        );
-
-
-        glow.addColorStop(
-            1,
-            "rgba(100,0,20,0)"
-        );
-
-
-        ctx.fillStyle =
-            glow;
-
-
-        ctx.beginPath();
-
-
-        ctx.arc(
-            x,
-            y,
-            30,
-            0,
-            Math.PI*2
-        );
-
-
-        ctx.fill();
-
-
-        ctx.font =
-            "22px Arial";
-
-
-        ctx.fillText(
-            "🔥",
-            x,
-            y
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-QUEST ARROW
-===================================================== */
-
-function drawQuestArrow(){
-
-    if(
-        questStage>=5 ||
-        dialogueOpen
-    )
-        return;
-
-
-    let target;
-
-
-    if(
-        area==="outside"
-    ){
-
-        target =
-            questStage===0
-            ?npc
-            :gate;
-
-    }
-    else if(
-        castleFloor===3 &&
-        boss.active
-    ){
-
-        target =
-            boss;
-
-    }
-    else{
-
-        target =
-            questStage===2
-            ?castleNPC
-            :{
-                x:1240,
-                y:170
-            };
-
-    }
-
-
-    const dx =
-        target.x-
-        player.x;
-
-
-    const dy =
-        target.y-
-        player.y;
-
-
-    const angle =
-        Math.atan2(
-            dy,
-            dx
-        );
-
-
-    const x =
-        W/2+
-        Math.cos(angle)*
-        105;
-
-
-    const y =
-        H/2+
-        Math.sin(angle)*
-        105;
-
+    ctx.clearRect(0,0,W,H);
 
     ctx.save();
 
+    ctx.translate(camera.x,camera.y);
 
-    ctx.translate(
-        x,
-        y
-    );
+    /* background */
 
-
-    ctx.rotate(
-        angle
-    );
-
-
-    ctx.fillStyle =
-        "#d9bd87";
-
-
-    ctx.beginPath();
-
-
-    ctx.moveTo(
-        25,
-        0
-    );
-
-
-    ctx.lineTo(
-        -15,
-        -14
-    );
-
-
-    ctx.lineTo(
-        -8,
-        0
-    );
-
-
-    ctx.lineTo(
-        -15,
-        14
-    );
-
-
-    ctx.closePath();
-
-
-    ctx.fill();
-
-
-    ctx.restore();
-
-}
-
-
-/* =====================================================
-DARKNESS
-===================================================== */
-
-function darkness(){
-
-    const g =
-        ctx.createRadialGradient(
-            W/2,
-            H/2,
-            100,
-            W/2,
-            H/2,
-            Math.max(
-                W,
-                H
-            )*.75
-        );
-
-
-    g.addColorStop(
-        0,
-        "rgba(0,0,0,0)"
-    );
-
-
-    g.addColorStop(
-        .6,
-        "rgba(0,0,0,.16)"
-    );
-
-
-    g.addColorStop(
-        1,
-        "rgba(0,0,0,.78)"
-    );
-
-
-    ctx.fillStyle =
-        g;
-
-
+    ctx.fillStyle="#09080d";
     ctx.fillRect(
         0,
         0,
-        W,
-        H
+        world.width,
+        world.height
     );
 
-}
+    /* grid / forest ground */
 
+    for(let x=0;x<world.width;x+=100){
 
-/* =====================================================
-UI UPDATE
-===================================================== */
+        for(let y=0;y<world.height;y+=100){
 
-function updateUI(){
+            ctx.strokeStyle="rgba(100,80,120,.06)";
 
-    document
-        .getElementById("hp")
-        .style.width =
-        Math.max(
-            0,
-            player.hp
-        )+
-        "%";
-
-
-    document
-        .getElementById("mana")
-        .style.width =
-        Math.max(
-            0,
-            player.mana
-        )+
-        "%";
-
-
-    document
-        .getElementById("souls")
-        .textContent =
-        souls;
-
-
-    if(
-        boss.active
-    ){
-
-        document
-            .getElementById(
-                "bossHP"
-            )
-            .style.width =
-            Math.max(
-                0,
-                boss.hp
-            )/
-            boss.maxHp*
-            100+
-            "%";
-
-    }
-
-
-    updateQuest();
-
-    updateInteractionPrompt();
-
-
-    if(
-        player.damageCooldown>0
-    ){
-
-        player.damageCooldown--;
-
-    }
-
-
-    if(
-        messageTimer>0
-    ){
-
-        messageTimer--;
-
-
-        if(
-            messageTimer===0
-        ){
-
-            document
-                .getElementById(
-                    "message"
-                )
-                .style.opacity =
-                "0";
+            ctx.strokeRect(x,y,100,100);
 
         }
 
     }
 
-}
+    /* forest */
 
+    for(let i=0;i<100;i++){
 
-/* =====================================================
-START
-===================================================== */
+        const x=(i*731)%3700+100;
+        const y=(i*419)%3300+100;
 
-document
-    .getElementById(
-        "startButton"
-    )
-    .onclick =
-    ()=>{
+        ctx.font="38px Arial";
+        ctx.fillText("🌲",x,y);
 
-        initAudio();
+    }
 
-        if(
-            audioCtx.state ===
-            "suspended"
-        ){
+    /* graveyard */
 
-            audioCtx.resume();
+    ctx.fillStyle="#111017";
+    ctx.fillRect(
+        graveyard.x,
+        graveyard.y,
+        graveyard.w,
+        graveyard.h
+    );
 
-        }
+    for(let i=0;i<20;i++){
 
+        const x=graveyard.x+50+(i%5)*180;
+        const y=graveyard.y+80+Math.floor(i/5)*170;
 
-        startMusic();
+        ctx.font="35px Arial";
+        ctx.fillText("🪦",x,y);
 
+    }
 
-        document
-            .getElementById(
-                "menu"
-            )
-            .classList.add(
-                "hidden"
-            );
+    /* castle */
 
+    ctx.fillStyle="#18131f";
 
-        document
-            .getElementById(
-                "ui"
-            )
-            .style.display =
-            "block";
+    ctx.fillRect(
+        castle.x,
+        castle.y,
+        castle.w,
+        castle.h
+    );
 
+    ctx.strokeStyle="#695486";
+    ctx.lineWidth=8;
 
-        running =
-            true;
+    ctx.strokeRect(
+        castle.x,
+        castle.y,
+        castle.w,
+        castle.h
+    );
 
+    ctx.font="70px Arial";
 
-        createWorld();
+    ctx.fillText(
+        "🏰",
+        castle.x+330,
+        castle.y+170
+    );
 
+    ctx.font="40px Arial";
 
-        showMessage(
-            "🌑 THE FORGOTTEN GOD AWAKENS"
+    ctx.fillText(
+        "🚪",
+        castle.x+375,
+        castle.y+700
+    );
+
+    /* NPC */
+
+    for(const npc of npcs){
+
+        ctx.font="42px Arial";
+
+        ctx.fillText(
+            npc.emoji,
+            npc.x-20,
+            npc.y
         );
 
+    }
 
-        gameLoop();
+    /* enemies */
 
-    };
+    for(const e of enemies){
 
+        if(e.hp<=0) continue;
 
-/* =====================================================
-LORE BUTTON
-===================================================== */
+        ctx.font="38px Arial";
 
-document
-    .getElementById(
-        "loreButton"
-    )
-    .onclick =
-    ()=>{
+        ctx.fillText(
+            e.emoji,
+            e.x-19,
+            e.y
+        );
 
-        document
-            .getElementById(
-                "menu"
-            )
-            .classList.add(
-                "hidden"
+    }
+
+    /* boss */
+
+    if(boss.active && boss.hp>0){
+
+        ctx.font="100px Arial";
+
+        ctx.fillText(
+            boss.emoji,
+            boss.x-50,
+            boss.y
+        );
+
+    }
+
+    /* projectiles */
+
+    for(const p of projectiles){
+
+        const gradient=
+            ctx.createRadialGradient(
+                p.x,p.y,2,
+                p.x,p.y,18
             );
 
+        gradient.addColorStop(0,"#fff");
+        gradient.addColorStop(.25,"#b99cff");
+        gradient.addColorStop(1,"transparent");
 
-        document
-            .getElementById(
-                "lore"
-            )
-            .classList.remove(
-                "hidden"
-            );
+        ctx.fillStyle=gradient;
 
-    };
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,18,0,Math.PI*2);
+        ctx.fill();
 
+        ctx.font="25px Arial";
+        ctx.fillText("🔮",p.x-13,p.y+9);
 
-/* =====================================================
-CLOSE LORE
-===================================================== */
+    }
 
-document
-    .getElementById(
-        "closeLore"
-    )
-    .onclick =
-    ()=>{
+    /* enemy projectiles */
 
-        document
-            .getElementById(
-                "lore"
-            )
-            .classList.add(
-                "hidden"
-            );
+    for(const p of enemyProjectiles){
 
+        ctx.font="28px Arial";
+        ctx.fillText("🔥",p.x-14,p.y+9);
 
-        document
-            .getElementById(
-                "menu"
-            )
-            .classList.remove(
-                "hidden"
-            );
+    }
 
-    };
+    /* player */
 
+    ctx.save();
 
-/* =====================================================
-RESTART
-===================================================== */
+    ctx.translate(player.x,player.y);
 
-document
-    .getElementById(
-        "restartButton"
-    )
-    .onclick =
-    ()=>{
+    ctx.rotate(player.angle);
 
-        location.reload();
+    ctx.font="48px Arial";
 
-    };
+    ctx.fillText(
+        "🧙",
+        -24,
+        20
+    );
 
+    /* magic orb */
 
-/* =====================================================
-INTERACT BUTTON
-===================================================== */
+    ctx.font="27px Arial";
 
-document
-    .getElementById(
-        "interactButton"
-    )
-    .addEventListener(
-        "pointerdown",
-        e=>{
+    ctx.fillText(
+        "🔮",
+        18,
+        5
+    );
 
-            e.preventDefault();
+    ctx.restore();
 
-            interact();
+    /* spawn */
+
+    ctx.font="25px Arial";
+
+    ctx.fillText(
+        "🕯️",
+        player.spawnX-12,
+        player.spawnY+10
+    );
+
+    ctx.restore();
+
+    /* interaction detection */
+
+    let near=false;
+
+    for(const npc of npcs){
+
+        if(Math.hypot(
+            npc.x-player.x,
+            npc.y-player.y
+        )<100){
+
+            near=true;
 
         }
-    );
 
-
-/* =====================================================
-GAME LOOP
-===================================================== */
-
-function gameLoop(){
-
-    if(!running)
-        return;
-
-
-    updatePlayer();
-
-    updateAttack();
-
-    updateProjectiles();
-
-    updateBossProjectiles();
-
-    updateEnemies();
-
-    updateBoss();
-
-    updateCamera();
-
-    updateUI();
-
-
-    /* DRAW */
+    }
 
     if(
-        area==="outside"
+        player.x>3850 &&
+        player.x<4100 &&
+        player.y>950 &&
+        player.y<1150
     ){
 
-        drawOutside();
-
-        drawTrees();
-
-        drawRocks();
-
-        drawGraves();
-
-        drawCastle();
-
-        drawNPC();
-
-        drawEnemies();
-
-    }
-    else{
-
-        drawInterior();
-
-        drawCastleNPC();
-
-        drawEnemies();
+        near=true;
 
     }
 
-
-    drawProjectiles();
-
-    drawPlayer();
-
-    drawQuestArrow();
-
-    darkness();
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
+    document.getElementById("interactHint")
+    .style.display=near?"block":"none";
 
 }
+
+/* =========================================================
+   DEATH / REVIVE
+   ========================================================= */
+
+let dying=false;
+
+function die(){
+
+    if(dying) return;
+
+    dying=true;
+
+    const screen=
+        document.getElementById("deathScreen");
+
+    screen.style.opacity="1";
+
+    let count=5;
+
+    document.getElementById("countdown")
+    .textContent=count;
+
+    const timer=setInterval(()=>{
+
+        count--;
+
+        document.getElementById("countdown")
+        .textContent=count;
+
+        if(count<=0){
+
+            clearInterval(timer);
+
+            revive();
+
+        }
+
+    },1000);
+
+}
+
+function revive(){
+
+    const screen=
+        document.getElementById("deathScreen");
+
+    soundRevive();
+
+    player.x=player.spawnX;
+    player.y=player.spawnY;
+
+    player.hp=100;
+
+    screen.style.opacity="0";
+
+    setTimeout(()=>{
+
+        screen.classList.add("hidden");
+
+        dying=false;
+
+        showMessage("✨ Bạn đã hồi sinh!");
+
+    },1000);
+
+}
+
+/* =========================================================
+   ENDING
+   ========================================================= */
+
+function ending(){
+
+    gameStarted=false;
+
+    clearInterval(musicTimer);
+
+    document.getElementById("bossHud")
+    .style.display="none";
+
+    document.getElementById("endingScreen")
+    .classList.remove("hidden");
+
+}
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+let messageTimer;
+
+function showMessage(text){
+
+    const el=
+        document.getElementById("message");
+
+    el.textContent=text;
+
+    el.style.opacity="1";
+
+    clearTimeout(messageTimer);
+
+    messageTimer=setTimeout(()=>{
+
+        el.style.opacity="0";
+
+    },3500);
+
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+
+document.getElementById("startBtn")
+.addEventListener("click",()=>{
+
+    initAudio();
+
+    if(audioCtx.state==="suspended"){
+        audioCtx.resume();
+    }
+
+    document
+        .getElementById("startScreen")
+        .classList.add("hidden");
+
+    gameStarted=true;
+
+    startMusic();
+
+    showMessage(
+        "WASD để di chuyển • Chuột để ngắm • SPACE để bắn • E để tương tác"
+    );
+
+});
+
+/* =========================================================
+   GAME LOOP
+   ========================================================= */
+
+function loop(){
+
+    update();
+    draw();
+
+    requestAnimationFrame(loop);
+
+}
+
+loop();
 
 </script>
 
