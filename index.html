@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>The Forgotten God V4</title>
+<title>The Forgotten God V5</title>
 
 <style>
 *{
@@ -15,20 +15,21 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#050408;
+    background:#030306;
     font-family:Georgia,serif;
 }
 
 canvas{
     display:block;
+    cursor:crosshair;
 }
 
 /* ================= MENU ================= */
 
-#menu{
+.screen{
     position:fixed;
     inset:0;
-    z-index:50;
+    z-index:100;
 
     display:flex;
     flex-direction:column;
@@ -38,51 +39,47 @@ canvas{
     text-align:center;
 
     background:
-    radial-gradient(
-        circle,
-        #3a1829 0%,
-        #130b14 45%,
-        #030305 100%
-    );
+        radial-gradient(
+            circle at center,
+            #351625 0%,
+            #120a13 45%,
+            #020205 100%
+        );
 
     color:#d8bd88;
 }
 
-#menu h1{
-    margin:0;
-
-    font-size:clamp(45px,9vw,100px);
-    line-height:.85;
-
-    letter-spacing:8px;
-
-    text-shadow:
-    0 0 15px #9b4659,
-    0 0 40px #401421;
+.hidden{
+    display:none !important;
 }
 
-#menu p{
-    margin:30px;
+.title{
+    font-size:clamp(45px,9vw,105px);
+    line-height:.82;
+    letter-spacing:9px;
+    margin:0;
 
+    text-shadow:
+        0 0 15px #9b4659,
+        0 0 45px #431522;
+}
+
+.subtitle{
+    margin:30px 0;
     color:#8e817d;
-
     letter-spacing:5px;
 }
 
 .button{
     width:300px;
-    height:55px;
-
+    min-height:55px;
     margin:8px;
 
     border:1px solid #80694e;
-
     background:#0b080c;
-
     color:#d9bd87;
 
     font-family:Georgia,serif;
-
     letter-spacing:3px;
 
     cursor:pointer;
@@ -90,7 +87,6 @@ canvas{
 
 .button:hover{
     background:#351924;
-
     box-shadow:0 0 25px #69283a;
 }
 
@@ -98,91 +94,116 @@ canvas{
 
 #ui{
     display:none;
-
     position:fixed;
     inset:0;
-
-    z-index:10;
-
+    z-index:20;
     pointer-events:none;
 }
 
 #location{
     position:absolute;
-
     top:18px;
     left:50%;
-
     transform:translateX(-50%);
 
     color:#d8bd88;
-
     letter-spacing:4px;
-
     text-shadow:0 2px 8px black;
+}
+
+#level{
+    position:absolute;
+    right:20px;
+    top:20px;
+    color:#bfa87a;
+    font-family:Arial,sans-serif;
 }
 
 #status{
     position:absolute;
-
     top:18px;
     left:20px;
-
     width:250px;
 
     color:#d0c0a8;
-
     font-family:Arial,sans-serif;
-
     font-size:13px;
 }
 
-#hpBox{
+.bar{
     width:225px;
     height:15px;
-
     margin-top:7px;
 
     border:1px solid #795c4b;
-
     background:#18080c;
 }
 
-#hp{
+.barFill{
     width:100%;
     height:100%;
+    transition:.12s;
+}
 
+#hp{
     background:#a72d43;
+}
 
+#mana{
+    background:#58459c;
+}
+
+#bossUI{
+    display:none;
+
+    position:absolute;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:min(600px,70vw);
+
+    text-align:center;
+    color:#d9bd87;
+}
+
+#bossName{
+    letter-spacing:4px;
+    margin-bottom:5px;
+}
+
+#bossBar{
+    height:18px;
+    border:1px solid #9d7653;
+    background:#16060b;
+}
+
+#bossHP{
+    width:100%;
+    height:100%;
+    background:#8f243e;
     transition:.1s;
 }
 
 #quest{
     position:absolute;
-
-    top:72px;
+    top:75px;
     left:20px;
 
-    width:310px;
-
+    width:315px;
     padding:14px;
 
     background:rgba(8,6,10,.9);
-
     border-left:3px solid #9c794d;
 
     color:#bdb09d;
-
     font-family:Arial,sans-serif;
 }
 
 #questTitle{
     color:#d9bd87;
-
     font-weight:bold;
-
     letter-spacing:2px;
-
     margin-bottom:8px;
 }
 
@@ -192,58 +213,39 @@ canvas{
 
 #distance{
     margin-top:8px;
-
     color:#8f817c;
-
     font-size:11px;
 }
 
 #controls{
     position:absolute;
-
     left:20px;
     bottom:18px;
 
     padding:10px 13px;
 
     background:rgba(5,4,7,.85);
-
     color:#8b807d;
 
     font-family:Arial,sans-serif;
-
     font-size:11px;
-}
-
-#level{
-    position:absolute;
-
-    right:20px;
-    top:20px;
-
-    color:#bfa87a;
-
-    font-family:Arial,sans-serif;
 }
 
 #dialogue{
     display:none;
 
     position:absolute;
-
     left:50%;
     bottom:25px;
 
     transform:translateX(-50%);
 
     width:min(760px,90%);
-
     min-height:135px;
 
     padding:20px;
 
     background:rgba(7,5,9,.97);
-
     border:1px solid #80694e;
 
     box-shadow:0 0 30px black;
@@ -253,9 +255,7 @@ canvas{
 
 #speaker{
     margin-bottom:10px;
-
     color:#d8b36d;
-
     letter-spacing:3px;
 }
 
@@ -265,18 +265,14 @@ canvas{
 
 #dialogueHint{
     position:absolute;
-
     right:15px;
     bottom:10px;
-
     color:#70666a;
-
     font-size:10px;
 }
 
 #message{
     position:absolute;
-
     top:50%;
     left:50%;
 
@@ -285,94 +281,183 @@ canvas{
     padding:15px 25px;
 
     background:rgba(8,5,10,.96);
-
     border:1px solid #8d704d;
 
     color:#d7bd8c;
-
     font-size:15px;
-
     letter-spacing:2px;
 
     opacity:0;
-
     transition:.25s;
 }
 
-#lore{
+/* ================= WAKE UP ================= */
+
+#reviveScreen{
     display:none;
 
     position:fixed;
-
     inset:0;
+    z-index:500;
 
-    z-index:60;
+    background:#000;
 
     justify-content:center;
     align-items:center;
+    flex-direction:column;
 
-    background:#050407;
-}
-
-#loreBox{
-    width:min(700px,90%);
-
-    padding:40px;
-
-    background:#0e090f;
-
-    border:1px solid #80694e;
-
-    color:#bcae9c;
+    color:#d8bd87;
 
     text-align:center;
 }
 
-#loreBox h2{
-    color:#d9bd87;
+#wakeUp{
+    font-size:clamp(55px,11vw,130px);
+    letter-spacing:16px;
 
-    letter-spacing:5px;
+    text-shadow:
+        0 0 15px #9b4659,
+        0 0 50px #401421;
+
+    animation:pulse 2s infinite;
 }
 
-#loreBox p{
-    line-height:1.8;
+#reviveText{
+    margin-top:20px;
+    color:#6f6669;
+    letter-spacing:4px;
+}
+
+#reviveTimer{
+    margin-top:20px;
+    font-size:35px;
+}
+
+@keyframes pulse{
+    0%,100%{opacity:.4}
+    50%{opacity:1}
+}
+
+/* ================= ENDING ================= */
+
+#ending{
+    display:none;
+
+    position:fixed;
+    inset:0;
+    z-index:600;
+
+    background:
+        radial-gradient(
+            circle,
+            #351b27,
+            #09070c 65%,
+            #020204
+        );
+
+    color:#cdb78e;
+
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    text-align:center;
+
+    padding:30px;
+}
+
+#ending h1{
+    font-size:clamp(40px,7vw,80px);
+    letter-spacing:8px;
+
+    margin:0 0 25px;
+
+    text-shadow:
+        0 0 20px #8d4052;
+}
+
+#endingText{
+    max-width:700px;
+    line-height:1.9;
+    color:#aaa09b;
+}
+
+#thanks{
+    margin:25px;
+    color:#d8bd88;
+    letter-spacing:4px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-MENU
-===================================================== -->
+<!-- ================= MENU ================= -->
 
-<div id="menu">
+<div id="menu" class="screen">
 
-<h1>
+<h1 class="title">
 THE<br>
 FORGOTTEN<br>
 GOD
 </h1>
 
-<p>HE REMEMBERS YOU</p>
+<div class="subtitle">
+HE REMEMBERS YOU
+</div>
 
-<button class="button" id="start">
+<button class="button" id="startButton">
 ENTER THE WORLD
 </button>
 
-<button class="button" id="showLore">
+<button class="button" id="loreButton">
 THE LORE
 </button>
 
 </div>
 
 
+<!-- ================= LORE ================= -->
+
+<div id="lore" class="screen hidden">
+
+<h2>THE LORE</h2>
+
+<p>
+Hàng trăm năm trước, một vương quốc từng được
+bảo vệ bởi các vị thần.
+</p>
+
+<p>
+Nhưng con người dần quên tên của họ.
+Vương quốc sụp đổ.
+</p>
+
+<p>
+Chỉ còn một vị thần vẫn tồn tại.
+</p>
+
+<p>
+<strong>FORGOTTEN GOD.</strong>
+</p>
+
+<p>
+Một phù thủy tỉnh dậy mà không nhớ mình là ai.
+</p>
+
+<button class="button" id="closeLore">
+QUAY LẠI
+</button>
+
+</div>
+
+
+<!-- ================= CANVAS ================= -->
+
 <canvas id="game"></canvas>
 
 
-<!-- =====================================================
-UI
-===================================================== -->
+<!-- ================= UI ================= -->
 
 <div id="ui">
 
@@ -388,8 +473,16 @@ LEVEL 1
 
 🧙‍♂️ WANDERER
 
-<div id="hpBox">
-<div id="hp"></div>
+<div class="bar">
+<div id="hp" class="barFill"></div>
+</div>
+
+<div style="margin-top:5px">
+🔮 MANA
+</div>
+
+<div class="bar">
+<div id="mana" class="barFill"></div>
 </div>
 
 <div style="margin-top:8px">
@@ -400,6 +493,23 @@ LEVEL 1
 </div>
 
 
+<!-- BOSS -->
+
+<div id="bossUI">
+
+<div id="bossName">
+👑 FORGOTTEN GOD
+</div>
+
+<div id="bossBar">
+<div id="bossHP"></div>
+</div>
+
+</div>
+
+
+<!-- QUEST -->
+
 <div id="quest">
 
 <div id="questTitle">
@@ -407,7 +517,7 @@ LEVEL 1
 </div>
 
 <div id="questText">
-Tìm NPC bí ẩn trong khu rừng.
+Tìm NPC bí ẩn.
 </div>
 
 <div id="distance">
@@ -417,17 +527,21 @@ Tìm NPC bí ẩn trong khu rừng.
 </div>
 
 
+<!-- CONTROLS -->
+
 <div id="controls">
 
 🎮 <b>ĐIỀU KHIỂN</b><br><br>
 
 W A S D → Di chuyển<br>
-🖱️ Chuột → Ngắm<br>
-SPACE → Bắn phép<br>
+🖱️ Chuột → Ngắm phép<br>
+SPACE → Bắn 🔮<br>
 E → Tương tác
 
 </div>
 
+
+<!-- DIALOGUE -->
 
 <div id="dialogue">
 
@@ -447,45 +561,59 @@ NHẤN E ĐỂ TIẾP TỤC
 </div>
 
 
-<!-- =====================================================
-LORE
-===================================================== -->
+<!-- ================= WAKE UP ================= -->
 
-<div id="lore">
+<div id="reviveScreen">
 
-<div id="loreBox">
+<div id="wakeUp">
+WAKE UP
+</div>
 
-<h2>THE LORE</h2>
+<div id="reviveText">
+THE DARKNESS HAS NOT CLAIMED YOU
+</div>
 
-<p>
-Hàng trăm năm trước, một vương quốc
-từng được bảo vệ bởi các vị thần.
-</p>
-
-<p>
-Nhưng con người dần quên tên của họ.
-Vương quốc sụp đổ.
-</p>
-
-<p>
-Chỉ còn một vị thần vẫn tồn tại.
-</p>
-
-<p>
-Người ta gọi hắn là
-<b>Forgotten God.</b>
-</p>
-
-<p>
-Một phù thủy tỉnh dậy bên ngoài
-vương quốc mà không nhớ mình là ai.
-</p>
-
-<button class="button" id="closeLore">
-QUAY LẠI
-</button>
+<div id="reviveTimer">
+5
+</div>
 
 </div>
+
+
+<!-- ================= ENDING ================= -->
+
+<div id="ending">
+
+<h1>THE END</h1>
+
+<div id="endingText">
+
+Forgotten God đã bị đánh bại.
+
+Vương quốc cuối cùng cũng được giải thoát
+khỏi lời nguyền của bóng tối.
+
+Nhưng khi vị thần biến mất,
+ký ức của người phù thủy cũng trở lại.
+
+Ngươi không phải người được chọn.
+
+Ngươi chính là người đã tạo ra lời nguyền
+từ hàng trăm năm trước.
+
+Và cuộc chiến này...
+
+chỉ là sự thức tỉnh.
+
+</div>
+
+<div id="thanks">
+CẢM ƠN BẠN ĐÃ CHƠI
+</div>
+
+<button class="button" id="restartButton">
+CHƠI LẠI
+</button>
 
 </div>
 
@@ -496,36 +624,28 @@ QUAY LẠI
 CANVAS
 ===================================================== */
 
-const canvas=
+const canvas =
 document.getElementById("game");
 
-const ctx=
+const ctx =
 canvas.getContext("2d");
 
-let W=innerWidth;
-let H=innerHeight;
+let W = innerWidth;
+let H = innerHeight;
 
 function resize(){
 
-W=innerWidth;
-H=innerHeight;
+    W = innerWidth;
+    H = innerHeight;
 
-canvas.width=W;
-canvas.height=H;
+    canvas.width = W;
+    canvas.height = H;
 
 }
 
 addEventListener("resize",resize);
 
 resize();
-
-
-/* =====================================================
-WORLD
-===================================================== */
-
-const WORLD_W=4200;
-const WORLD_H=3200;
 
 
 /* =====================================================
@@ -548,6 +668,18 @@ let dialogueIndex=0;
 
 let messageTimer=0;
 
+let reviving=false;
+
+let gameFinished=false;
+
+
+/* =====================================================
+WORLD
+===================================================== */
+
+const WORLD_W=4200;
+const WORLD_H=3200;
+
 
 /* =====================================================
 PLAYER
@@ -555,17 +687,75 @@ PLAYER
 
 const player={
 
-x:2100,
-y:2200,
+    x:2100,
+    y:2200,
 
-speed:8,
+    speed:8,
 
-hp:100,
-maxHp:100,
+    hp:100,
+    maxHp:100,
 
-cooldown:0,
+    mana:100,
+    maxMana:100,
 
-emoji:"🧙‍♂️"
+    cooldown:0,
+
+    damageCooldown:0,
+
+    footTimer:0,
+
+    emoji:"🧙‍♂️"
+
+};
+
+
+/* =====================================================
+MAGIC PROJECTILES
+===================================================== */
+
+let projectiles=[];
+
+
+/* =====================================================
+BOSS PROJECTILES
+===================================================== */
+
+let bossProjectiles=[];
+
+
+/* =====================================================
+BOSS
+===================================================== */
+
+const boss={
+
+    x:750,
+    y:220,
+
+    hp:150,
+    maxHp:150,
+
+    speed:1.35,
+
+    attackCooldown:0,
+
+    active:false,
+
+    defeated:false
+
+};
+
+
+/* =====================================================
+CAMERA
+===================================================== */
+
+const camera={
+
+    x:0,
+    y:0,
+
+    smooth:.12
 
 };
 
@@ -576,8 +766,8 @@ MOUSE
 
 const mouse={
 
-x:W/2,
-y:H/2
+    x:W/2,
+    y:H/2
 
 };
 
@@ -585,67 +775,14 @@ canvas.addEventListener(
 "mousemove",
 e=>{
 
-mouse.x=e.clientX;
-mouse.y=e.clientY;
+    mouse.x=e.clientX;
+    mouse.y=e.clientY;
 
 });
 
 
 /* =====================================================
-CAMERA
-===================================================== */
-
-const camera={
-
-x:0,
-y:0,
-
-smooth:.12
-
-};
-
-
-/* =====================================================
-OBJECTS
-===================================================== */
-
-const npc={
-x:2200,
-y:2150,
-emoji:"🧝"
-};
-
-
-const castle={
-x:1850,
-y:350,
-width:500,
-height:320
-};
-
-
-const gate={
-x:2100,
-y:670
-};
-
-
-const castleNPC={
-x:750,
-y:550,
-emoji:"🧙"
-};
-
-
-let trees=[];
-let rocks=[];
-let graves=[];
-let enemies=[];
-let projectiles=[];
-
-
-/* =====================================================
-KEYBOARD
+KEYS
 ===================================================== */
 
 const keys={};
@@ -654,13 +791,13 @@ addEventListener(
 "keydown",
 e=>{
 
-keys[e.key.toLowerCase()]=true;
+    keys[e.key.toLowerCase()]=true;
 
-if(e.code==="Space")
-e.preventDefault();
+    if(e.code==="Space")
+        e.preventDefault();
 
-if(e.key.toLowerCase()==="e")
-interact();
+    if(e.key.toLowerCase()==="e")
+        interact();
 
 });
 
@@ -669,41 +806,45 @@ addEventListener(
 "keyup",
 e=>{
 
-keys[e.key.toLowerCase()]=false;
+    keys[e.key.toLowerCase()]=false;
 
 });
 
 
 /* =====================================================
-AUDIO ENGINE
+AUDIO
 ===================================================== */
 
 let audioCtx=null;
 
 let master=null;
 
-let ambientStarted=false;
+let musicTimer=null;
+
+let bossMusic=false;
+
+let audioStarted=false;
 
 
 function initAudio(){
 
-if(audioCtx)
-return;
+    if(audioCtx)
+        return;
 
-audioCtx=
-new(
-window.AudioContext||
-window.webkitAudioContext
-)();
+    audioCtx =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
 
-master=
-audioCtx.createGain();
+    master =
+        audioCtx.createGain();
 
-master.gain.value=.20;
+    master.gain.value=.22;
 
-master.connect(
-audioCtx.destination
-);
+    master.connect(
+        audioCtx.destination
+    );
 
 }
 
@@ -713,45 +854,337 @@ TONE
 ===================================================== */
 
 function tone(
-freq,
-duration,
-type="sine",
-volume=.12
+    frequency,
+    duration,
+    type="sine",
+    volume=.08
 ){
 
-if(!audioCtx)
-return;
+    if(!audioCtx)
+        return;
 
-const osc=
-audioCtx.createOscillator();
+    const osc =
+        audioCtx.createOscillator();
 
-const gain=
-audioCtx.createGain();
+    const gain =
+        audioCtx.createGain();
 
-osc.type=type;
+    osc.type=type;
 
-osc.frequency.value=freq;
+    osc.frequency.setValueAtTime(
+        frequency,
+        audioCtx.currentTime
+    );
 
-gain.gain.setValueAtTime(
-volume,
-audioCtx.currentTime
-);
+    gain.gain.setValueAtTime(
+        volume,
+        audioCtx.currentTime
+    );
 
-gain.gain.exponentialRampToValueAtTime(
-.001,
-audioCtx.currentTime+duration
-);
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioCtx.currentTime+duration
+    );
 
-osc.connect(gain);
+    osc.connect(gain);
+    gain.connect(master);
 
-gain.connect(master);
+    osc.start();
 
-osc.start();
+    osc.stop(
+        audioCtx.currentTime+
+        duration
+    );
 
-osc.stop(
-audioCtx.currentTime+
-duration
-);
+}
+
+
+/* =====================================================
+NOISE
+===================================================== */
+
+function noise(duration=.1,volume=.05){
+
+    if(!audioCtx)
+        return;
+
+    const buffer =
+        audioCtx.createBuffer(
+            1,
+            audioCtx.sampleRate*duration,
+            audioCtx.sampleRate
+        );
+
+    const data =
+        buffer.getChannelData(0);
+
+    for(let i=0;i<data.length;i++){
+
+        data[i]=
+            Math.random()*2-1;
+
+    }
+
+    const source =
+        audioCtx.createBufferSource();
+
+    const gain =
+        audioCtx.createGain();
+
+    source.buffer=buffer;
+
+    gain.gain.value=volume;
+
+    source.connect(gain);
+
+    gain.connect(master);
+
+    source.start();
+
+}
+
+
+/* =====================================================
+CHARACTER SOUNDS
+===================================================== */
+
+function footstep(){
+
+    tone(
+        65+Math.random()*20,
+        .07,
+        "sine",
+        .035
+    );
+
+}
+
+
+function castSound(){
+
+    tone(
+        180,
+        .08,
+        "triangle",
+        .08
+    );
+
+    setTimeout(
+        ()=>tone(
+            380,
+            .12,
+            "sine",
+            .06
+        ),
+        50
+    );
+
+}
+
+
+function shootSound(){
+
+    tone(
+        250,
+        .07,
+        "sawtooth",
+        .08
+    );
+
+    tone(
+        600,
+        .15,
+        "sine",
+        .06
+    );
+
+}
+
+
+function hurtSound(){
+
+    tone(
+        100,
+        .2,
+        "sawtooth",
+        .1
+    );
+
+    noise(
+        .12,
+        .04
+    );
+
+}
+
+
+function deathSound(){
+
+    tone(
+        90,
+        .6,
+        "sine",
+        .1
+    );
+
+    setTimeout(
+        ()=>{
+            tone(
+                55,
+                .8,
+                "sine",
+                .08
+            );
+        },
+        250
+    );
+
+}
+
+
+function reviveSound(){
+
+    tone(
+        110,
+        .15,
+        "sine",
+        .06
+    );
+
+    setTimeout(
+        ()=>tone(
+            220,
+            .15,
+            "sine",
+            .07
+        ),
+        150
+    );
+
+    setTimeout(
+        ()=>tone(
+            440,
+            .35,
+            "sine",
+            .09
+        ),
+        300
+    );
+
+}
+
+
+function npcSound(){
+
+    tone(
+        300,
+        .12,
+        "triangle",
+        .05
+    );
+
+    setTimeout(
+        ()=>tone(
+            450,
+            .15,
+            "triangle",
+            .04
+        ),
+        100
+    );
+
+}
+
+
+function levelSound(){
+
+    tone(
+        220,
+        .15,
+        "sine",
+        .07
+    );
+
+    setTimeout(
+        ()=>tone(
+            330,
+            .15,
+            "sine",
+            .07
+        ),
+        120
+    );
+
+    setTimeout(
+        ()=>tone(
+            440,
+            .3,
+            "sine",
+            .08
+        ),
+        240
+    );
+
+}
+
+
+function bossAttackSound(){
+
+    tone(
+        75,
+        .25,
+        "sawtooth",
+        .12
+    );
+
+    noise(
+        .18,
+        .06
+    );
+
+}
+
+
+function bossHitSound(){
+
+    tone(
+        55,
+        .18,
+        "square",
+        .1
+    );
+
+}
+
+
+function bossDeathSound(){
+
+    tone(
+        70,
+        .4,
+        "sawtooth",
+        .1
+    );
+
+    setTimeout(
+        ()=>tone(
+            180,
+            .4,
+            "sine",
+            .08
+        ),
+        250
+    );
+
+    setTimeout(
+        ()=>tone(
+            440,
+            .8,
+            "sine",
+            .1
+        ),
+        500
+    );
 
 }
 
@@ -760,225 +1193,82 @@ duration
 DARK FANTASY MUSIC
 ===================================================== */
 
-function startDarkFantasyMusic(){
+function startMusic(){
 
-if(ambientStarted)
-return;
+    if(musicTimer)
+        return;
 
-ambientStarted=true;
+    let index=0;
 
+    const normalNotes=[
+        55,
+        65.41,
+        73.42,
+        61.74,
+        49
+    ];
 
-/*
-   Bass drone
-*/
+    musicTimer=setInterval(()=>{
 
-const bass=
-audioCtx.createOscillator();
+        if(!audioCtx)
+            return;
 
-const bassGain=
-audioCtx.createGain();
+        if(bossMusic)
+            return;
 
-bass.type="sine";
+        tone(
+            normalNotes[index%normalNotes.length],
+            1.1,
+            "triangle",
+            .025
+        );
 
-bass.frequency.value=55;
+        index++;
 
-bassGain.gain.value=.06;
-
-bass.connect(bassGain);
-
-bassGain.connect(master);
-
-bass.start();
-
-
-/*
-   Dark pad
-*/
-
-const pad=
-audioCtx.createOscillator();
-
-const padGain=
-audioCtx.createGain();
-
-pad.type="triangle";
-
-pad.frequency.value=110;
-
-padGain.gain.value=.018;
-
-pad.connect(padGain);
-
-padGain.connect(master);
-
-pad.start();
-
-
-/*
-   Musical sequence
-*/
-
-const notes=[
-110,
-130.81,
-146.83,
-123.47,
-98,
-110,
-82.41,
-98
-];
-
-let i=0;
-
-setInterval(()=>{
-
-if(!audioCtx)
-return;
-
-tone(
-notes[i%notes.length],
-1.2,
-"triangle",
-.025
-);
-
-i++;
-
-},1100);
+    },1000);
 
 }
 
 
 /* =====================================================
-SOUND EFFECTS
+BOSS MUSIC
 ===================================================== */
 
-function attackSound(){
+function startBossMusic(){
 
-tone(
-260,
-.07,
-"sawtooth",
-.12
-);
+    bossMusic=true;
 
-tone(
-520,
-.12,
-"sine",
-.06
-);
+    let index=0;
 
-}
+    const notes=[
+        55,
+        55,
+        73.42,
+        49,
+        65.41,
+        41.20
+    ];
 
+    const timer=setInterval(()=>{
 
-function hitSound(){
+        if(!bossMusic){
 
-tone(
-80,
-.12,
-"square",
-.14
-);
+            clearInterval(timer);
 
-}
+            return;
 
+        }
 
-function soulSound(){
+        tone(
+            notes[index%notes.length],
+            .7,
+            "sawtooth",
+            .035
+        );
 
-tone(
-440,
-.12,
-"sine",
-.1
-);
+        index++;
 
-setTimeout(
-()=>tone(
-660,
-.2,
-"sine",
-.08
-),
-100
-);
-
-}
-
-
-function doorSound(){
-
-tone(
-70,
-.5,
-"sawtooth",
-.1
-);
-
-setTimeout(
-()=>tone(
-110,
-.5,
-"sine",
-.08
-),
-150
-);
-
-}
-
-
-function levelSound(){
-
-tone(
-220,
-.15,
-"sine",
-.1
-);
-
-setTimeout(
-()=>tone(
-330,
-.15,
-"sine",
-.1
-),
-120
-);
-
-setTimeout(
-()=>tone(
-440,
-.3,
-"sine",
-.1
-),
-240
-);
-
-}
-
-
-function npcSound(){
-
-tone(
-280,
-.15,
-"triangle",
-.06
-);
-
-setTimeout(
-()=>tone(
-420,
-.18,
-"triangle",
-.05
-),
-120
-);
+    },650);
 
 }
 
@@ -988,47 +1278,36 @@ START
 ===================================================== */
 
 document
-.getElementById("start")
-.addEventListener(
-"click",
-startGame
-);
+.getElementById("startButton")
+.onclick=()=>{
 
+    initAudio();
 
-function startGame(){
+    audioCtx.resume();
 
-initAudio();
+    audioStarted=true;
 
-audioCtx.resume();
+    startMusic();
 
-startDarkFantasyMusic();
+    document
+        .getElementById("menu")
+        .classList.add("hidden");
 
-tone(
-220,
-.2,
-"sine",
-.1
-);
+    document
+        .getElementById("ui")
+        .style.display="block";
 
-document
-.getElementById("menu")
-.style.display="none";
+    running=true;
 
-document
-.getElementById("ui")
-.style.display="block";
+    createWorld();
 
-running=true;
+    showMessage(
+        "🌑 THE FORGOTTEN GOD AWAKENS"
+    );
 
-createWorld();
+    gameLoop();
 
-showMessage(
-"🌑 THE FORGOTTEN GOD AWAKENS"
-);
-
-gameLoop();
-
-}
+};
 
 
 /* =====================================================
@@ -1036,16 +1315,16 @@ LORE
 ===================================================== */
 
 document
-.getElementById("showLore")
+.getElementById("loreButton")
 .onclick=()=>{
 
-document
-.getElementById("menu")
-.style.display="none";
+    document
+        .getElementById("menu")
+        .classList.add("hidden");
 
-document
-.getElementById("lore")
-.style.display="flex";
+    document
+        .getElementById("lore")
+        .classList.remove("hidden");
 
 };
 
@@ -1054,14 +1333,61 @@ document
 .getElementById("closeLore")
 .onclick=()=>{
 
-document
-.getElementById("lore")
-.style.display="none";
+    document
+        .getElementById("lore")
+        .classList.add("hidden");
+
+    document
+        .getElementById("menu")
+        .classList.remove("hidden");
+
+};
+
+
+/* =====================================================
+RESTART
+===================================================== */
 
 document
-.getElementById("menu")
-.style.display="flex";
+.getElementById("restartButton")
+.onclick=()=>{
 
+    location.reload();
+
+};
+
+
+/* =====================================================
+OBJECTS
+===================================================== */
+
+let trees=[];
+let rocks=[];
+let graves=[];
+let enemies=[];
+
+const npc={
+    x:2200,
+    y:2150,
+    emoji:"🧝"
+};
+
+const castle={
+    x:1850,
+    y:350,
+    width:500,
+    height:320
+};
+
+const gate={
+    x:2100,
+    y:670
+};
+
+const castleNPC={
+    x:750,
+    y:550,
+    emoji:"🧙"
 };
 
 
@@ -1071,60 +1397,62 @@ CREATE WORLD
 
 function createWorld(){
 
-trees=[];
-rocks=[];
-graves=[];
-enemies=[];
+    trees=[];
+    rocks=[];
+    graves=[];
+    enemies=[];
+
+    for(let i=0;i<250;i++){
+
+        trees.push({
+
+            x:Math.random()*WORLD_W,
+            y:Math.random()*WORLD_H,
+
+            size:
+                25+
+                Math.random()*35
+
+        });
+
+    }
 
 
-for(let i=0;i<250;i++){
+    for(let i=0;i<130;i++){
 
-trees.push({
+        rocks.push({
 
-x:Math.random()*WORLD_W,
+            x:Math.random()*WORLD_W,
+            y:Math.random()*WORLD_H,
 
-y:Math.random()*WORLD_H,
+            size:
+                5+
+                Math.random()*13
 
-size:25+Math.random()*35
+        });
 
-});
-
-}
-
-
-for(let i=0;i<130;i++){
-
-rocks.push({
-
-x:Math.random()*WORLD_W,
-
-y:Math.random()*WORLD_H,
-
-size:5+Math.random()*13
-
-});
-
-}
+    }
 
 
-for(let i=0;i<70;i++){
+    for(let i=0;i<70;i++){
 
-graves.push({
+        graves.push({
 
-x:700+Math.random()*1000,
+            x:
+                700+
+                Math.random()*1000,
 
-y:1200+Math.random()*1000
+            y:
+                1200+
+                Math.random()*1000
 
-});
+        });
 
-}
+    }
 
 
-for(let i=0;i<25;i++){
-
-createEnemy();
-
-}
+    for(let i=0;i<20;i++)
+        createEnemy();
 
 }
 
@@ -1135,41 +1463,41 @@ ENEMY
 
 function createEnemy(){
 
-let x;
-let y;
+    let x,y;
 
-do{
+    do{
 
-x=Math.random()*WORLD_W;
-y=Math.random()*WORLD_H;
+        x=Math.random()*WORLD_W;
+        y=Math.random()*WORLD_H;
 
-}
-while(
-distance(
-x,y,
-player.x,
-player.y
-)<500
-);
+    }
+    while(
+        distance(
+            x,y,
+            player.x,
+            player.y
+        )<500
+    );
 
 
-enemies.push({
+    enemies.push({
 
-x,
-y,
+        x:x,
+        y:y,
 
-speed:.6+Math.random()*.7,
+        speed:
+            .6+
+            Math.random()*.7,
 
-hp:3,
+        hp:3,
+        maxHp:3,
 
-maxHp:3,
+        emoji:
+            Math.random()>.5
+            ?"👹"
+            :"💀"
 
-emoji:
-Math.random()>.5
-?"👹"
-:"💀"
-
-});
+    });
 
 }
 
@@ -1179,105 +1507,127 @@ DISTANCE
 ===================================================== */
 
 function distance(
-x1,y1,
-x2,y2
+    x1,y1,
+    x2,y2
 ){
 
-const dx=x2-x1;
-const dy=y2-y1;
+    const dx=x2-x1;
+    const dy=y2-y1;
 
-return Math.sqrt(
-dx*dx+dy*dy
-);
+    return Math.sqrt(
+        dx*dx+
+        dy*dy
+    );
 
 }
 
 
 /* =====================================================
-PLAYER MOVEMENT
+PLAYER
 ===================================================== */
 
 function updatePlayer(){
 
-if(dialogueOpen)
-return;
+    if(dialogueOpen)
+        return;
+
+    let dx=0;
+    let dy=0;
 
 
-let dx=0;
-let dy=0;
+    if(keys["w"]) dy--;
+
+    if(keys["s"]) dy++;
+
+    if(keys["a"]) dx--;
+
+    if(keys["d"]) dx++;
 
 
-if(keys["w"])dy--;
-
-if(keys["s"])dy++;
-
-if(keys["a"])dx--;
-
-if(keys["d"])dx++;
+    const moving =
+        dx!==0 ||
+        dy!==0;
 
 
-if(dx!==0||dy!==0){
+    if(moving){
 
-const len=
-Math.sqrt(
-dx*dx+dy*dy
-);
+        const len =
+            Math.sqrt(
+                dx*dx+
+                dy*dy
+            );
 
-dx/=len;
-dy/=len;
-
-
-player.x+=
-dx*player.speed;
-
-player.y+=
-dy*player.speed;
-
-}
+        dx/=len;
+        dy/=len;
 
 
-if(area==="outside"){
+        player.x +=
+            dx*player.speed;
 
-player.x=
-Math.max(
-40,
-Math.min(
-WORLD_W-40,
-player.x
-)
-);
+        player.y +=
+            dy*player.speed;
 
-player.y=
-Math.max(
-40,
-Math.min(
-WORLD_H-40,
-player.y
-)
-);
 
-}
-else{
+        player.footTimer--;
 
-player.x=
-Math.max(
-80,
-Math.min(
-1420,
-player.x
-)
-);
+        if(player.footTimer<=0){
 
-player.y=
-Math.max(
-100,
-Math.min(
-900,
-player.y
-)
-);
+            footstep();
 
-}
+            player.footTimer=18;
+
+        }
+
+    }
+    else{
+
+        player.footTimer=0;
+
+    }
+
+
+    if(area==="outside"){
+
+        player.x=
+            Math.max(
+                40,
+                Math.min(
+                    WORLD_W-40,
+                    player.x
+                )
+            );
+
+        player.y=
+            Math.max(
+                40,
+                Math.min(
+                    WORLD_H-40,
+                    player.y
+                )
+            );
+
+    }
+    else{
+
+        player.x=
+            Math.max(
+                80,
+                Math.min(
+                    1420,
+                    player.x
+                )
+            );
+
+        player.y=
+            Math.max(
+                80,
+                Math.min(
+                    920,
+                    player.y
+                )
+            );
+
+    }
 
 }
 
@@ -1288,50 +1638,50 @@ CAMERA
 
 function updateCamera(){
 
-const targetX=
-player.x-W/2;
+    const targetX=
+        player.x-W/2;
 
-const targetY=
-player.y-H/2;
-
-
-camera.x+=
-(targetX-camera.x)*
-camera.smooth;
-
-camera.y+=
-(targetY-camera.y)*
-camera.smooth;
+    const targetY=
+        player.y-H/2;
 
 
-const maxX=
-area==="outside"
-?WORLD_W-W
-:1500-W;
+    camera.x +=
+        (targetX-camera.x)*
+        camera.smooth;
 
-const maxY=
-area==="outside"
-?WORLD_H-H
-:1000-H;
+    camera.y +=
+        (targetY-camera.y)*
+        camera.smooth;
 
 
-camera.x=
-Math.max(
-0,
-Math.min(
-Math.max(0,maxX),
-camera.x
-)
-);
+    const maxX =
+        area==="outside"
+        ?WORLD_W-W
+        :1500-W;
 
-camera.y=
-Math.max(
-0,
-Math.min(
-Math.max(0,maxY),
-camera.y
-)
-);
+    const maxY =
+        area==="outside"
+        ?WORLD_H-H
+        :1000-H;
+
+
+    camera.x=
+        Math.max(
+            0,
+            Math.min(
+                Math.max(0,maxX),
+                camera.x
+            )
+        );
+
+    camera.y=
+        Math.max(
+            0,
+            Math.min(
+                Math.max(0,maxY),
+                camera.y
+            )
+        );
 
 }
 
@@ -1342,77 +1692,103 @@ RANGED ATTACK
 
 function rangedAttack(){
 
-if(!running)
-return;
+    if(!running)
+        return;
 
-if(dialogueOpen)
-return;
+    if(dialogueOpen)
+        return;
 
-if(player.cooldown>0)
-return;
+    if(player.cooldown>0)
+        return;
 
+    if(player.mana<8){
 
-player.cooldown=10;
+        showMessage(
+            "🔮 KHÔNG ĐỦ MANA"
+        );
 
-attackSound();
+        return;
 
-
-const worldMouseX=
-mouse.x+camera.x;
-
-const worldMouseY=
-mouse.y+camera.y;
+    }
 
 
-const dx=
-worldMouseX-player.x;
+    player.cooldown=9;
 
-const dy=
-worldMouseY-player.y;
+    player.mana-=8;
 
-const len=
-Math.sqrt(
-dx*dx+dy*dy
-);
+    castSound();
+
+    setTimeout(
+        shootSound,
+        60
+    );
 
 
-projectiles.push({
+    const worldMouseX=
+        mouse.x+camera.x;
 
-x:player.x,
+    const worldMouseY=
+        mouse.y+camera.y;
 
-y:player.y,
 
-vx:(dx/len)*16,
+    const dx=
+        worldMouseX-player.x;
 
-vy:(dy/len)*16,
+    const dy=
+        worldMouseY-player.y;
 
-life:80,
 
-damage:1
+    const len=
+        Math.sqrt(
+            dx*dx+
+            dy*dy
+        );
 
-});
+
+    projectiles.push({
+
+        x:player.x,
+        y:player.y,
+
+        vx:
+            dx/len*17,
+
+        vy:
+            dy/len*17,
+
+        life:90,
+
+        damage:2
+
+    });
 
 }
 
 
 /* =====================================================
-ATTACK INPUT
+ATTACK
 ===================================================== */
 
 function updateAttack(){
 
-if(
-keys[" "]||
-keys["space"]
-){
+    if(keys[" "]||
+       keys["space"]){
 
-rangedAttack();
+        rangedAttack();
 
-}
+    }
 
 
-if(player.cooldown>0)
-player.cooldown--;
+    if(player.cooldown>0)
+        player.cooldown--;
+
+
+    if(player.mana<
+       player.maxMana){
+
+        player.mana+=.08;
+
+    }
 
 }
 
@@ -1423,135 +1799,288 @@ PROJECTILES
 
 function updateProjectiles(){
 
-for(
-let i=projectiles.length-1;
-i>=0;
-i--
-){
+    for(
+        let i=projectiles.length-1;
+        i>=0;
+        i--
+    ){
 
-const p=
-projectiles[i];
+        const p=
+            projectiles[i];
 
-p.x+=p.vx;
+        p.x+=p.vx;
+        p.y+=p.vy;
 
-p.y+=p.vy;
-
-p.life--;
-
-
-const list=enemies;
+        p.life--;
 
 
-for(
-let j=list.length-1;
-j>=0;
-j--
-){
+        /* BOSS */
 
-const e=list[j];
+        if(
+            boss.active &&
+            !boss.defeated &&
+            castleFloor===3 &&
+            distance(
+                p.x,p.y,
+                boss.x,boss.y
+            )<55
+        ){
 
+            boss.hp-=p.damage;
 
-if(
-distance(
-p.x,
-p.y,
-e.x,
-e.y
-)<40
-){
+            projectiles.splice(i,1);
 
-e.hp-=p.damage;
+            bossHitSound();
 
-projectiles.splice(i,1);
+            if(boss.hp<=0){
 
-hitSound();
+                boss.hp=0;
 
+                defeatBoss();
 
-if(e.hp<=0){
+            }
 
-list.splice(j,1);
+            continue;
 
-souls++;
-
-soulSound();
-
-createEnemy();
-
-showMessage(
-"+1 SOUL"
-);
-
-}
-
-break;
-
-}
-
-}
+        }
 
 
-if(p.life<=0){
+        /* ENEMIES */
 
-projectiles.splice(i,1);
+        for(
+            let j=enemies.length-1;
+            j>=0;
+            j--
+        ){
 
-}
+            const e=enemies[j];
 
-}
+
+            if(
+                distance(
+                    p.x,p.y,
+                    e.x,e.y
+                )<40
+            ){
+
+                e.hp-=p.damage;
+
+                projectiles.splice(i,1);
+
+                bossHitSound();
+
+
+                if(e.hp<=0){
+
+                    enemies.splice(j,1);
+
+                    souls++;
+
+                    createEnemy();
+
+                }
+
+                break;
+
+            }
+
+        }
+
+
+        if(p.life<=0){
+
+            projectiles.splice(i,1);
+
+        }
+
+    }
 
 }
 
 
 /* =====================================================
-ENEMY AI
+ENEMIES
 ===================================================== */
 
 function updateEnemies(){
 
-if(dialogueOpen)
-return;
+    if(dialogueOpen)
+        return;
 
 
-for(const e of enemies){
+    for(const e of enemies){
 
-const d=
-distance(
-player.x,
-player.y,
-e.x,
-e.y
-);
-
-
-if(
-d<650 &&
-d>45
-){
-
-const dx=
-player.x-e.x;
-
-const dy=
-player.y-e.y;
+        const d=
+            distance(
+                player.x,
+                player.y,
+                e.x,
+                e.y
+            );
 
 
-e.x+=
-dx/d*
-e.speed;
+        if(
+            d<650 &&
+            d>45
+        ){
 
-e.y+=
-dy/d*
-e.speed;
+            const dx=
+                player.x-e.x;
+
+            const dy=
+                player.y-e.y;
+
+
+            e.x+=
+                dx/d*
+                e.speed;
+
+            e.y+=
+                dy/d*
+                e.speed;
+
+        }
+
+
+        if(d<45){
+
+            damagePlayer(.12);
+
+        }
+
+    }
 
 }
 
 
-if(d<45){
+/* =====================================================
+DAMAGE PLAYER
+===================================================== */
 
-player.hp-=.1;
+function damagePlayer(amount){
+
+    if(player.damageCooldown>0)
+        return;
+
+    player.damageCooldown=25;
+
+    player.hp-=amount;
+
+    hurtSound();
+
+
+    if(player.hp<=0){
+
+        player.hp=0;
+
+        playerDeath();
+
+    }
 
 }
 
+
+/* =====================================================
+PLAYER DEATH
+===================================================== */
+
+function playerDeath(){
+
+    if(reviving)
+        return;
+
+    reviving=true;
+
+    running=false;
+
+    deathSound();
+
+    const screen=
+        document.getElementById(
+            "reviveScreen"
+        );
+
+    const timer=
+        document.getElementById(
+            "reviveTimer"
+        );
+
+    screen.style.display="flex";
+
+    let count=5;
+
+    timer.textContent=count;
+
+
+    const interval=
+        setInterval(()=>{
+
+            count--;
+
+            timer.textContent=count;
+
+
+            if(count<=0){
+
+                clearInterval(interval);
+
+                revivePlayer();
+
+            }
+
+        },1000);
+
 }
+
+
+/* =====================================================
+REVIVE
+===================================================== */
+
+function revivePlayer(){
+
+    reviveSound();
+
+
+    player.hp=player.maxHp;
+
+    player.mana=player.maxMana;
+
+
+    /*
+       Điểm hồi sinh
+    */
+
+    if(area==="outside"){
+
+        player.x=2100;
+        player.y=2200;
+
+    }
+    else{
+
+        player.x=750;
+        player.y=800;
+
+    }
+
+
+    document
+        .getElementById("reviveScreen")
+        .style.display="none";
+
+
+    reviving=false;
+
+    running=true;
+
+
+    showMessage(
+        "✨ YOU HAVE AWAKENED"
+    );
+
+
+    gameLoop();
 
 }
 
@@ -1562,108 +2091,93 @@ INTERACTION
 
 function interact(){
 
-/*
-NPC
-*/
+    if(area==="outside"){
 
-if(
-area==="outside"&&
-distance(
-player.x,
-player.y,
-npc.x,
-npc.y
-)<160
-){
+        if(
+            distance(
+                player.x,
+                player.y,
+                npc.x,
+                npc.y
+            )<160
+        ){
 
-if(dialogueOpen)
-nextDialogue();
+            if(dialogueOpen)
+                nextDialogue();
+            else
+                startDialogue();
 
-else
-startDialogue();
+            return;
 
-return;
-
-}
+        }
 
 
-/*
-CỔNG
-*/
+        if(
+            distance(
+                player.x,
+                player.y,
+                gate.x,
+                gate.y
+            )<140
+        ){
 
-if(
-area==="outside"&&
-distance(
-player.x,
-player.y,
-gate.x,
-gate.y
-)<130
-){
+            enterCastle();
 
-enterCastle();
+            return;
 
-return;
+        }
 
-}
+    }
 
 
-/*
-NPC CASTLE
-*/
+    if(area==="inside"){
 
-if(
-area==="inside"&&
-distance(
-player.x,
-player.y,
-castleNPC.x,
-castleNPC.y
-)<160
-){
+        if(
+            castleFloor===1 &&
+            distance(
+                player.x,
+                player.y,
+                castleNPC.x,
+                castleNPC.y
+            )<160
+        ){
 
-if(dialogueOpen)
-nextDialogue();
+            if(dialogueOpen)
+                nextDialogue();
+            else
+                startDialogue();
 
-else
-startDialogue();
+            return;
 
-return;
-
-}
+        }
 
 
-/*
-CẦU THANG
-*/
+        if(
+            player.x>1100 &&
+            player.y<350
+        ){
 
-if(
-area==="inside"&&
-player.x>1120&&
-player.y<350
-){
+            nextFloor();
 
-nextFloor();
+            return;
 
-return;
-
-}
+        }
 
 
-/*
-CỬA RA
-*/
+        if(
+            castleFloor===1 &&
+            player.y>830 &&
+            player.x>650 &&
+            player.x<850
+        ){
 
-if(
-area==="inside"&&
-player.y>830&&
-player.x>650&&
-player.x<850
-){
+            exitCastle();
 
-exitCastle();
+            return;
 
-}
+        }
+
+    }
 
 }
 
@@ -1674,33 +2188,30 @@ ENTER CASTLE
 
 function enterCastle(){
 
-area="inside";
+    area="inside";
 
-castleFloor=1;
+    castleFloor=1;
 
-player.x=750;
+    player.x=750;
+    player.y=800;
 
-player.y=800;
+    questStage=2;
 
-questStage=2;
+    levelSound();
 
-doorSound();
+    showMessage(
+        "🏰 FORGOTTEN CASTLE"
+    );
 
-levelSound();
+    document
+        .getElementById("location")
+        .textContent=
+        "FORGOTTEN CASTLE — FLOOR 1";
 
-document
-.getElementById("location")
-.textContent=
-"FORGOTTEN CASTLE — FLOOR 1";
-
-document
-.getElementById("level")
-.textContent=
-"FLOOR 1";
-
-showMessage(
-"🏰 ĐÃ VÀO LÂU ĐÀI"
-);
+    document
+        .getElementById("level")
+        .textContent=
+        "FLOOR 1";
 
 }
 
@@ -1711,98 +2222,321 @@ NEXT FLOOR
 
 function nextFloor(){
 
-if(castleFloor>=3){
+    if(castleFloor>=3){
 
-showMessage(
-"👑 ĐÂY LÀ TẦNG CAO NHẤT"
-);
+        if(
+            castleFloor===3 &&
+            boss.defeated
+        ){
 
-return;
+            showEnding();
 
-}
+        }
+        else{
 
+            showMessage(
+                "👑 HÃY ĐỐI MẶT FORGOTTEN GOD"
+            );
 
-castleFloor++;
+        }
 
-levelSound();
+        return;
 
-doorSound();
-
-
-player.x=750;
-
-player.y=800;
-
-
-document
-.getElementById("location")
-.textContent=
-"FORGOTTEN CASTLE — FLOOR "+
-castleFloor;
+    }
 
 
-document
-.getElementById("level")
-.textContent=
-"FLOOR "+
-castleFloor;
+    castleFloor++;
+
+    levelSound();
 
 
-if(castleFloor===2){
-
-questStage=3;
-
-showMessage(
-"🪜 TẦNG 2 — HÃY TÌM ĐƯỜNG LÊN"
-);
-
-}
+    player.x=750;
+    player.y=800;
 
 
-if(castleFloor===3){
+    document
+        .getElementById("location")
+        .textContent=
+        "FORGOTTEN CASTLE — FLOOR "+
+        castleFloor;
 
-questStage=4;
+    document
+        .getElementById("level")
+        .textContent=
+        "FLOOR "+
+        castleFloor;
 
-showMessage(
-"👑 TẦNG CAO NHẤT — FORGOTTEN GOD"
-);
 
-}
+    if(castleFloor===2){
+
+        questStage=3;
+
+        showMessage(
+            "🪜 TẦNG 2"
+        );
+
+    }
+
+
+    if(castleFloor===3){
+
+        questStage=4;
+
+        activateBoss();
+
+    }
 
 }
 
 
 /* =====================================================
-EXIT
+ACTIVATE BOSS
 ===================================================== */
 
-function exitCastle(){
+function activateBoss(){
 
-area="outside";
+    boss.active=true;
 
-castleFloor=0;
+    boss.defeated=false;
 
-player.x=2100;
+    boss.hp=boss.maxHp;
 
-player.y=760;
+    boss.x=750;
 
-questStage=1;
+    boss.y=220;
 
-doorSound();
 
-document
-.getElementById("location")
-.textContent=
-"THE LOST KINGDOM";
+    document
+        .getElementById("bossUI")
+        .style.display="block";
 
-document
-.getElementById("level")
-.textContent=
-"LEVEL 1";
 
-showMessage(
-"ĐÃ RỜI LÂU ĐÀI"
-);
+    startBossMusic();
+
+    bossAttackSound();
+
+    showMessage(
+        "👑 FORGOTTEN GOD HAS AWAKENED"
+    );
+
+}
+
+
+/* =====================================================
+BOSS AI
+===================================================== */
+
+function updateBoss(){
+
+    if(
+        !boss.active ||
+        boss.defeated ||
+        castleFloor!==3
+    )
+        return;
+
+
+    const d=
+        distance(
+            boss.x,
+            boss.y,
+            player.x,
+            player.y
+        );
+
+
+    if(d>85){
+
+        const dx=
+            player.x-boss.x;
+
+        const dy=
+            player.y-boss.y;
+
+
+        boss.x+=
+            dx/d*
+            boss.speed;
+
+        boss.y+=
+            dy/d*
+            boss.speed;
+
+    }
+
+
+    if(boss.attackCooldown>0){
+
+        boss.attackCooldown--;
+
+    }
+
+
+    if(
+        d<650 &&
+        boss.attackCooldown<=0
+    ){
+
+        bossAttack();
+
+        boss.attackCooldown=75;
+
+    }
+
+
+    if(d<80){
+
+        damagePlayer(.45);
+
+    }
+
+}
+
+
+/* =====================================================
+BOSS ATTACK
+===================================================== */
+
+function bossAttack(){
+
+    bossAttackSound();
+
+
+    const dx=
+        player.x-boss.x;
+
+    const dy=
+        player.y-boss.y;
+
+
+    const len=
+        Math.sqrt(
+            dx*dx+
+            dy*dy
+        );
+
+
+    bossProjectiles.push({
+
+        x:boss.x,
+        y:boss.y,
+
+        vx:
+            dx/len*7,
+
+        vy:
+            dy/len*7,
+
+        life:120
+
+    });
+
+}
+
+
+/* =====================================================
+BOSS PROJECTILES
+===================================================== */
+
+function updateBossProjectiles(){
+
+    for(
+        let i=bossProjectiles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p=
+            bossProjectiles[i];
+
+        p.x+=p.vx;
+        p.y+=p.vy;
+
+        p.life--;
+
+
+        if(
+            distance(
+                p.x,p.y,
+                player.x,player.y
+            )<35
+        ){
+
+            damagePlayer(12);
+
+            bossProjectiles.splice(i,1);
+
+            continue;
+
+        }
+
+
+        if(p.life<=0){
+
+            bossProjectiles.splice(i,1);
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+DEFEAT BOSS
+===================================================== */
+
+function defeatBoss(){
+
+    boss.defeated=true;
+
+    boss.active=false;
+
+    bossDeathSound();
+
+    bossMusic=false;
+
+
+    document
+        .getElementById("bossUI")
+        .style.display="none";
+
+
+    souls+=50;
+
+
+    questStage=5;
+
+
+    showMessage(
+        "👑 FORGOTTEN GOD HAS FALLEN"
+    );
+
+
+    setTimeout(
+        showEnding,
+        3500
+    );
+
+}
+
+
+/* =====================================================
+ENDING
+===================================================== */
+
+function showEnding(){
+
+    if(gameFinished)
+        return;
+
+    gameFinished=true;
+
+    running=false;
+
+    document
+        .getElementById("ending")
+        .style.display="flex";
 
 }
 
@@ -1813,156 +2547,161 @@ DIALOGUE
 
 const dialogues=[
 
-[
-"MYSTERIOUS NPC",
-"Ngươi cuối cùng cũng tỉnh lại."
-],
+    [
+        "MYSTERIOUS NPC",
+        "Ngươi cuối cùng cũng tỉnh lại."
+    ],
 
-[
-"WANDERER",
-"Đây là đâu?"
-],
+    [
+        "WANDERER",
+        "Đây là đâu?"
+    ],
 
-[
-"MYSTERIOUS NPC",
-"Đây từng là một vương quốc hùng mạnh."
-],
+    [
+        "MYSTERIOUS NPC",
+        "Một vương quốc đã chết."
+    ],
 
-[
-"MYSTERIOUS NPC",
-"Nhưng mọi người đã quên vị thần bảo vệ nó."
-],
+    [
+        "MYSTERIOUS NPC",
+        "Nhưng vị thần của nó vẫn còn sống."
+    ],
 
-[
-"WANDERER",
-"Forgotten God?"
-],
+    [
+        "WANDERER",
+        "Forgotten God?"
+    ],
 
-[
-"MYSTERIOUS NPC",
-"Hắn đang ở trong lâu đài."
-],
+    [
+        "MYSTERIOUS NPC",
+        "Hắn đang ở trong lâu đài."
+    ],
 
-[
-"MYSTERIOUS NPC",
-"Hãy tìm hắn nếu ngươi muốn biết mình là ai."
-]
+    [
+        "MYSTERIOUS NPC",
+        "Nếu muốn biết mình là ai..."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Hãy tìm hắn."
+    ]
 
 ];
 
 
 const castleDialogues=[
 
-[
-"KEEPER",
-"Ngươi đã vào được lâu đài."
-],
+    [
+        "KEEPER",
+        "Ngươi đã vào được lâu đài."
+    ],
 
-[
-"WANDERER",
-"Forgotten God ở đâu?"
-],
+    [
+        "WANDERER",
+        "Forgotten God ở đâu?"
+    ],
 
-[
-"KEEPER",
-"Trên tầng cao nhất."
-],
+    [
+        "KEEPER",
+        "Trên tầng cao nhất."
+    ],
 
-[
-"KEEPER",
-"Nhưng con đường đó không dành cho người yếu."
-]
+    [
+        "KEEPER",
+        "Nhưng hắn đã chờ ngươi từ rất lâu."
+    ]
 
 ];
 
 
 function startDialogue(){
 
-dialogueOpen=true;
+    dialogueOpen=true;
 
-dialogueIndex=0;
+    dialogueIndex=0;
 
-npcSound();
+    npcSound();
 
-showDialogue();
+    showDialogue();
 
 }
 
 
 function showDialogue(){
 
-const list=
-area==="outside"
-?dialogues
-:castleDialogues;
+    const list=
+        area==="outside"
+        ?dialogues
+        :castleDialogues;
 
 
-document
-.getElementById("dialogue")
-.style.display="block";
+    document
+        .getElementById("dialogue")
+        .style.display="block";
 
 
-document
-.getElementById("speaker")
-.textContent=
-list[dialogueIndex][0];
+    document
+        .getElementById("speaker")
+        .textContent=
+        list[dialogueIndex][0];
 
 
-document
-.getElementById("dialogueText")
-.textContent=
-list[dialogueIndex][1];
+    document
+        .getElementById("dialogueText")
+        .textContent=
+        list[dialogueIndex][1];
 
 }
 
 
 function nextDialogue(){
 
-dialogueIndex++;
+    dialogueIndex++;
 
 
-const list=
-area==="outside"
-?dialogues
-:castleDialogues;
+    const list=
+        area==="outside"
+        ?dialogues
+        :castleDialogues;
 
 
-if(
-dialogueIndex>=list.length
-){
+    if(
+        dialogueIndex>=list.length
+    ){
 
-dialogueOpen=false;
+        dialogueOpen=false;
 
-document
-.getElementById("dialogue")
-.style.display="none";
-
-
-if(area==="outside"){
-
-questStage=1;
-
-showMessage(
-"📜 NHIỆM VỤ: ĐI ĐẾN LÂU ĐÀI"
-);
-
-}
-else{
-
-questStage=3;
-
-showMessage(
-"📜 NHIỆM VỤ: LÊN TẦNG 2"
-);
-
-}
-
-return;
-
-}
+        document
+            .getElementById("dialogue")
+            .style.display="none";
 
 
-showDialogue();
+        if(area==="outside"){
+
+            questStage=1;
+
+            showMessage(
+                "📜 ĐI ĐẾN LÂU ĐÀI"
+            );
+
+        }
+        else{
+
+            questStage=3;
+
+            showMessage(
+                "📜 TÌM CẦU THANG"
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    showDialogue();
 
 }
 
@@ -1973,115 +2712,113 @@ QUEST
 
 function updateQuest(){
 
-const text=
-document.getElementById(
-"questText"
-);
+    const text=
+        document.getElementById(
+            "questText"
+        );
 
-const dist=
-document.getElementById(
-"distance"
-);
-
-
-let target=null;
-
-let name="";
+    const distEl=
+        document.getElementById(
+            "distance"
+        );
 
 
-if(questStage===0){
+    let target=null;
 
-target=npc;
-
-name="NPC BÍ ẨN";
-
-text.innerHTML=
-"🌲 Tìm NPC bí ẩn.<br>"+
-"💬 Đến gần và nhấn E.";
-
-}
+    let name="";
 
 
-else if(questStage===1){
+    if(questStage===0){
 
-target=gate;
+        target=npc;
 
-name="CỔNG LÂU ĐÀI";
+        name="NPC BÍ ẨN";
 
-text.innerHTML=
-"🏰 Đi đến lâu đài.<br>"+
-"🚪 Nhấn E tại cổng.";
+        text.innerHTML=
+            "🌲 Tìm NPC bí ẩn.<br>"+
+            "💬 Nhấn E.";
 
-}
+    }
+
+    else if(questStage===1){
+
+        target=gate;
+
+        name="LÂU ĐÀI";
+
+        text.innerHTML=
+            "🏰 Đi đến lâu đài.<br>"+
+            "🚪 Nhấn E.";
+
+    }
+
+    else if(questStage===2){
+
+        target=castleNPC;
+
+        name="KEEPER";
+
+        text.innerHTML=
+            "🧙 Tìm Keeper.<br>"+
+            "💬 Nhấn E.";
+
+    }
+
+    else if(questStage===3){
+
+        target={
+            x:1240,
+            y:170
+        };
+
+        name="CẦU THANG";
+
+        text.innerHTML=
+            "🪜 Tìm cầu thang.<br>"+
+            "⬆️ Nhấn E.";
+
+    }
+
+    else if(questStage===4){
+
+        target=boss;
+
+        name="FORGOTTEN GOD";
+
+        text.innerHTML=
+            "👑 Đánh bại Forgotten God.";
+
+    }
+
+    else{
+
+        target=player;
+
+        name="HOÀN THÀNH";
+
+        text.innerHTML=
+            "🏆 Vương quốc đã được giải thoát.";
+
+    }
 
 
-else if(questStage===2){
-
-target=castleNPC;
-
-name="KEEPER";
-
-text.innerHTML=
-"🧙 Tìm người giữ lâu đài.<br>"+
-"💬 Nhấn E để nói chuyện.";
-
-}
+    const d=
+        Math.round(
+            distance(
+                player.x,
+                player.y,
+                target.x,
+                target.y
+            )/10
+        );
 
 
-else if(questStage===3){
-
-target={
-x:1250,
-y:200
-};
-
-name="CẦU THANG";
-
-text.innerHTML=
-"🪜 Đi đến cầu thang.<br>"+
-"⬆️ Lên tầng tiếp theo.";
-
-}
-
-
-else{
-
-target={
-x:750,
-y:250
-};
-
-name=
-castleFloor===3
-?"FORGOTTEN GOD"
-:"CẦU THANG TẦNG TIẾP THEO";
-
-
-text.innerHTML=
-castleFloor===3
-?"👑 Đối mặt với Forgotten God."
-:"🪜 Tìm đường lên tầng cao nhất.";
-
-}
-
-
-const d=
-Math.round(
-distance(
-player.x,
-player.y,
-target.x,
-target.y
-)/10
-);
-
-
-dist.textContent=
-"📍 "+
-name+
-" — "+
-d+
-"m";
+    distEl.textContent=
+        "📍 "+
+        name+
+        " — "+
+        d+
+        "m";
 
 }
 
@@ -2092,71 +2829,70 @@ MESSAGE
 
 function showMessage(text){
 
-const el=
-document.getElementById(
-"message"
-);
+    const el=
+        document.getElementById(
+            "message"
+        );
 
-el.textContent=text;
+    el.textContent=text;
 
-el.style.opacity="1";
+    el.style.opacity="1";
 
-messageTimer=130;
+    messageTimer=120;
 
 }
 
 
 /* =====================================================
-DRAW WORLD
+DRAW OUTSIDE
 ===================================================== */
 
 function drawOutside(){
 
-ctx.fillStyle="#14131a";
+    ctx.fillStyle="#111017";
 
-ctx.fillRect(
-0,0,W,H
-);
-
-
-ctx.strokeStyle=
-"rgba(130,120,130,.04)";
-
-const grid=100;
+    ctx.fillRect(
+        0,0,W,H
+    );
 
 
-for(
-let x=-camera.x%grid;
-x<W;
-x+=grid
-){
-
-ctx.beginPath();
-
-ctx.moveTo(x,0);
-
-ctx.lineTo(x,H);
-
-ctx.stroke();
-
-}
+    ctx.strokeStyle=
+        "rgba(130,120,130,.045)";
 
 
-for(
-let y=-camera.y%grid;
-y<H;
-y+=grid
-){
+    const grid=100;
 
-ctx.beginPath();
 
-ctx.moveTo(0,y);
+    for(
+        let x=-camera.x%grid;
+        x<W;
+        x+=grid
+    ){
 
-ctx.lineTo(W,y);
+        ctx.beginPath();
 
-ctx.stroke();
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,H);
 
-}
+        ctx.stroke();
+
+    }
+
+
+    for(
+        let y=-camera.y%grid;
+        y<H;
+        y+=grid
+    ){
+
+        ctx.beginPath();
+
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
+
+        ctx.stroke();
+
+    }
 
 }
 
@@ -2167,68 +2903,70 @@ TREES
 
 function drawTrees(){
 
-for(const t of trees){
+    for(const t of trees){
 
-const x=t.x-camera.x;
+        const x=
+            t.x-camera.x;
 
-const y=t.y-camera.y;
-
-
-if(
-x<-100||
-x>W+100||
-y<-100||
-y>H+100
-)
-continue;
+        const y=
+            t.y-camera.y;
 
 
-ctx.strokeStyle="#241a20";
-
-ctx.lineWidth=9;
-
-ctx.beginPath();
-
-ctx.moveTo(
-x,
-y+t.size
-);
-
-ctx.lineTo(
-x,
-y-t.size
-);
-
-ctx.stroke();
+        if(
+            x<-100||
+            x>W+100||
+            y<-100||
+            y>H+100
+        )
+            continue;
 
 
-ctx.lineWidth=5;
+        ctx.strokeStyle="#241a20";
 
-ctx.beginPath();
+        ctx.lineWidth=9;
 
-ctx.moveTo(
-x,
-y
-);
+        ctx.beginPath();
 
-ctx.lineTo(
-x-t.size,
-y-t.size*.7
-);
+        ctx.moveTo(
+            x,
+            y+t.size
+        );
 
-ctx.moveTo(
-x,
-y-10
-);
+        ctx.lineTo(
+            x,
+            y-t.size
+        );
 
-ctx.lineTo(
-x+t.size,
-y-t.size*.8
-);
+        ctx.stroke();
 
-ctx.stroke();
 
-}
+        ctx.lineWidth=5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            y
+        );
+
+        ctx.lineTo(
+            x-t.size,
+            y-t.size*.7
+        );
+
+        ctx.moveTo(
+            x,
+            y-10
+        );
+
+        ctx.lineTo(
+            x+t.size,
+            y-t.size*.8
+        );
+
+        ctx.stroke();
+
+    }
 
 }
 
@@ -2239,28 +2977,30 @@ ROCKS
 
 function drawRocks(){
 
-for(const r of rocks){
+    for(const r of rocks){
 
-const x=r.x-camera.x;
+        const x=
+            r.x-camera.x;
 
-const y=r.y-camera.y;
+        const y=
+            r.y-camera.y;
 
 
-ctx.fillStyle="#2b282e";
+        ctx.fillStyle="#2b282e";
 
-ctx.beginPath();
+        ctx.beginPath();
 
-ctx.arc(
-x,
-y,
-r.size,
-0,
-Math.PI*2
-);
+        ctx.arc(
+            x,
+            y,
+            r.size,
+            0,
+            Math.PI*2
+        );
 
-ctx.fill();
+        ctx.fill();
 
-}
+    }
 
 }
 
@@ -2271,24 +3011,26 @@ GRAVES
 
 function drawGraves(){
 
-for(const g of graves){
+    for(const g of graves){
 
-const x=g.x-camera.x;
+        const x=
+            g.x-camera.x;
 
-const y=g.y-camera.y;
+        const y=
+            g.y-camera.y;
 
 
-ctx.font="30px Arial";
+        ctx.font="30px Arial";
 
-ctx.textAlign="center";
+        ctx.textAlign="center";
 
-ctx.fillText(
-"🪦",
-x,
-y
-);
+        ctx.fillText(
+            "🪦",
+            x,
+            y
+        );
 
-}
+    }
 
 }
 
@@ -2299,158 +3041,142 @@ CASTLE
 
 function drawCastle(){
 
-const x=
-castle.x-camera.x;
+    const x=
+        castle.x-camera.x;
 
-const y=
-castle.y-camera.y;
-
-
-ctx.fillStyle="#29242d";
-
-ctx.fillRect(
-x,
-y,
-500,
-320
-);
+    const y=
+        castle.y-camera.y;
 
 
-ctx.fillRect(
-x-80,
-y-100,
-120,
-420
-);
+    ctx.fillStyle="#29242d";
+
+    ctx.fillRect(
+        x,
+        y,
+        500,
+        320
+    );
 
 
-ctx.fillRect(
-x+460,
-y-100,
-120,
-420
-);
+    ctx.fillRect(
+        x-80,
+        y-100,
+        120,
+        420
+    );
 
 
-ctx.fillStyle="#0c080d";
+    ctx.fillRect(
+        x+460,
+        y-100,
+        120,
+        420
+    );
 
 
-ctx.beginPath();
-
-ctx.moveTo(
-x-100,
-y-100
-);
-
-ctx.lineTo(
-x-20,
-y-175
-);
-
-ctx.lineTo(
-x+60,
-y-100
-);
-
-ctx.closePath();
-
-ctx.fill();
+    ctx.fillStyle="#09070b";
 
 
-ctx.beginPath();
+    ctx.beginPath();
 
-ctx.moveTo(
-x+440,
-y-100
-);
+    ctx.moveTo(
+        x-100,
+        y-100
+    );
 
-ctx.lineTo(
-x+520,
-y-175
-);
+    ctx.lineTo(
+        x-20,
+        y-175
+    );
 
-ctx.lineTo(
-x+600,
-y-100
-);
+    ctx.lineTo(
+        x+60,
+        y-100
+    );
 
-ctx.closePath();
+    ctx.closePath();
 
-ctx.fill();
-
-
-ctx.fillStyle="#050408";
-
-ctx.fillRect(
-x+195,
-y+165,
-110,
-155
-);
+    ctx.fill();
 
 
-ctx.fillStyle="#a97842";
+    ctx.beginPath();
 
-ctx.fillRect(
-x+70,
-y+70,
-20,
-45
-);
+    ctx.moveTo(
+        x+440,
+        y-100
+    );
 
-ctx.fillRect(
-x+155,
-y+70,
-20,
-45
-);
+    ctx.lineTo(
+        x+520,
+        y-175
+    );
 
-ctx.fillRect(
-x+325,
-y+70,
-20,
-45
-);
+    ctx.lineTo(
+        x+600,
+        y-100
+    );
 
-ctx.fillRect(
-x+410,
-y+70,
-20,
-45
-);
+    ctx.closePath();
+
+    ctx.fill();
 
 
-ctx.fillStyle="#d1af72";
+    ctx.fillStyle="#050408";
 
-ctx.font="bold 18px Georgia";
-
-ctx.textAlign="center";
-
-ctx.fillText(
-"THE FORGOTTEN CASTLE",
-x+250,
-y+360
-);
+    ctx.fillRect(
+        x+195,
+        y+165,
+        110,
+        155
+    );
 
 
-if(
-distance(
-player.x,
-player.y,
-gate.x,
-gate.y
-)<180
-){
+    ctx.fillStyle="#a97842";
 
-ctx.font="bold 16px Arial";
 
-ctx.fillText(
-"🚪 E — VÀO LÂU ĐÀI",
-x+250,
-y+410
-);
+    for(let i=0;i<4;i++){
 
-}
+        ctx.fillRect(
+            x+70+i*85,
+            y+70,
+            20,
+            45
+        );
+
+    }
+
+
+    ctx.fillStyle="#d1af72";
+
+    ctx.font="bold 18px Georgia";
+
+    ctx.textAlign="center";
+
+    ctx.fillText(
+        "THE FORGOTTEN CASTLE",
+        x+250,
+        y+360
+    );
+
+
+    if(
+        distance(
+            player.x,
+            player.y,
+            gate.x,
+            gate.y
+        )<180
+    ){
+
+        ctx.font="bold 16px Arial";
+
+        ctx.fillText(
+            "🚪 E — VÀO LÂU ĐÀI",
+            x+250,
+            y+410
+        );
+
+    }
 
 }
 
@@ -2461,33 +3187,35 @@ NPC
 
 function drawNPC(){
 
-const x=npc.x-camera.x;
+    const x=
+        npc.x-camera.x;
 
-const y=npc.y-camera.y;
-
-
-ctx.font="60px Arial";
-
-ctx.textAlign="center";
-
-ctx.textBaseline="middle";
-
-ctx.fillText(
-npc.emoji,
-x,
-y
-);
+    const y=
+        npc.y-camera.y;
 
 
-ctx.font="13px Georgia";
+    ctx.font="60px Arial";
 
-ctx.fillStyle="#d0af73";
+    ctx.textAlign="center";
 
-ctx.fillText(
-"MYSTERIOUS NPC",
-x,
-y-50
-);
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        npc.emoji,
+        x,
+        y
+    );
+
+
+    ctx.font="13px Georgia";
+
+    ctx.fillStyle="#d0af73";
+
+    ctx.fillText(
+        "MYSTERIOUS NPC",
+        x,
+        y-50
+    );
 
 }
 
@@ -2498,274 +3226,286 @@ ENEMIES
 
 function drawEnemies(){
 
-for(const e of enemies){
+    for(const e of enemies){
 
-const x=e.x-camera.x;
+        const x=
+            e.x-camera.x;
 
-const y=e.y-camera.y;
-
-
-ctx.font="48px Arial";
-
-ctx.textAlign="center";
-
-ctx.textBaseline="middle";
-
-ctx.fillText(
-e.emoji,
-x,
-y
-);
+        const y=
+            e.y-camera.y;
 
 
-/* thanh máu */
+        ctx.font="48px Arial";
 
-ctx.fillStyle="#22090e";
+        ctx.textAlign="center";
 
-ctx.fillRect(
-x-22,
-y-40,
-44,
-5
-);
+        ctx.textBaseline="middle";
+
+        ctx.fillText(
+            e.emoji,
+            x,
+            y
+        );
 
 
-ctx.fillStyle="#b52f45";
+        ctx.fillStyle="#22090e";
 
-ctx.fillRect(
-x-22,
-y-40,
-44*(e.hp/e.maxHp),
-5
-);
+        ctx.fillRect(
+            x-22,
+            y-40,
+            44,
+            5
+        );
 
-}
+
+        ctx.fillStyle="#b52f45";
+
+        ctx.fillRect(
+            x-22,
+            y-40,
+            44*(e.hp/e.maxHp),
+            5
+        );
+
+    }
 
 }
 
 
 /* =====================================================
-CASTLE INTERIOR
+INTERIOR
 ===================================================== */
 
 function drawInterior(){
 
-ctx.fillStyle=
-castleFloor===1
-?"#0e0a10"
-:castleFloor===2
-?"#130a10"
-:"#18070e";
-
-ctx.fillRect(
-0,0,W,H
-);
+    ctx.fillStyle=
+        castleFloor===1
+        ?"#0e0a10"
+        :castleFloor===2
+        ?"#130a10"
+        :"#18070e";
 
 
-/* nền */
-
-ctx.strokeStyle=
-"rgba(170,140,100,.08)";
-
-ctx.lineWidth=2;
+    ctx.fillRect(
+        0,0,W,H
+    );
 
 
-for(
-let x=-camera.x%100;
-x<W;
-x+=100
-){
+    ctx.strokeStyle=
+        "rgba(170,140,100,.08)";
 
-ctx.beginPath();
-
-ctx.moveTo(x,0);
-
-ctx.lineTo(x,H);
-
-ctx.stroke();
-
-}
+    ctx.lineWidth=2;
 
 
-for(
-let y=-camera.y%100;
-y<H;
-y+=100
-){
+    for(
+        let x=-camera.x%100;
+        x<W;
+        x+=100
+    ){
 
-ctx.beginPath();
+        ctx.beginPath();
 
-ctx.moveTo(0,y);
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,H);
 
-ctx.lineTo(W,y);
+        ctx.stroke();
 
-ctx.stroke();
-
-}
-
-
-/* tường */
-
-ctx.strokeStyle="#3a3038";
-
-ctx.lineWidth=25;
-
-ctx.strokeRect(
--camera.x,
--camera.y,
-1500,
-1000
-);
+    }
 
 
-/* thảm */
+    for(
+        let y=-camera.y%100;
+        y<H;
+        y+=100
+    ){
 
-ctx.fillStyle=
-castleFloor===3
-?"#4b1524"
-:"#321822";
+        ctx.beginPath();
 
-ctx.fillRect(
-700-camera.x,
--camera.y,
-100,
-1000
-);
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
 
+        ctx.stroke();
 
-/* cầu thang */
-
-ctx.fillStyle="#4b3a40";
+    }
 
 
-for(let i=0;i<7;i++){
+    ctx.strokeStyle="#3a3038";
 
-ctx.fillRect(
-1120-camera.x,
-700-i*70-camera.y,
-240,
-50
-);
+    ctx.lineWidth=25;
 
-}
-
-
-ctx.fillStyle="#d1b477";
-
-ctx.font="bold 15px Arial";
-
-ctx.textAlign="center";
-
-ctx.fillText(
-"⬆ CẦU THANG",
-1240-camera.x,
-170-camera.y
-);
+    ctx.strokeRect(
+        -camera.x,
+        -camera.y,
+        1500,
+        1000
+    );
 
 
-/* cửa ra */
+    ctx.fillStyle=
+        castleFloor===3
+        ?" #4b1524"
+        :"#321822";
 
-if(castleFloor===1){
-
-ctx.fillStyle="#080609";
-
-ctx.fillRect(
-700-camera.x,
-900-camera.y,
-100,
-100
-);
-
-ctx.fillStyle="#b99b65";
-
-ctx.fillText(
-"🚪 EXIT",
-750-camera.x,
-875-camera.y
-);
-
-}
+    ctx.fillRect(
+        700-camera.x,
+        -camera.y,
+        100,
+        1000
+    );
 
 
-/* NẾN */
+    /* CẦU THANG */
 
-drawCandle(
-400-camera.x,
-250-camera.y
-);
-
-drawCandle(
-1050-camera.x,
-250-camera.y
-);
-
-drawCandle(
-400-camera.x,
-700-camera.y
-);
-
-drawCandle(
-1050-camera.x,
-700-camera.y
-);
+    ctx.fillStyle="#4b3a40";
 
 
-/* TẦNG 3 BOSS */
+    for(let i=0;i<7;i++){
 
-if(castleFloor===3){
+        ctx.fillRect(
+            1120-camera.x,
+            700-i*70-camera.y,
+            240,
+            50
+        );
 
-ctx.font="90px Arial";
+    }
 
-ctx.fillText(
-"👑",
-750-camera.x,
-250-camera.y
-);
 
-ctx.font="bold 20px Georgia";
+    ctx.fillStyle="#d1b477";
 
-ctx.fillStyle="#d9bd87";
+    ctx.font="bold 15px Arial";
 
-ctx.fillText(
-"FORGOTTEN GOD",
-750-camera.x,
-350-camera.y
-);
+    ctx.textAlign="center";
 
-}
+    ctx.fillText(
+        "⬆ CẦU THANG",
+        1240-camera.x,
+        170-camera.y
+    );
+
+
+    /* NẾN */
+
+    drawCandle(
+        400-camera.x,
+        250-camera.y
+    );
+
+    drawCandle(
+        1050-camera.x,
+        250-camera.y
+    );
+
+    drawCandle(
+        400-camera.x,
+        700-camera.y
+    );
+
+    drawCandle(
+        1050-camera.x,
+        700-camera.y
+    );
+
+
+    /* BOSS ROOM */
+
+    if(castleFloor===3){
+
+        drawBossRoom();
+
+    }
+
+
+    /* EXIT */
+
+    if(castleFloor===1){
+
+        ctx.fillStyle="#080609";
+
+        ctx.fillRect(
+            700-camera.x,
+            900-camera.y,
+            100,
+            100
+        );
+
+        ctx.fillStyle="#b99b65";
+
+        ctx.fillText(
+            "🚪 EXIT",
+            750-camera.x,
+            875-camera.y
+        );
+
+    }
 
 }
 
 
 /* =====================================================
-CANDLE
+BOSS ROOM
 ===================================================== */
 
-function drawCandle(x,y){
+function drawBossRoom(){
 
-ctx.fillStyle="#704d37";
-
-ctx.fillRect(
-x-5,
-y,
-10,
-35
-);
+    const pulse=
+        Math.sin(
+            Date.now()/300
+        )*.5+.5;
 
 
-ctx.fillStyle="#e1a24d";
+    ctx.fillStyle=
+        `rgba(120,20,45,${.03+pulse*.04})`;
 
-ctx.beginPath();
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
 
-ctx.arc(
-x,
-y-5,
-6,
-0,
-Math.PI*2
-);
 
-ctx.fill();
+    ctx.strokeStyle=
+        "rgba(170,30,60,.25)";
+
+    ctx.lineWidth=4;
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        750-camera.x,
+        250-camera.y,
+        170,
+        0,
+        Math.PI*2
+    );
+
+    ctx.stroke();
+
+
+    ctx.font="100px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        "👑",
+        boss.x-camera.x,
+        boss.y-camera.y
+    );
+
+
+    ctx.font="bold 18px Georgia";
+
+    ctx.fillStyle="#d9bd87";
+
+    ctx.fillText(
+        "FORGOTTEN GOD",
+        boss.x-camera.x,
+        boss.y-camera.y+80
+    );
 
 }
 
@@ -2776,188 +3516,378 @@ CASTLE NPC
 
 function drawCastleNPC(){
 
-if(castleFloor!==1)
-return;
+    if(castleFloor!==1)
+        return;
 
 
-const x=
-castleNPC.x-camera.x;
+    const x=
+        castleNPC.x-camera.x;
 
-const y=
-castleNPC.y-camera.y;
-
-
-ctx.font="60px Arial";
-
-ctx.textAlign="center";
-
-ctx.textBaseline="middle";
-
-ctx.fillText(
-castleNPC.emoji,
-x,
-y
-);
+    const y=
+        castleNPC.y-camera.y;
 
 
-ctx.font="13px Georgia";
+    ctx.font="60px Arial";
 
-ctx.fillStyle="#d0af73";
+    ctx.textAlign="center";
 
-ctx.fillText(
-"KEEPER",
-x,
-y-50
-);
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        castleNPC.emoji,
+        x,
+        y
+    );
+
+
+    ctx.font="13px Georgia";
+
+    ctx.fillStyle="#d0af73";
+
+    ctx.fillText(
+        "KEEPER",
+        x,
+        y-50
+    );
 
 }
 
 
 /* =====================================================
-PROJECTILES
+CANDLE
 ===================================================== */
 
-function drawProjectiles(){
+function drawCandle(x,y){
 
-for(const p of projectiles){
+    ctx.fillStyle="#704d37";
 
-const x=
-p.x-camera.x;
-
-const y=
-p.y-camera.y;
-
-
-const glow=
-ctx.createRadialGradient(
-x,y,2,
-x,y,22
-);
-
-glow.addColorStop(
-0,
-"rgba(220,180,100,.9)"
-);
-
-glow.addColorStop(
-1,
-"rgba(100,30,100,0)"
-);
-
-ctx.fillStyle=glow;
-
-ctx.beginPath();
-
-ctx.arc(
-x,
-y,
-22,
-0,
-Math.PI*2
-);
-
-ctx.fill();
+    ctx.fillRect(
+        x-5,
+        y,
+        10,
+        35
+    );
 
 
-ctx.fillStyle="#d9bd87";
+    const glow=
+        ctx.createRadialGradient(
+            x,
+            y-5,
+            2,
+            x,
+            y-5,
+            45
+        );
 
-ctx.beginPath();
+    glow.addColorStop(
+        0,
+        "rgba(220,160,70,.35)"
+    );
 
-ctx.arc(
-x,
-y,
-6,
-0,
-Math.PI*2
-);
+    glow.addColorStop(
+        1,
+        "rgba(220,160,70,0)"
+    );
 
-ctx.fill();
+    ctx.fillStyle=glow;
 
-}
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-5,
+        45,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="#e1a24d";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-5,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
 
 }
 
 
 /* =====================================================
-PLAYER
+PLAYER DRAW
 ===================================================== */
 
 function drawPlayer(){
 
-const x=
-player.x-camera.x;
+    const x=
+        player.x-camera.x;
 
-const y=
-player.y-camera.y;
-
-
-ctx.fillStyle=
-"rgba(0,0,0,.5)";
-
-ctx.beginPath();
-
-ctx.ellipse(
-x,
-y+30,
-30,
-10,
-0,
-0,
-Math.PI*2
-);
-
-ctx.fill();
+    const y=
+        player.y-camera.y;
 
 
-ctx.font="65px Arial";
+    /* bóng */
 
-ctx.textAlign="center";
+    ctx.fillStyle=
+        "rgba(0,0,0,.5)";
 
-ctx.textBaseline="middle";
+    ctx.beginPath();
 
-ctx.fillText(
-player.emoji,
-x,
-y
-);
+    ctx.ellipse(
+        x,
+        y+32,
+        30,
+        10,
+        0,
+        0,
+        Math.PI*2
+    );
 
-
-/* hướng ngắm */
-
-const worldMouseX=
-mouse.x+camera.x;
-
-const worldMouseY=
-mouse.y+camera.y;
+    ctx.fill();
 
 
-const angle=
-Math.atan2(
-worldMouseY-player.y,
-worldMouseX-player.x
-);
+    /* nhân vật */
+
+    ctx.font="62px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        player.emoji,
+        x,
+        y
+    );
 
 
-ctx.strokeStyle=
-"rgba(220,190,120,.5)";
+    /* hướng */
 
-ctx.lineWidth=3;
+    const worldMouseX=
+        mouse.x+camera.x;
 
-ctx.beginPath();
+    const worldMouseY=
+        mouse.y+camera.y;
 
-ctx.moveTo(
-x,
-y
-);
 
-ctx.lineTo(
-x+
-Math.cos(angle)*65,
-y+
-Math.sin(angle)*65
-);
+    const angle=
+        Math.atan2(
+            worldMouseY-player.y,
+            worldMouseX-player.x
+        );
 
-ctx.stroke();
+
+    /*
+       🔮 QUẢ CẦU PHÉP
+    */
+
+    const orbX=
+        x+
+        Math.cos(angle)*38;
+
+    const orbY=
+        y+
+        Math.sin(angle)*38;
+
+
+    const glow=
+        ctx.createRadialGradient(
+            orbX,
+            orbY,
+            2,
+            orbX,
+            orbY,
+            25
+        );
+
+    glow.addColorStop(
+        0,
+        "rgba(230,190,255,.9)"
+    );
+
+    glow.addColorStop(
+        .3,
+        "rgba(150,90,220,.6)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(80,30,150,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        orbX,
+        orbY,
+        25,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.font="25px Arial";
+
+    ctx.fillText(
+        "🔮",
+        orbX,
+        orbY
+    );
+
+
+    /* đường ngắm */
+
+    ctx.strokeStyle=
+        "rgba(220,190,120,.25)";
+
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        orbX,
+        orbY
+    );
+
+    ctx.lineTo(
+        orbX+
+        Math.cos(angle)*55,
+        orbY+
+        Math.sin(angle)*55
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* =====================================================
+PROJECTILE DRAW
+===================================================== */
+
+function drawProjectiles(){
+
+    for(const p of projectiles){
+
+        const x=
+            p.x-camera.x;
+
+        const y=
+            p.y-camera.y;
+
+
+        const glow=
+            ctx.createRadialGradient(
+                x,y,2,
+                x,y,30
+            );
+
+        glow.addColorStop(
+            0,
+            "rgba(240,210,255,.95)"
+        );
+
+        glow.addColorStop(
+            .25,
+            "rgba(170,100,255,.7)"
+        );
+
+        glow.addColorStop(
+            1,
+            "rgba(80,30,150,0)"
+        );
+
+        ctx.fillStyle=glow;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            30,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.font="20px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "🔮",
+            x,
+            y
+        );
+
+    }
+
+
+    /* BOSS PROJECTILES */
+
+    for(const p of bossProjectiles){
+
+        const x=
+            p.x-camera.x;
+
+        const y=
+            p.y-camera.y;
+
+
+        const glow=
+            ctx.createRadialGradient(
+                x,y,2,
+                x,y,30
+            );
+
+        glow.addColorStop(
+            0,
+            "rgba(255,60,80,.9)"
+        );
+
+        glow.addColorStop(
+            1,
+            "rgba(100,0,20,0)"
+        );
+
+        ctx.fillStyle=glow;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            30,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.font="22px Arial";
+
+        ctx.fillText(
+            "🔥",
+            x,
+            y
+        );
+
+    }
 
 }
 
@@ -2968,154 +3898,203 @@ QUEST ARROW
 
 function drawQuestArrow(){
 
-let target;
+    if(
+        questStage>=5 ||
+        dialogueOpen
+    )
+        return;
 
 
-if(area==="outside"){
-
-target=
-questStage===0
-?npc
-:gate;
-
-}
-else{
-
-target=
-questStage===2
-?castleNPC
-:{
-x:1240,
-y:170
-};
-
-}
+    let target;
 
 
-const dx=
-target.x-player.x;
+    if(area==="outside"){
 
-const dy=
-target.y-player.y;
+        target=
+            questStage===0
+            ?npc
+            :gate;
+
+    }
+    else if(
+        castleFloor===3 &&
+        boss.active
+    ){
+
+        target=boss;
+
+    }
+    else{
+
+        target=
+            questStage===2
+            ?castleNPC
+            :{
+                x:1240,
+                y:170
+            };
+
+    }
 
 
-const angle=
-Math.atan2(dy,dx);
+    const dx=
+        target.x-player.x;
+
+    const dy=
+        target.y-player.y;
 
 
-const x=
-W/2+
-Math.cos(angle)*105;
-
-const y=
-H/2+
-Math.sin(angle)*105;
+    const angle=
+        Math.atan2(
+            dy,
+            dx
+        );
 
 
-ctx.save();
+    const x=
+        W/2+
+        Math.cos(angle)*105;
 
-ctx.translate(x,y);
+    const y=
+        H/2+
+        Math.sin(angle)*105;
 
-ctx.rotate(angle);
 
-ctx.fillStyle="#d9bd87";
+    ctx.save();
 
-ctx.beginPath();
+    ctx.translate(x,y);
 
-ctx.moveTo(25,0);
+    ctx.rotate(angle);
 
-ctx.lineTo(-15,-14);
+    ctx.fillStyle="#d9bd87";
 
-ctx.lineTo(-8,0);
+    ctx.beginPath();
 
-ctx.lineTo(-15,14);
+    ctx.moveTo(25,0);
 
-ctx.closePath();
+    ctx.lineTo(-15,-14);
 
-ctx.fill();
+    ctx.lineTo(-8,0);
 
-ctx.restore();
+    ctx.lineTo(-15,14);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
 
 }
 
 
 /* =====================================================
-DARK VIGNETTE
+DARKNESS
 ===================================================== */
 
 function darkness(){
 
-const g=
-ctx.createRadialGradient(
-W/2,
-H/2,
-100,
-W/2,
-H/2,
-Math.max(W,H)*.75
-);
+    const g=
+        ctx.createRadialGradient(
+            W/2,
+            H/2,
+            100,
+            W/2,
+            H/2,
+            Math.max(W,H)*.75
+        );
 
-g.addColorStop(
-0,
-"rgba(0,0,0,0)"
-);
 
-g.addColorStop(
-.6,
-"rgba(0,0,0,.16)"
-);
+    g.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
 
-g.addColorStop(
-1,
-"rgba(0,0,0,.78)"
-);
+    g.addColorStop(
+        .6,
+        "rgba(0,0,0,.16)"
+    );
 
-ctx.fillStyle=g;
+    g.addColorStop(
+        1,
+        "rgba(0,0,0,.78)"
+    );
 
-ctx.fillRect(
-0,0,W,H
-);
+
+    ctx.fillStyle=g;
+
+    ctx.fillRect(
+        0,0,W,H
+    );
 
 }
 
 
 /* =====================================================
-UPDATE UI
+UI
 ===================================================== */
 
 function updateUI(){
 
-document
-.getElementById("hp")
-.style.width=
-Math.max(
-0,
-player.hp
-)+"%";
+    document
+        .getElementById("hp")
+        .style.width=
+        Math.max(
+            0,
+            player.hp
+        )+"%";
 
 
-document
-.getElementById("souls")
-.textContent=
-souls;
+    document
+        .getElementById("mana")
+        .style.width=
+        Math.max(
+            0,
+            player.mana
+        )+"%";
 
 
-updateQuest();
+    document
+        .getElementById("souls")
+        .textContent=
+        souls;
 
 
-if(messageTimer>0){
+    if(boss.active){
 
-messageTimer--;
+        document
+            .getElementById("bossHP")
+            .style.width=
+            Math.max(
+                0,
+                boss.hp
+            )/
+            boss.maxHp*
+            100+
+            "%";
 
-if(messageTimer===0){
+    }
 
-document
-.getElementById("message")
-.style.opacity="0";
 
-}
+    updateQuest();
 
-}
+
+    if(player.damageCooldown>0)
+        player.damageCooldown--;
+
+
+    if(messageTimer>0){
+
+        messageTimer--;
+
+        if(messageTimer===0){
+
+            document
+                .getElementById("message")
+                .style.opacity="0";
+
+        }
+
+    }
 
 }
 
@@ -3126,86 +4105,69 @@ GAME LOOP
 
 function gameLoop(){
 
-if(!running)
-return;
+    if(!running)
+        return;
 
 
-updatePlayer();
+    updatePlayer();
 
-updateAttack();
+    updateAttack();
 
-updateProjectiles();
+    updateProjectiles();
 
-updateEnemies();
+    updateBossProjectiles();
 
-updateCamera();
+    updateEnemies();
 
-updateUI();
+    updateBoss();
 
+    updateCamera();
 
-if(player.hp<=0){
-
-player.hp=player.maxHp;
-
-player.x=
-area==="outside"
-?2100
-:750;
-
-player.y=
-area==="outside"
-?2200
-:800;
-
-showMessage(
-"💀 BẠN ĐÃ GỤC NGÃ"
-);
-
-}
+    updateUI();
 
 
-/* DRAW */
+    /* DRAW */
 
-if(area==="outside"){
+    if(area==="outside"){
 
-drawOutside();
+        drawOutside();
 
-drawTrees();
+        drawTrees();
 
-drawRocks();
+        drawRocks();
 
-drawGraves();
+        drawGraves();
 
-drawCastle();
+        drawCastle();
 
-drawNPC();
+        drawNPC();
 
-drawEnemies();
+        drawEnemies();
 
-}
-else{
+    }
+    else{
 
-drawInterior();
+        drawInterior();
 
-drawCastleNPC();
+        drawCastleNPC();
 
-drawEnemies();
+        drawEnemies();
 
-}
-
-
-drawProjectiles();
-
-drawPlayer();
-
-drawQuestArrow();
-
-darkness();
+    }
 
 
-requestAnimationFrame(
-gameLoop
-);
+    drawProjectiles();
+
+    drawPlayer();
+
+    drawQuestArrow();
+
+    darkness();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
