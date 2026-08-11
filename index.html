@@ -3,472 +3,2415 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>THE FORGOTTEN GOD</title>
 
 <style>
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html,
-body {
-    margin: 0;
+html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-}
-
-body {
-    background:
-        radial-gradient(
-            circle at 50% 45%,
-            #21141b 0%,
-            #0d090d 45%,
-            #020204 100%
-        );
-
-    color: #d9c18e;
-
+    background: #020204;
     font-family: Georgia, "Times New Roman", serif;
+    color: #dfc89a;
 }
 
-/* DARK FOG */
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-
-    background:
-        radial-gradient(
-            circle at 50% 50%,
-            transparent 0%,
-            rgba(0,0,0,.25) 50%,
-            rgba(0,0,0,.8) 100%
-        );
-
-    pointer-events: none;
-}
-
-/* MAIN */
+/* =====================================================
+   MENU
+===================================================== */
 
 #menu {
-    position: relative;
-
-    width: 100%;
-    height: 100%;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
 
     display: flex;
-    flex-direction: column;
-
     align-items: center;
     justify-content: center;
 
     text-align: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(80, 35, 45, .45),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 50%,
+            #21131a 0%,
+            #0b080c 48%,
+            #020204 100%
+        );
 }
 
-/* TITLE */
+.menuFog {
+    position: absolute;
+    inset: -20%;
+
+    background:
+        radial-gradient(
+            ellipse at 20% 70%,
+            rgba(130, 110, 100, .08),
+            transparent 35%
+        ),
+        radial-gradient(
+            ellipse at 80% 40%,
+            rgba(120, 35, 50, .12),
+            transparent 40%
+        );
+
+    filter: blur(35px);
+
+    animation: fog 12s ease-in-out infinite alternate;
+}
+
+@keyframes fog {
+    from {
+        transform: translateX(-3%);
+    }
+
+    to {
+        transform: translateX(3%);
+    }
+}
+
+.menuContent {
+    position: relative;
+    z-index: 2;
+}
 
 .title {
-    font-size: clamp(50px, 9vw, 105px);
+    font-size: clamp(50px, 9vw, 110px);
+    line-height: .87;
+    letter-spacing: 10px;
 
-    line-height: 0.9;
-
-    letter-spacing: 9px;
-
-    margin: 0;
-
-    color: #e5cc99;
+    color: #ead2a0;
 
     text-shadow:
-        0 0 8px rgba(255,210,160,.35),
-        0 0 25px rgba(130,40,55,.7),
-        0 0 60px rgba(100,20,40,.35);
+        0 0 10px rgba(255, 215, 160, .35),
+        0 0 30px rgba(140, 40, 60, .7),
+        0 0 70px rgba(80, 15, 30, .5);
 
     animation: titleGlow 4s infinite alternate;
 }
 
 @keyframes titleGlow {
-
     from {
-        text-shadow:
-            0 0 8px rgba(255,210,160,.3),
-            0 0 20px rgba(130,40,55,.5);
+        filter: brightness(.9);
     }
 
     to {
-        text-shadow:
-            0 0 12px rgba(255,220,170,.5),
-            0 0 35px rgba(150,45,65,.8);
+        filter: brightness(1.15);
     }
-
 }
 
-/* SUBTITLE */
-
 .subtitle {
+    margin-top: 30px;
 
-    margin-top: 28px;
-
-    color: #8e8176;
+    color: #978878;
 
     font-size: 14px;
-
     letter-spacing: 7px;
 }
 
-/* BUTTONS */
-
 .buttons {
-
     margin-top: 55px;
 
     display: flex;
-
     flex-direction: column;
+    align-items: center;
 
     gap: 15px;
-
-    width: 300px;
 }
 
 .gameButton {
+    width: 300px;
+    height: 58px;
 
-    height: 57px;
+    background: rgba(12, 9, 13, .75);
 
-    border: 1px solid #705c49;
+    border: 1px solid #806849;
 
-    background: rgba(15,10,14,.7);
-
-    color: #d8bd8a;
+    color: #ddc18c;
 
     font-family: Georgia, serif;
-
     font-size: 15px;
-
     letter-spacing: 4px;
 
     cursor: pointer;
 
-    transition:
-        .3s ease;
+    transition: .3s;
 }
 
 .gameButton:hover {
+    background: rgba(65, 27, 39, .55);
 
-    background: rgba(70,30,40,.45);
+    border-color: #c09a63;
 
-    border-color: #b18b61;
-
-    color: #f0d7a4;
+    color: #f2d9a6;
 
     box-shadow:
-        0 0 20px rgba(130,40,55,.4);
+        0 0 25px rgba(130, 40, 55, .5);
 
-    transform:
-        scale(1.03);
+    transform: translateY(-2px) scale(1.03);
 }
 
-/* FOOTER */
-
 .footer {
-
     position: absolute;
 
-    bottom: 50px;
-
+    bottom: 40px;
     left: 50%;
 
     transform: translateX(-50%);
 
-    color: #51484a;
+    width: 90%;
+
+    color: #51494a;
+
+    font-size: 11px;
+    line-height: 18px;
+    letter-spacing: 2px;
+}
+
+/* =====================================================
+   WORLD
+===================================================== */
+
+#world {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    overflow: hidden;
+
+    background: #07070a;
+}
+
+#worldCanvas {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+/* =====================================================
+   WORLD UI
+===================================================== */
+
+.worldUI {
+    position: absolute;
+    inset: 0;
+
+    z-index: 10;
+
+    pointer-events: none;
+}
+
+.location {
+    position: absolute;
+
+    top: 25px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: #d9bf8c;
+
+    font-size: 14px;
+    letter-spacing: 5px;
+
+    text-shadow:
+        0 0 10px #000;
+}
+
+.playerInfo {
+    position: absolute;
+
+    top: 25px;
+    left: 25px;
+
+    width: 230px;
+
+    color: #d8c8aa;
+
+    font-family: Arial, sans-serif;
 
     font-size: 12px;
-
-    line-height: 18px;
-
-    letter-spacing: 1px;
-
-    width: 90%;
+    letter-spacing: 2px;
 }
 
-/* GAME SCREEN */
+.hpBackground {
+    width: 230px;
+    height: 15px;
 
-#gameScreen {
+    margin-top: 7px;
 
-    display: none;
+    border: 1px solid #927650;
 
-    position: fixed;
+    background: #160a0e;
+}
 
-    inset: 0;
+.hpBar {
+    width: 100%;
+    height: 100%;
+
+    background: #8f2638;
+
+    transition: width .2s;
+}
+
+.controls {
+    position: absolute;
+
+    bottom: 20px;
+    left: 25px;
+
+    color: #756d68;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.dialogue {
+    position: absolute;
+
+    left: 50%;
+    bottom: 35px;
+
+    transform: translateX(-50%);
+
+    width: min(760px, 90%);
+
+    min-height: 125px;
+
+    padding: 22px 28px;
 
     background:
-        radial-gradient(
-            circle at center,
-            #21151b,
-            #08070a 70%
+        linear-gradient(
+            135deg,
+            rgba(12, 9, 12, .95),
+            rgba(25, 13, 19, .95)
         );
 
-    align-items: center;
+    border: 1px solid rgba(190, 150, 95, .45);
 
-    justify-content: center;
+    box-shadow:
+        0 0 35px rgba(0,0,0,.8);
 
-    flex-direction: column;
+    color: #c8b9a0;
 
-    text-align: center;
+    font-family: Georgia, serif;
+
+    display: none;
 }
 
-#gameScreen h2 {
+.speaker {
+    color: #d8b477;
 
-    color: #d9c18e;
+    font-size: 14px;
 
-    font-size: 45px;
+    letter-spacing: 3px;
 
-    letter-spacing: 6px;
-
+    margin-bottom: 10px;
 }
 
-#gameScreen p {
+.dialogueText {
+    line-height: 1.6;
 
-    color: #81756e;
+    font-size: 15px;
+}
+
+.nextDialogue {
+    position: absolute;
+
+    right: 18px;
+    bottom: 12px;
+
+    color: #75695f;
+
+    font-size: 10px;
 
     letter-spacing: 2px;
-
 }
 
-/* LORE */
+/* =====================================================
+   LORE
+===================================================== */
 
-#loreScreen {
-
+#lore {
     display: none;
 
     position: fixed;
-
     inset: 0;
+
+    z-index: 50;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 25px;
 
     background:
         radial-gradient(
             circle,
-            #24151d,
+            #25151d,
             #050507 75%
         );
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    text-align: center;
-
-    padding: 30px;
-
 }
 
-#loreScreen h2 {
+.loreBox {
+    max-width: 760px;
+    max-height: 85vh;
 
-    color: #d9c18e;
+    overflow-y: auto;
 
-    font-size: 45px;
+    padding: 45px;
+
+    border: 1px solid rgba(190, 150, 95, .4);
+
+    background: rgba(8, 6, 9, .85);
+
+    box-shadow:
+        0 0 60px rgba(80, 20, 35, .4);
+}
+
+.loreBox h2 {
+    margin-bottom: 30px;
+
+    font-size: 42px;
 
     letter-spacing: 6px;
 
+    color: #e0c493;
 }
 
-.loreText {
+.loreBox p {
+    color: #a99b8b;
 
-    max-width: 700px;
-
-    color: #9b8c80;
-
-    line-height: 1.8;
+    line-height: 1.9;
 
     font-size: 16px;
-
 }
 
-.back {
+.backButton {
+    margin-top: 30px;
 
-    margin-top: 35px;
-
-    padding: 14px 35px;
+    width: 190px;
+    height: 50px;
 
     background: transparent;
 
-    color: #d9c18e;
+    border: 1px solid #806849;
 
-    border: 1px solid #705c49;
+    color: #d9bf8c;
+
+    font-family: Georgia, serif;
 
     cursor: pointer;
-
 }
 
+/* =====================================================
+   FADE
+===================================================== */
+
+#fade {
+    position: fixed;
+    inset: 0;
+
+    z-index: 100;
+
+    background: #000;
+
+    pointer-events: none;
+
+    opacity: 1;
+
+    transition: opacity 1.5s;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:600px) {
+
+    .title {
+        letter-spacing: 5px;
+    }
+
+    .subtitle {
+        letter-spacing: 4px;
+        font-size: 11px;
+    }
+
+    .gameButton {
+        width: 270px;
+    }
+
+    .dialogue {
+        bottom: 20px;
+        min-height: 140px;
+    }
+
+}
 </style>
 </head>
 
 <body>
 
-<!-- =========================
+<!-- =====================================================
+     FADE
+===================================================== -->
+
+<div id="fade"></div>
+
+
+<!-- =====================================================
      MAIN MENU
-========================= -->
+===================================================== -->
 
 <div id="menu">
 
-    <h1 class="title">
-        THE<br>
-        FORGOTTEN<br>
-        GOD
-    </h1>
+    <div class="menuFog"></div>
 
-    <div class="subtitle">
-        HE REMEMBERS YOU
-    </div>
+    <div class="menuContent">
 
-    <div class="buttons">
+        <div class="title">
+            THE<br>
+            FORGOTTEN<br>
+            GOD
+        </div>
 
-        <button
-            class="gameButton"
-            onclick="enterWorld()">
+        <div class="subtitle">
+            HE REMEMBERS YOU
+        </div>
 
-            ENTER THE WORLD
+        <div class="buttons">
 
-        </button>
+            <button
+                class="gameButton"
+                id="enterButton">
 
-        <button
-            class="gameButton"
-            onclick="showLore()">
+                ENTER THE WORLD
 
-            THE LORE
+            </button>
 
-        </button>
+            <button
+                class="gameButton"
+                id="loreButton">
+
+                THE LORE
+
+            </button>
+
+        </div>
 
     </div>
 
     <div class="footer">
-
         THE GODS FORGOT THE WORLD.<br>
         THE WORLD DID NOT FORGET THEM.
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     WORLD
+===================================================== -->
+
+<div id="world">
+
+    <canvas id="worldCanvas"></canvas>
+
+    <div class="worldUI">
+
+        <div class="location">
+            THE LOST KINGDOM
+        </div>
+
+        <div class="playerInfo">
+
+            <div>
+                WANDERER
+            </div>
+
+            <div class="hpBackground">
+                <div
+                    class="hpBar"
+                    id="hpBar">
+                </div>
+            </div>
+
+            <div style="margin-top:8px;">
+                SOULS:
+                <span id="souls">0</span>
+            </div>
+
+        </div>
+
+        <div class="controls">
+            W A S D — MOVE
+            &nbsp;&nbsp;
+            SPACE — ATTACK
+            &nbsp;&nbsp;
+            E — TALK
+        </div>
+
+        <div
+            class="dialogue"
+            id="dialogue">
+
+            <div
+                class="speaker"
+                id="speaker">
+            </div>
+
+            <div
+                class="dialogueText"
+                id="dialogueText">
+            </div>
+
+            <div class="nextDialogue">
+                PRESS E
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- =========================
-     GAME SCREEN
-========================= -->
+<!-- =====================================================
+     LORE
+===================================================== -->
 
-<div id="gameScreen">
+<div id="lore">
 
-    <h2>
-        THE LOST KINGDOM
-    </h2>
+    <div class="loreBox">
 
-    <p>
-        THE WORLD IS WAITING FOR YOU...
-    </p>
+        <h2>
+            THE LORE
+        </h2>
 
-    <button
-        class="back"
-        onclick="backToMenu()">
+        <p>
+            Long ago, the gods ruled the world.
+        </p>
 
-        RETURN TO MENU
+        <p>
+            Kingdoms were built beneath their shadows.
+        </p>
 
-    </button>
+        <p>
+            Humanity worshipped them.
+        </p>
 
-</div>
+        <br>
 
+        <p>
+            Then humanity forgot.
+        </p>
 
-<!-- =========================
-     LORE SCREEN
-========================= -->
+        <p>
+            The temples fell.
+            The statues broke.
+            The names disappeared.
+        </p>
 
-<div id="loreScreen">
+        <br>
 
-    <h2>
-        THE LORE
-    </h2>
+        <p>
+            But one god remained.
+        </p>
 
-    <div class="loreText">
+        <p>
+            A god without worshippers.
+            A god without a name.
+        </p>
 
-        Long ago, the gods ruled the world.<br><br>
+        <br>
 
-        Then humanity forgot their names.
+        <p>
+            He waited in the darkness.
+        </p>
 
-        Their temples fell.
+        <p>
+            Until someone finally entered his kingdom.
+        </p>
 
-        Their kingdoms disappeared.
+        <br>
 
-        Their stories became myths.<br><br>
+        <p>
+            You.
+        </p>
 
-        But one god was never forgotten.
+        <button
+            class="backButton"
+            id="closeLore">
 
-        He was only waiting.
+            RETURN
 
-        And now...
-
-        he remembers you.
+        </button>
 
     </div>
-
-    <button
-        class="back"
-        onclick="backToMenu()">
-
-        RETURN TO MENU
-
-    </button>
 
 </div>
 
 
 <script>
 
-/* ENTER WORLD */
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const menu =
+    document.getElementById("menu");
+
+const world =
+    document.getElementById("world");
+
+const lore =
+    document.getElementById("lore");
+
+const fade =
+    document.getElementById("fade");
+
+const canvas =
+    document.getElementById("worldCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+/* =====================================================
+   CANVAS
+===================================================== */
+
+let W = 0;
+let H = 0;
+
+function resizeCanvas() {
+
+    W = canvas.width =
+        window.innerWidth;
+
+    H = canvas.height =
+        window.innerHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+let gameStarted = false;
+
+let keys = {};
+
+let souls = 0;
+
+let dialogueOpen = false;
+
+let dialogueIndex = 0;
+
+
+/* =====================================================
+   PLAYER
+===================================================== */
+
+const player = {
+
+    x: 0,
+    y: 0,
+
+    speed: 3.5,
+
+    hp: 100,
+    maxHp: 100,
+
+    attack: 0
+
+};
+
+
+/* =====================================================
+   NPC
+===================================================== */
+
+const npc = {
+
+    x: 0,
+    y: 0,
+
+    radius: 25
+
+};
+
+
+/* =====================================================
+   ENEMIES
+===================================================== */
+
+let enemies = [];
+
+
+/* =====================================================
+   DECORATIONS
+===================================================== */
+
+let trees = [];
+let rocks = [];
+let ruins = [];
+let particles = [];
+
+
+/* =====================================================
+   DIALOGUE
+===================================================== */
+
+const dialogues = [
+
+    {
+        speaker: "THE WANDERER",
+        text:
+        "Where... am I?"
+    },
+
+    {
+        speaker: "THE WANDERER",
+        text:
+        "This kingdom should have disappeared centuries ago."
+    },
+
+    {
+        speaker: "THE MYSTERIOUS STRANGER",
+        text:
+        "It did."
+    },
+
+    {
+        speaker: "THE MYSTERIOUS STRANGER",
+        text:
+        "But the Forgotten God never disappeared."
+    },
+
+    {
+        speaker: "THE WANDERER",
+        text:
+        "Who are you?"
+    },
+
+    {
+        speaker: "THE MYSTERIOUS STRANGER",
+        text:
+        "Someone who remembers what the world chose to forget."
+    },
+
+    {
+        speaker: "THE MYSTERIOUS STRANGER",
+        text:
+        "Leave this place while you still can."
+    },
+
+    {
+        speaker: "THE WANDERER",
+        text:
+        "And if I don't?"
+    },
+
+    {
+        speaker: "THE MYSTERIOUS STRANGER",
+        text:
+        "Then the God will remember your name."
+    }
+
+];
+
+
+/* =====================================================
+   ENTER WORLD
+===================================================== */
+
+document
+.getElementById("enterButton")
+.addEventListener(
+    "click",
+    enterWorld
+);
+
 
 function enterWorld() {
 
-    document.getElementById("menu").style.display =
-        "none";
+    fade.style.opacity = "1";
 
-    document.getElementById("loreScreen").style.display =
-        "none";
+    setTimeout(() => {
 
-    document.getElementById("gameScreen").style.display =
-        "flex";
+        menu.style.display =
+            "none";
+
+        world.style.display =
+            "block";
+
+        gameStarted = true;
+
+        createWorld();
+
+        fade.style.opacity = "0";
+
+        setTimeout(() => {
+
+            openDialogue();
+
+        }, 1200);
+
+        gameLoop();
+
+    }, 900);
 
 }
 
 
-/* SHOW LORE */
+/* =====================================================
+   LORE
+===================================================== */
 
-function showLore() {
+document
+.getElementById("loreButton")
+.addEventListener(
+    "click",
+    () => {
 
-    document.getElementById("menu").style.display =
-        "none";
+        menu.style.display =
+            "none";
 
-    document.getElementById("gameScreen").style.display =
-        "none";
+        lore.style.display =
+            "flex";
 
-    document.getElementById("loreScreen").style.display =
-        "flex";
+    }
+);
+
+
+document
+.getElementById("closeLore")
+.addEventListener(
+    "click",
+    () => {
+
+        lore.style.display =
+            "none";
+
+        menu.style.display =
+            "flex";
+
+    }
+);
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+window.addEventListener(
+    "keydown",
+    e => {
+
+        keys[e.key.toLowerCase()] =
+            true;
+
+        if(e.code === "Space") {
+
+            attack();
+
+        }
+
+        if(
+            e.key.toLowerCase() === "e"
+        ) {
+
+            if(dialogueOpen) {
+
+                nextDialogue();
+
+            }
+            else {
+
+                talk();
+
+            }
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e => {
+
+        keys[e.key.toLowerCase()] =
+            false;
+
+    }
+);
+
+
+/* =====================================================
+   CREATE WORLD
+===================================================== */
+
+function createWorld() {
+
+    player.x =
+        W / 2;
+
+    player.y =
+        H / 2;
+
+    npc.x =
+        player.x + 170;
+
+    npc.y =
+        player.y - 50;
+
+
+    trees = [];
+    rocks = [];
+    ruins = [];
+    enemies = [];
+    particles = [];
+
+
+    /* TREES */
+
+    for(let i = 0; i < 45; i++) {
+
+        trees.push({
+
+            x: Math.random() * W,
+            y: Math.random() * H,
+
+            size:
+                25 +
+                Math.random() * 35
+
+        });
+
+    }
+
+
+    /* ROCKS */
+
+    for(let i = 0; i < 50; i++) {
+
+        rocks.push({
+
+            x: Math.random() * W,
+            y: Math.random() * H,
+
+            size:
+                5 +
+                Math.random() * 15
+
+        });
+
+    }
+
+
+    /* RUINS */
+
+    for(let i = 0; i < 10; i++) {
+
+        ruins.push({
+
+            x:
+                50 +
+                Math.random() *
+                (W - 100),
+
+            y:
+                50 +
+                Math.random() *
+                (H - 100),
+
+            width:
+                60 +
+                Math.random() * 70,
+
+            height:
+                70 +
+                Math.random() * 80
+
+        });
+
+    }
+
+
+    /* ENEMIES */
+
+    for(let i = 0; i < 6; i++) {
+
+        spawnEnemy();
+
+    }
+
+
+    /* PARTICLES */
+
+    for(let i = 0; i < 180; i++) {
+
+        particles.push({
+
+            x:
+                Math.random() * W,
+
+            y:
+                Math.random() * H,
+
+            size:
+                .5 +
+                Math.random() * 2,
+
+            speed:
+                .1 +
+                Math.random() * .4,
+
+            alpha:
+                .1 +
+                Math.random() * .4
+
+        });
+
+    }
 
 }
 
 
-/* BACK */
+/* =====================================================
+   SPAWN ENEMY
+===================================================== */
 
-function backToMenu() {
+function spawnEnemy() {
 
-    document.getElementById("gameScreen").style.display =
-        "none";
+    enemies.push({
 
-    document.getElementById("loreScreen").style.display =
-        "none";
+        x:
+            Math.random() * W,
 
-    document.getElementById("menu").style.display =
-        "flex";
+        y:
+            Math.random() * H,
+
+        radius:
+            15 +
+            Math.random() * 8,
+
+        speed:
+            .4 +
+            Math.random() * .4,
+
+        hp: 2
+
+    });
+
+}
+
+
+/* =====================================================
+   TALK
+===================================================== */
+
+function talk() {
+
+    const dx =
+        npc.x - player.x;
+
+    const dy =
+        npc.y - player.y;
+
+    const distance =
+        Math.sqrt(dx * dx + dy * dy);
+
+
+    if(distance < 180) {
+
+        openDialogue();
+
+    }
+
+}
+
+
+/* =====================================================
+   OPEN DIALOGUE
+===================================================== */
+
+function openDialogue() {
+
+    dialogueOpen = true;
+
+    dialogueIndex = 0;
+
+    showDialogue();
+
+}
+
+
+/* =====================================================
+   SHOW DIALOGUE
+===================================================== */
+
+function showDialogue() {
+
+    const dialogue =
+        dialogues[dialogueIndex];
+
+
+    document
+    .getElementById("dialogue")
+    .style.display =
+        "block";
+
+
+    document
+    .getElementById("speaker")
+    .textContent =
+        dialogue.speaker;
+
+
+    document
+    .getElementById("dialogueText")
+    .textContent =
+        dialogue.text;
+
+}
+
+
+/* =====================================================
+   NEXT DIALOGUE
+===================================================== */
+
+function nextDialogue() {
+
+    dialogueIndex++;
+
+
+    if(
+        dialogueIndex >=
+        dialogues.length
+    ) {
+
+        dialogueOpen = false;
+
+        document
+        .getElementById("dialogue")
+        .style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    showDialogue();
+
+}
+
+
+/* =====================================================
+   ATTACK
+===================================================== */
+
+function attack() {
+
+    if(!gameStarted)
+        return;
+
+    if(player.attack > 0)
+        return;
+
+
+    player.attack = 15;
+
+
+    for(
+        let i = enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const enemy =
+            enemies[i];
+
+
+        const dx =
+            enemy.x - player.x;
+
+        const dy =
+            enemy.y - player.y;
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if(distance < 75) {
+
+            enemy.hp--;
+
+
+            if(enemy.hp <= 0) {
+
+                enemies.splice(
+                    i,
+                    1
+                );
+
+                souls++;
+
+                spawnEnemy();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   PLAYER MOVEMENT
+===================================================== */
+
+function updatePlayer() {
+
+    if(dialogueOpen)
+        return;
+
+
+    let dx = 0;
+    let dy = 0;
+
+
+    if(keys["w"])
+        dy--;
+
+    if(keys["s"])
+        dy++;
+
+    if(keys["a"])
+        dx--;
+
+    if(keys["d"])
+        dx++;
+
+
+    if(dx !== 0 || dy !== 0) {
+
+        const length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+        dx /= length;
+        dy /= length;
+
+
+        player.x +=
+            dx *
+            player.speed;
+
+        player.y +=
+            dy *
+            player.speed;
+
+    }
+
+
+    player.x =
+        Math.max(
+            30,
+            Math.min(
+                W - 30,
+                player.x
+            )
+        );
+
+
+    player.y =
+        Math.max(
+            30,
+            Math.min(
+                H - 30,
+                player.y
+            )
+        );
+
+}
+
+
+/* =====================================================
+   ENEMY AI
+===================================================== */
+
+function updateEnemies() {
+
+    if(dialogueOpen)
+        return;
+
+
+    for(
+        const enemy
+        of enemies
+    ) {
+
+        const dx =
+            player.x -
+            enemy.x;
+
+        const dy =
+            player.y -
+            enemy.y;
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if(
+            distance > 35
+        ) {
+
+            enemy.x +=
+                dx /
+                distance *
+                enemy.speed;
+
+            enemy.y +=
+                dy /
+                distance *
+                enemy.speed;
+
+        }
+        else {
+
+            player.hp -= .05;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE PARTICLES
+===================================================== */
+
+function updateParticles() {
+
+    for(
+        const p
+        of particles
+    ) {
+
+        p.y -=
+            p.speed;
+
+
+        if(p.y < -10) {
+
+            p.y = H + 10;
+
+            p.x =
+                Math.random() * W;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   DRAW BACKGROUND
+===================================================== */
+
+function drawBackground() {
+
+    /* SKY */
+
+    const sky =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            H
+        );
+
+
+    sky.addColorStop(
+        0,
+        "#08070d"
+    );
+
+    sky.addColorStop(
+        .5,
+        "#111017"
+    );
+
+    sky.addColorStop(
+        1,
+        "#050507"
+    );
+
+
+    ctx.fillStyle =
+        sky;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* MOON GLOW */
+
+    const moonX =
+        W * .78;
+
+    const moonY =
+        H * .20;
+
+
+    const moonGlow =
+        ctx.createRadialGradient(
+            moonX,
+            moonY,
+            10,
+            moonX,
+            moonY,
+            220
+        );
+
+
+    moonGlow.addColorStop(
+        0,
+        "rgba(245,225,185,.4)"
+    );
+
+    moonGlow.addColorStop(
+        1,
+        "rgba(245,225,185,0)"
+    );
+
+
+    ctx.fillStyle =
+        moonGlow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        moonX,
+        moonY,
+        220,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* MOON */
+
+    ctx.fillStyle =
+        "#ddd1b4";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        moonX,
+        moonY,
+        58,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* MOON CRATERS */
+
+    ctx.fillStyle =
+        "rgba(100,90,80,.15)";
+
+    for(let i = 0; i < 9; i++) {
+
+        ctx.beginPath();
+
+        ctx.arc(
+            moonX - 30 + Math.random() * 60,
+            moonY - 30 + Math.random() * 60,
+            3 + Math.random() * 8,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* GROUND */
+
+    ctx.fillStyle =
+        "#101015";
+
+    ctx.fillRect(
+        0,
+        H * .48,
+        W,
+        H * .52
+    );
+
+
+    /* MOUNTAINS */
+
+    ctx.fillStyle =
+        "#09090d";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        H * .55
+    );
+
+    for(
+        let x = 0;
+        x <= W;
+        x += 80
+    ) {
+
+        const y =
+            H * .42 +
+            Math.sin(x * .012) * 70 +
+            Math.sin(x * .026) * 35;
+
+        ctx.lineTo(
+            x,
+            y
+        );
+
+    }
+
+    ctx.lineTo(
+        W,
+        H
+    );
+
+    ctx.lineTo(
+        0,
+        H
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* RUINS */
+
+    drawRuins();
+
+
+    /* TREES */
+
+    drawTrees();
+
+
+    /* ROCKS */
+
+    drawRocks();
+
+
+    /* FOG */
+
+    const fog =
+        ctx.createLinearGradient(
+            0,
+            H * .5,
+            0,
+            H
+        );
+
+
+    fog.addColorStop(
+        0,
+        "rgba(100,95,100,0)"
+    );
+
+    fog.addColorStop(
+        .6,
+        "rgba(100,95,100,.06)"
+    );
+
+    fog.addColorStop(
+        1,
+        "rgba(120,110,110,.12)"
+    );
+
+
+    ctx.fillStyle =
+        fog;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* PARTICLES */
+
+    for(
+        const p
+        of particles
+    ) {
+
+        ctx.fillStyle =
+            `rgba(210,190,160,${p.alpha})`;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   RUINS
+===================================================== */
+
+function drawRuins() {
+
+    for(
+        const r
+        of ruins
+    ) {
+
+        ctx.fillStyle =
+            "#17151a";
+
+
+        ctx.fillRect(
+            r.x,
+            r.y,
+            r.width,
+            r.height
+        );
+
+
+        ctx.fillStyle =
+            "#242027";
+
+
+        ctx.fillRect(
+            r.x - 8,
+            r.y - 10,
+            r.width + 16,
+            12
+        );
+
+
+        /* WINDOWS */
+
+        ctx.fillStyle =
+            "#050407";
+
+
+        for(
+            let x =
+                r.x + 12;
+            x <
+                r.x +
+                r.width -
+                10;
+            x += 25
+        ) {
+
+            ctx.fillRect(
+                x,
+                r.y + 20,
+                10,
+                25
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   TREES
+===================================================== */
+
+function drawTrees() {
+
+    for(
+        const tree
+        of trees
+    ) {
+
+        ctx.strokeStyle =
+            "#171216";
+
+        ctx.lineWidth = 8;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            tree.x,
+            tree.y + tree.size
+        );
+
+        ctx.lineTo(
+            tree.x,
+            tree.y - tree.size
+        );
+
+        ctx.stroke();
+
+
+        ctx.lineWidth = 4;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            tree.x,
+            tree.y - 5
+        );
+
+        ctx.lineTo(
+            tree.x - tree.size,
+            tree.y - tree.size * .7
+        );
+
+        ctx.moveTo(
+            tree.x,
+            tree.y - 15
+        );
+
+        ctx.lineTo(
+            tree.x + tree.size,
+            tree.y - tree.size * .9
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =====================================================
+   ROCKS
+===================================================== */
+
+function drawRocks() {
+
+    for(
+        const r
+        of rocks
+    ) {
+
+        ctx.fillStyle =
+            "#242229";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            r.x,
+            r.y,
+            r.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   DRAW NPC
+===================================================== */
+
+function drawNPC() {
+
+    const x = npc.x;
+    const y = npc.y;
+
+
+    /* SHADOW */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,.6)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y + 28,
+        28,
+        10,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* CLOAK */
+
+    ctx.fillStyle =
+        "#171019";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x - 24,
+        y + 28
+    );
+
+    ctx.lineTo(
+        x,
+        y - 10
+    );
+
+    ctx.lineTo(
+        x + 24,
+        y + 28
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* HEAD */
+
+    ctx.fillStyle =
+        "#b69a7a";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y - 22,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* HOOD */
+
+    ctx.strokeStyle =
+        "#31202b";
+
+    ctx.lineWidth = 8;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y - 23,
+        14,
+        Math.PI,
+        Math.PI * 2
+    );
+
+    ctx.stroke();
+
+
+    /* EYES */
+
+    ctx.fillStyle =
+        "#bd5360";
+
+    ctx.fillRect(
+        x - 6,
+        y - 23,
+        4,
+        3
+    );
+
+    ctx.fillRect(
+        x + 2,
+        y - 23,
+        4,
+        3
+    );
+
+}
+
+
+/* =====================================================
+   DRAW PLAYER
+===================================================== */
+
+function drawPlayer() {
+
+    const x = player.x;
+    const y = player.y;
+
+
+    /* SHADOW */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,.7)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y + 30,
+        30,
+        11,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* AURA */
+
+    const aura =
+        ctx.createRadialGradient(
+            x,
+            y,
+            5,
+            x,
+            y,
+            65
+        );
+
+
+    aura.addColorStop(
+        0,
+        "rgba(150,35,55,.25)"
+    );
+
+    aura.addColorStop(
+        1,
+        "rgba(150,35,55,0)"
+    );
+
+
+    ctx.fillStyle =
+        aura;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        65,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* CLOAK */
+
+    ctx.fillStyle =
+        "#141017";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x - 25,
+        y + 30
+    );
+
+    ctx.lineTo(
+        x - 18,
+        y - 5
+    );
+
+    ctx.lineTo(
+        x,
+        y - 18
+    );
+
+    ctx.lineTo(
+        x + 18,
+        y - 5
+    );
+
+    ctx.lineTo(
+        x + 25,
+        y + 30
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* ARMOR */
+
+    ctx.strokeStyle =
+        "#5d4a42";
+
+    ctx.lineWidth = 4;
+
+    ctx.stroke();
+
+
+    /* HEAD */
+
+    ctx.fillStyle =
+        "#b99c7b";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y - 25,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* MASK */
+
+    ctx.fillStyle =
+        "#17151a";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y - 25,
+        9,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* EYES */
+
+    ctx.fillStyle =
+        "#d34855";
+
+    ctx.fillRect(
+        x - 6,
+        y - 27,
+        4,
+        3
+    );
+
+    ctx.fillRect(
+        x + 2,
+        y - 27,
+        4,
+        3
+    );
+
+
+    /* SWORD */
+
+    ctx.strokeStyle =
+        "#e0d0a8";
+
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 13,
+        y - 4
+    );
+
+    ctx.lineTo(
+        x + 45,
+        y - 40
+    );
+
+    ctx.stroke();
+
+
+    /* SWORD GLOW */
+
+    ctx.strokeStyle =
+        "rgba(230,190,120,.25)";
+
+    ctx.lineWidth = 12;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 13,
+        y - 4
+    );
+
+    ctx.lineTo(
+        x + 45,
+        y - 40
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* =====================================================
+   DRAW ENEMIES
+===================================================== */
+
+function drawEnemies() {
+
+    for(
+        const enemy
+        of enemies
+    ) {
+
+        const x = enemy.x;
+        const y = enemy.y;
+
+
+        /* SHADOW */
+
+        ctx.fillStyle =
+            "rgba(0,0,0,.7)";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            x,
+            y + enemy.radius,
+            enemy.radius,
+            6,
+            0,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        /* BODY */
+
+        ctx.fillStyle =
+            "#34111c";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            enemy.radius,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        /* HORNS */
+
+        ctx.fillStyle =
+            "#1b0b11";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x - 8,
+            y - 10
+        );
+
+        ctx.lineTo(
+            x - 17,
+            y - 27
+        );
+
+        ctx.lineTo(
+            x - 2,
+            y - 16
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x + 8,
+            y - 10
+        );
+
+        ctx.lineTo(
+            x + 17,
+            y - 27
+        );
+
+        ctx.lineTo(
+            x + 2,
+            y - 16
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        /* EYES */
+
+        ctx.fillStyle =
+            "#ff4d5b";
+
+        ctx.fillRect(
+            x - 8,
+            y - 3,
+            5,
+            4
+        );
+
+        ctx.fillRect(
+            x + 3,
+            y - 3,
+            5,
+            4
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   GAME LOOP
+===================================================== */
+
+function gameLoop() {
+
+    if(!gameStarted)
+        return;
+
+
+    updatePlayer();
+
+    updateEnemies();
+
+    updateParticles();
+
+
+    if(player.attack > 0) {
+
+        player.attack--;
+
+    }
+
+
+    if(player.hp <= 0) {
+
+        player.hp = 100;
+
+        player.x = W / 2;
+        player.y = H / 2;
+
+        souls = 0;
+
+    }
+
+
+    document
+    .getElementById("hpBar")
+    .style.width =
+        player.hp + "%";
+
+
+    document
+    .getElementById("souls")
+    .textContent =
+        souls;
+
+
+    drawBackground();
+
+    drawNPC();
+
+    drawEnemies();
+
+    drawPlayer();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
