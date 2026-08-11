@@ -2,8 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>WAKE UP — Dark Fantasy V6</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>WAKE UP - Forgotten God V6</title>
 
 <style>
 *{
@@ -11,338 +12,170 @@
     margin:0;
     padding:0;
     user-select:none;
-    -webkit-user-select:none;
-    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#030308;
-    font-family:Arial,Helvetica,sans-serif;
-    touch-action:none;
+    background:#050507;
+    font-family:Arial,sans-serif;
 }
 
 canvas{
     display:block;
+    width:100vw;
+    height:100vh;
+    touch-action:none;
+}
+
+.panel{
     position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-}
-
-button{
-    border:1px solid #9d7cff;
-    background:#151020;
-    color:#fff;
-    border-radius:12px;
-    padding:13px 25px;
-    font-size:17px;
-    cursor:pointer;
-    box-shadow:0 0 20px #6545a044;
-}
-
-button:hover{
-    background:#211733;
-}
-
-button:active{
-    transform:scale(.96);
-}
-
-.hidden{
-    display:none!important;
-}
-
-/* START */
-
-.overlay{
-    position:fixed;
-    inset:0;
-    z-index:100;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:#eee;
-    background:
-        radial-gradient(
-            circle at center,
-            #251a39 0%,
-            #0b0910 48%,
-            #020204 100%
-        );
-}
-
-#start h1{
-    font-size:clamp(48px,11vw,110px);
-    letter-spacing:12px;
-    text-shadow:
-        0 0 12px #a989ff,
-        0 0 35px #7048d9,
-        0 0 70px #4c299d;
-}
-
-#start .subtitle{
-    margin:18px 20px 28px;
-    color:#aaa1bd;
-    letter-spacing:2px;
-}
-
-.controls{
-    margin-top:24px;
-    color:#8d849d;
-    font-size:13px;
-    line-height:1.7;
-}
-
-/* HUD */
-
-#hud{
-    position:fixed;
-    left:14px;
-    top:14px;
-    z-index:20;
-    color:#fff;
-    text-shadow:0 2px 4px #000;
+    background:rgba(10,8,18,.88);
+    border:1px solid #78638f;
+    border-radius:10px;
+    color:white;
+    padding:10px;
+    z-index:5;
     pointer-events:none;
 }
 
-.hudLabel{
-    font-size:14px;
-}
-
-.bar{
-    width:250px;
-    height:19px;
-    margin:4px 0 7px;
-    overflow:hidden;
-    border-radius:20px;
-    border:2px solid #aaa;
-    background:#211c27;
-}
-
-.fill{
-    height:100%;
-    width:100%;
-    transition:width .15s;
-}
-
-#hpFill{
-    background:linear-gradient(
-        90deg,
-        #891331,
-        #ff456b
-    );
-}
-
-#staminaFill{
-    background:linear-gradient(
-        90deg,
-        #49368c,
-        #a88cff
-    );
-}
-
-#manaFill{
-    background:linear-gradient(
-        90deg,
-        #185f86,
-        #69d9ff
-    );
-}
-
-#floor{
-    position:fixed;
-    z-index:20;
-    top:14px;
-    left:50%;
-    transform:translateX(-50%);
-    color:#d6c9ea;
-    font-weight:bold;
-    text-shadow:0 2px 4px #000;
-    pointer-events:none;
+#stats{
+    left:12px;
+    top:12px;
+    width:220px;
 }
 
 #quest{
-    position:fixed;
-    z-index:20;
-    right:14px;
-    top:14px;
-    width:min(300px,30vw);
-    padding:10px 13px;
-    border-radius:10px;
-    border:1px solid #5b4a73;
-    background:#08070ddd;
-    color:#d7d0df;
-    font-size:13px;
-    line-height:1.4;
+    right:12px;
+    top:12px;
+    width:290px;
 }
 
-#message{
-    position:fixed;
-    z-index:40;
-    left:50%;
-    bottom:17%;
-    transform:translateX(-50%);
-    padding:10px 17px;
-    max-width:90%;
-    border-radius:12px;
-    border:1px solid #8066a8;
-    background:#08070de8;
-    color:#fff;
-    text-align:center;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .25s;
-}
-
-#hint{
-    position:fixed;
-    z-index:35;
-    left:50%;
-    bottom:8%;
-    transform:translateX(-50%);
-    padding:8px 16px;
-    border-radius:12px;
-    background:#090811e8;
-    border:1px solid #7f66a3;
-    color:#fff;
-    display:none;
-}
-
-/* BOSS */
-
-#bossHUD{
-    position:fixed;
-    z-index:25;
-    top:13px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(540px,72vw);
-    display:none;
-    text-align:center;
-    color:#fff;
-    pointer-events:none;
-    text-shadow:0 2px 4px #000;
-}
-
-#bossName{
-    margin-bottom:5px;
-    font-size:14px;
-    letter-spacing:4px;
-    font-weight:bold;
-}
-
+#hpBar,
 #bossBar{
-    width:100%;
-    height:22px;
-    border:2px solid #c4a9b8;
-    background:#160b12;
-    border-radius:20px;
+    height:16px;
+    background:#241018;
+    border-radius:10px;
     overflow:hidden;
+    margin-top:5px;
+}
+
+#hpFill{
+    width:100%;
+    height:100%;
+    background:#c93450;
 }
 
 #bossFill{
     width:100%;
     height:100%;
-    background:
-        linear-gradient(
-            90deg,
-            #51000d,
-            #b3002d,
-            #ff3d5f
-        );
-    transition:width .12s;
+    background:#8736c4;
 }
 
-/* DIALOGUE */
-
-#dialog{
-    position:fixed;
-    z-index:60;
+#bossUI{
+    display:none;
     left:50%;
-    bottom:6%;
+    top:12px;
     transform:translateX(-50%);
-    width:min(720px,90%);
-    padding:18px;
-    border-radius:15px;
-    border:1px solid #8e70bd;
-    background:#090811f2;
-    color:#eee;
-    line-height:1.55;
+    width:420px;
+    text-align:center;
+}
+
+#message{
+    display:none;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%);
+    min-width:250px;
+    text-align:center;
+}
+
+#interact{
+    display:none;
+    position:fixed;
+    left:50%;
+    top:54%;
+    transform:translate(-50%,-50%);
+    background:rgba(15,10,25,.9);
+    border:2px solid #c5a7ed;
+    padding:10px 18px;
+    border-radius:12px;
+    color:white;
+    z-index:7;
+    font-weight:bold;
+}
+
+#start,
+#ending,
+#wake{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:
+        radial-gradient(circle at center,#201630,#030306 70%);
+    color:white;
+}
+
+#ending,
+#wake{
     display:none;
 }
 
-#dialogName{
-    color:#cdb8ff;
+.screen{
+    max-width:760px;
+    padding:30px;
+}
+
+h1{
+    font-size:clamp(45px,9vw,90px);
+    color:#dfd0ff;
+    text-shadow:
+        0 0 10px #9b69d6,
+        0 0 40px #54277e;
+}
+
+h2{
+    color:#c8b2e5;
+    margin:8px 0 20px;
+}
+
+p{
+    line-height:1.6;
+    color:#d1cadb;
+    margin:8px;
+}
+
+button{
+    border:1px solid #b998dc;
+    border-radius:10px;
+    background:#302044;
+    color:white;
+    padding:12px 25px;
+    margin:8px;
+    font-size:17px;
     font-weight:bold;
-    font-size:18px;
 }
 
-#dialogText{
-    margin-top:9px;
+button:active{
+    transform:scale(.95);
 }
 
-#dialogClose{
-    margin-top:13px;
-    color:#8f849c;
-    font-size:12px;
+#wakeTitle{
+    font-size:clamp(50px,12vw,120px);
+    letter-spacing:12px;
+    color:white;
+    text-shadow:0 0 25px white;
 }
 
-/* DEATH */
-
-#death{
-    background:#000;
-    opacity:0;
-    transition:opacity 1s;
-}
-
-#death h1{
-    font-size:clamp(50px,12vw,110px);
-    letter-spacing:13px;
-    text-shadow:
-        0 0 20px #fff,
-        0 0 45px #8d77aa;
-}
-
-#deathText{
-    margin-top:12px;
+#wakeCount{
+    font-size:28px;
+    margin-top:20px;
     color:#aaa;
-}
-
-#count{
-    margin-top:18px;
-    font-size:44px;
-}
-
-/* ENDING */
-
-#ending h1{
-    font-size:clamp(42px,9vw,90px);
-    color:#d8c6ff;
-    letter-spacing:6px;
-    text-shadow:
-        0 0 18px #9871ff,
-        0 0 45px #51309e;
-}
-
-.story{
-    width:min(760px,90%);
-    margin:24px auto;
-    line-height:1.7;
-    color:#c9c2d2;
-}
-
-.story i{
-    color:#d9c8ff;
-}
-
-#stats{
-    color:#81798c;
-    margin-bottom:20px;
 }
 
 /* MOBILE */
@@ -351,193 +184,111 @@ button:active{
     display:none;
     position:fixed;
     inset:0;
-    z-index:45;
+    z-index:20;
     pointer-events:none;
 }
 
-.joystick{
+#joystick{
     position:absolute;
-    width:138px;
-    height:138px;
+    left:20px;
+    bottom:25px;
+    width:150px;
+    height:150px;
+    border:2px solid rgba(220,210,255,.35);
+    background:rgba(40,25,60,.3);
     border-radius:50%;
-    background:#b9a0dc16;
-    border:2px solid #cbbbe044;
     pointer-events:auto;
+    touch-action:none;
 }
 
-.knob{
+#stick{
     position:absolute;
-    width:57px;
-    height:57px;
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
+    width:60px;
+    height:60px;
+    margin:-30px;
     border-radius:50%;
-    background:#d9cfff48;
-    border:2px solid #ffffff55;
-    box-shadow:0 0 15px #b99cff22;
+    background:rgba(190,170,230,.5);
+    border:1px solid #d0b8ee;
 }
 
-#moveJoystick{
-    left:18px;
-    bottom:22px;
+#aimZone{
+    position:absolute;
+    right:15px;
+    bottom:20px;
+    width:210px;
+    height:210px;
+    border:2px solid rgba(220,210,255,.25);
+    border-radius:50%;
+    pointer-events:auto;
+    touch-action:none;
 }
 
-#aimJoystick{
-    right:18px;
-    bottom:22px;
+#aimDot{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:18px;
+    height:18px;
+    margin:-9px;
+    border-radius:50%;
+    border:2px solid white;
 }
 
 .mobileButton{
     position:absolute;
-    width:68px;
-    height:68px;
     border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    background:rgba(65,35,90,.8);
+    border:2px solid #c7a7ef;
     color:white;
-    font-weight:bold;
-    font-size:15px;
-    background:#21172edb;
-    border:2px solid #9e7cff;
-    box-shadow:0 0 18px #6f4bb844;
     pointer-events:auto;
+    touch-action:none;
+    font-weight:bold;
 }
 
 #shootButton{
-    right:165px;
-    bottom:43px;
+    right:55px;
+    bottom:240px;
+    width:85px;
+    height:85px;
 }
 
-#targetButton{
-    right:26px;
-    bottom:150px;
+#eButton{
+    right:150px;
+    bottom:130px;
+    width:60px;
+    height:60px;
 }
 
-#interactButton{
-    right:96px;
-    bottom:140px;
-}
-
-#mobileHelp{
-    position:absolute;
-    right:12px;
-    top:85px;
-    color:#aaa0b8;
+#lockButton{
+    right:45px;
+    bottom:130px;
+    width:95px;
+    height:60px;
+    border-radius:12px;
     font-size:11px;
-    text-align:right;
-    opacity:.7;
 }
 
-/* EFFECTS */
-
-#damageFlash{
-    position:fixed;
-    inset:0;
-    z-index:80;
-    background:rgba(255,0,45,.22);
-    pointer-events:none;
-    opacity:0;
-}
-
-#bossFlash{
-    position:fixed;
-    inset:0;
-    z-index:79;
-    background:rgba(90,0,130,.2);
-    pointer-events:none;
-    opacity:0;
-}
-
-@media(max-width:850px){
-
+@media(max-width:800px),(pointer:coarse){
     #mobile{
         display:block;
     }
 
+    #stats{
+        width:185px;
+        font-size:12px;
+    }
+
     #quest{
-        top:65px;
-        right:8px;
         width:190px;
-        font-size:11px;
+        font-size:12px;
     }
 
-    #hud{
-        left:8px;
-        top:8px;
+    #bossUI{
+        width:65%;
+        font-size:12px;
     }
-
-    .bar{
-        width:155px;
-        height:15px;
-    }
-
-    #floor{
-        font-size:11px;
-        top:10px;
-    }
-
-    #bossHUD{
-        top:7px;
-        width:58vw;
-    }
-
-    #bossName{
-        font-size:10px;
-    }
-
-    #bossBar{
-        height:16px;
-    }
-
-    .controls{
-        display:none;
-    }
-}
-
-@media(max-width:500px){
-
-    .joystick{
-        width:124px;
-        height:124px;
-    }
-
-    .knob{
-        width:51px;
-        height:51px;
-    }
-
-    #moveJoystick{
-        left:10px;
-        bottom:14px;
-    }
-
-    #aimJoystick{
-        right:10px;
-        bottom:14px;
-    }
-
-    .mobileButton{
-        width:61px;
-        height:61px;
-    }
-
-    #shootButton{
-        right:145px;
-        bottom:38px;
-    }
-
-    #interactButton{
-        right:80px;
-        bottom:130px;
-    }
-
-    #targetButton{
-        right:16px;
-        bottom:142px;
-    }
-
 }
 </style>
 </head>
@@ -546,1633 +297,1154 @@ button:active{
 
 <canvas id="game"></canvas>
 
-<div id="damageFlash"></div>
-<div id="bossFlash"></div>
-
 <!-- START -->
+<div id="start">
+    <div class="screen">
+        <h1>WAKE UP</h1>
+        <h2>FORGOTTEN GOD</h2>
 
-<div id="start" class="overlay">
+        <p>
+            Một vùng đất cổ xưa đã bị bóng tối nuốt chửng.
+            Hãy tìm ba mảnh đồ nằm bên ngoài lâu đài,
+            mở cánh cổng và tiến lên tầng cao nhất.
+        </p>
 
-    <h1>WAKE UP</h1>
+        <button id="startButton">BẮT ĐẦU</button>
 
-    <div class="subtitle">
-        A DARK FANTASY ADVENTURE
+        <p>
+            🖥️ PC: WASD di chuyển · Chuột ngắm · Click bắn · E tương tác
+        </p>
+
+        <p>
+            📱 Mobile: Joystick trái · vùng phải ngắm · BẮN · E · KHÓA
+        </p>
     </div>
-
-    <button id="startButton">
-        ⚔️ BẮT ĐẦU
-    </button>
-
-    <div class="controls">
-        PC: WASD di chuyển • Chuột ngắm • Click/SPACE bắn • E tương tác<br>
-        Mobile: Joystick trái di chuyển • Joystick phải ngắm • 🔮 BẮN
-    </div>
-
 </div>
 
+<!-- WAKE UP -->
+<div id="wake">
+    <div>
+        <div id="wakeTitle">WAKE UP</div>
+        <div id="wakeCount">5</div>
+    </div>
+</div>
+
+<!-- ENDING -->
+<div id="ending">
+    <div class="screen">
+        <h1>THE END</h1>
+        <h2>FORGOTTEN GOD HAS FALLEN</h2>
+
+        <p>
+            Forgotten God đã bị đánh bại.
+        </p>
+
+        <p>
+            Ba mảnh đồ cuối cùng đã được thu thập.
+            Cánh cổng lâu đài mở ra và bóng tối
+            bắt đầu tan biến.
+        </p>
+
+        <p>
+            Nhưng sâu trong khu rừng,
+            một tiếng thì thầm vẫn còn vang lên...
+        </p>
+
+        <button onclick="location.reload()">CHƠI LẠI</button>
+
+        <p>
+            Cảm ơn bạn đã chơi ❤️
+        </p>
+    </div>
+</div>
 
 <!-- HUD -->
 
-<div id="hud">
+<div id="stats" class="panel">
+    ❤️ HP:
+    <span id="hpText">100/100</span>
 
-    <div class="hudLabel">
-        ❤️ MÁU:
-        <span id="hpText">100</span>/100
+    <div id="hpBar">
+        <div id="hpFill"></div>
     </div>
 
-    <div class="bar">
-        <div id="hpFill" class="fill"></div>
-    </div>
+    <br>
 
-    <div class="hudLabel">
-        ✦ THỂ LỰC:
-        <span id="staminaText">100</span>/100
-    </div>
-
-    <div class="bar">
-        <div id="staminaFill" class="fill"></div>
-    </div>
-
-    <div class="hudLabel">
-        🔷 NĂNG LƯỢNG:
-        <span id="manaText">100</span>/100
-    </div>
-
-    <div class="bar">
-        <div id="manaFill" class="fill"></div>
-    </div>
-
+    🧩 Mảnh đồ:
+    <b id="shardText">0/3</b>
 </div>
 
-
-<div id="floor">
-    TẦNG 1 — RỪNG HẮC ÁM
+<div id="quest" class="panel">
+    <b>📜 NHIỆM VỤ</b>
+    <br><br>
+    <span id="questText">
+        Tìm 3 mảnh đồ bên ngoài lâu đài.
+    </span>
 </div>
 
+<div id="bossUI" class="panel">
 
-<div id="quest">
-    📜 Nhiệm vụ: Tìm phù thủy già.
-</div>
-
-
-<!-- BOSS -->
-
-<div id="bossHUD">
-
-    <div id="bossName">
-        👑 FORGOTTEN GOD
-    </div>
+    👑 FORGOTTEN GOD
 
     <div id="bossBar">
         <div id="bossFill"></div>
     </div>
 
-</div>
-
-
-<div id="hint">
-    ⌨️ E — TƯƠNG TÁC
-</div>
-
-
-<div id="message"></div>
-
-
-<!-- DIALOG -->
-
-<div id="dialog">
-
-    <div id="dialogName"></div>
-
-    <div id="dialogText"></div>
-
-    <div id="dialogClose">
-        Nhấn E / chạm nút E để đóng
-    </div>
+    <span id="bossHPText">1000/1000</span>
 
 </div>
 
+<div id="message" class="panel"></div>
+
+<div id="interact">
+    E — TƯƠNG TÁC
+</div>
 
 <!-- MOBILE -->
 
 <div id="mobile">
 
-    <div id="moveJoystick" class="joystick">
-        <div class="knob"></div>
+    <div id="joystick">
+        <div id="stick"></div>
     </div>
 
-    <div id="aimJoystick" class="joystick">
-        <div class="knob"></div>
+    <div id="aimZone">
+        <div id="aimDot"></div>
     </div>
 
-    <div id="shootButton" class="mobileButton">
-        🔮
-    </div>
-
-    <div id="targetButton" class="mobileButton">
-        🎯
-    </div>
-
-    <div id="interactButton" class="mobileButton">
-        E
-    </div>
-
-    <div id="mobileHelp">
-        TRÁI: DI CHUYỂN<br>
-        PHẢI: NGẮM
-    </div>
-
-</div>
-
-
-<!-- DEATH -->
-
-<div id="death" class="overlay hidden">
-
-    <h1>WAKE UP</h1>
-
-    <div id="deathText">
-        Linh hồn của ngươi đang trở về...
-    </div>
-
-    <div id="count">
-        5
-    </div>
-
-</div>
-
-
-<!-- ENDING -->
-
-<div id="ending" class="overlay hidden">
-
-    <h1>THE END</h1>
-
-    <div class="story">
-
-        👑 <b>Forgotten God đã bị đánh bại.</b>
-
-        <br><br>
-
-        Những linh hồn bị nguyền rủa cuối cùng
-        cũng được giải thoát.
-
-        <br><br>
-
-        Lâu đài cổ bắt đầu sụp đổ.
-        Những ngọn nến lần lượt tắt.
-
-        <br><br>
-
-        Người phù thủy già nhìn về phía bóng tối
-        và nói:
-
-        <br><br>
-
-        <i>
-            “Ngươi đã đánh thức vị thần...
-            nhưng có lẽ chính ngươi mới là
-            người đang ngủ.”
-        </i>
-
-        <br><br>
-
-        Một cánh cửa bí mật mở ra.
-
-        <br>
-
-        Phía bên kia không phải là lối ra.
-
-        <br><br>
-
-        Đó là một thế giới khác.
-
-    </div>
-
-    <div id="stats"></div>
-
-    <button id="restartButton">
-        🔄 CHƠI LẠI
+    <button id="shootButton" class="mobileButton">
+        🔮<br>BẮN
     </button>
 
-    <div style="margin-top:18px;color:#777">
-        Cảm ơn bạn đã chơi ❤️
-    </div>
+    <button id="eButton" class="mobileButton">
+        E
+    </button>
+
+    <button id="lockButton" class="mobileButton">
+        🎯 KHÓA
+    </button>
 
 </div>
-
 
 <script>
 
-/* ============================================================
-   SECTION 01 — CANVAS
-============================================================ */
+/* =========================================================
+   CANVAS
+========================================================= */
 
-const canvas =
-    document.getElementById("game");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-const ctx =
-    canvas.getContext("2d");
+let W=innerWidth;
+let H=innerHeight;
 
-let W = 0;
-let H = 0;
+function resize(){
 
-function resizeCanvas(){
+    W=innerWidth;
+    H=innerHeight;
 
-    W =
-        canvas.width =
-        window.innerWidth;
+    canvas.width=W*devicePixelRatio;
+    canvas.height=H*devicePixelRatio;
 
-    H =
-        canvas.height =
-        window.innerHeight;
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
 
+    ctx.setTransform(
+        devicePixelRatio,0,0,
+        devicePixelRatio,0,0
+    );
 }
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
+resize();
 
-resizeCanvas();
+addEventListener("resize",resize);
 
 
-/* ============================================================
-   SECTION 02 — AUDIO ENGINE
-============================================================ */
+/* =========================================================
+   AUDIO
+========================================================= */
 
-let audioContext = null;
-
-let masterGain = null;
-
-let musicGain = null;
-
-let sfxGain = null;
-
-let musicTimer = null;
-
-let currentMusicMode = "normal";
-
-let audioStarted = false;
-
+let audio=null;
+let musicTimer=null;
+let musicType="field";
 
 function initAudio(){
 
-    if(audioStarted){
+    if(audio)return;
 
-        if(
-            audioContext &&
-            audioContext.state === "suspended"
-        ){
+    audio=new(
+        window.AudioContext||
+        window.webkitAudioContext
+    )();
 
-            audioContext.resume();
-
-        }
-
-        return;
-
-    }
-
-    const AudioCtx =
-        window.AudioContext ||
-        window.webkitAudioContext;
-
-    if(!AudioCtx){
-
-        return;
-
-    }
-
-    audioContext =
-        new AudioCtx();
-
-    masterGain =
-        audioContext.createGain();
-
-    musicGain =
-        audioContext.createGain();
-
-    sfxGain =
-        audioContext.createGain();
-
-    masterGain.gain.value = .75;
-
-    musicGain.gain.value = .35;
-
-    sfxGain.gain.value = .8;
-
-    musicGain.connect(masterGain);
-
-    sfxGain.connect(masterGain);
-
-    masterGain.connect(
-        audioContext.destination
-    );
-
-    audioStarted = true;
-
-    startMusic("normal");
-
+    startMusic("field");
 }
 
+function sound(freq,duration,type="sine",volume=.06){
 
-function playTone(
-    frequency,
-    duration,
-    type,
-    volume,
-    destination = sfxGain
-){
+    if(!audio)return;
 
-    if(
-        !audioStarted ||
-        !audioContext ||
-        !destination
-    ){
+    let osc=audio.createOscillator();
+    let gain=audio.createGain();
 
-        return;
-
-    }
-
-    const oscillator =
-        audioContext.createOscillator();
-
-    const gain =
-        audioContext.createGain();
-
-    oscillator.type =
-        type || "sine";
-
-    oscillator.frequency.setValueAtTime(
-        frequency,
-        audioContext.currentTime
-    );
-
-    gain.gain.setValueAtTime(
-        Math.max(volume,.0001),
-        audioContext.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        .0001,
-        audioContext.currentTime +
-        duration
-    );
-
-    oscillator.connect(gain);
-
-    gain.connect(destination);
-
-    oscillator.start();
-
-    oscillator.stop(
-        audioContext.currentTime +
-        duration
-    );
-
-}
-
-
-function playSweep(
-    startFrequency,
-    endFrequency,
-    duration,
-    type,
-    volume
-){
-
-    if(
-        !audioStarted ||
-        !audioContext
-    ){
-
-        return;
-
-    }
-
-    const oscillator =
-        audioContext.createOscillator();
-
-    const gain =
-        audioContext.createGain();
-
-    oscillator.type =
-        type || "sine";
-
-    oscillator.frequency.setValueAtTime(
-        startFrequency,
-        audioContext.currentTime
-    );
-
-    oscillator.frequency.exponentialRampToValueAtTime(
-        endFrequency,
-        audioContext.currentTime +
-        duration
-    );
+    osc.type=type;
+    osc.frequency.value=freq;
 
     gain.gain.setValueAtTime(
         volume,
-        audioContext.currentTime
+        audio.currentTime
     );
 
     gain.gain.exponentialRampToValueAtTime(
-        .0001,
-        audioContext.currentTime +
+        .001,
+        audio.currentTime+duration
+    );
+
+    osc.connect(gain);
+    gain.connect(audio.destination);
+
+    osc.start();
+
+    osc.stop(
+        audio.currentTime+
         duration
     );
+}
 
-    oscillator.connect(gain);
+function sfx(name){
 
-    gain.connect(sfxGain);
+    if(!audio)return;
 
-    oscillator.start();
+    if(name==="shoot"){
 
-    oscillator.stop(
-        audioContext.currentTime +
-        duration
-    );
+        sound(550,.07,"triangle",.1);
+        sound(800,.08,"sine",.06);
 
+    }
+
+    if(name==="hit"){
+
+        sound(120,.08,"square",.08);
+        sound(80,.1,"sawtooth",.05);
+
+    }
+
+    if(name==="hurt"){
+
+        sound(80,.15,"sawtooth",.1);
+        sound(55,.2,"square",.06);
+
+    }
+
+    if(name==="pickup"){
+
+        sound(440,.1,"sine",.08);
+        sound(660,.12,"sine",.07);
+        sound(880,.2,"sine",.06);
+
+    }
+
+    if(name==="step"){
+
+        sound(70,.04,"square",.025);
+
+    }
+
+    if(name==="boss"){
+
+        sound(60,.4,"sawtooth",.12);
+        sound(90,.5,"sine",.08);
+        sound(130,.6,"sine",.06);
+
+    }
+
+    if(name==="bossAttack"){
+
+        sound(200,.1,"sawtooth",.1);
+        sound(90,.2,"square",.08);
+
+    }
+
+    if(name==="stairs"){
+
+        sound(300,.1,"triangle",.06);
+        sound(450,.15,"triangle",.06);
+
+    }
+
+    if(name==="revive"){
+
+        sound(220,.12,"sine",.06);
+        sound(330,.12,"sine",.07);
+        sound(520,.15,"sine",.08);
+        sound(780,.3,"sine",.08);
+
+    }
+
+    if(name==="ending"){
+
+        sound(261,.3,"sine",.06);
+        sound(329,.3,"sine",.06);
+        sound(392,.5,"sine",.07);
+
+    }
 }
 
 
-/* ---------------- MUSIC ---------------- */
+function startMusic(type){
 
-const normalMusic = [
+    if(!audio)return;
 
-    73.42,
-    65.41,
-    55.00,
-    61.74,
-    49.00,
-    55.00,
-    65.41,
-    43.65
+    musicType=type;
 
-];
+    if(musicTimer)
+        clearInterval(musicTimer);
 
-const bossMusic = [
+    let notes;
 
-    55.00,
-    58.27,
-    65.41,
-    49.00,
-    41.20,
-    43.65,
-    61.74,
-    36.71
+    if(type==="boss"){
 
-];
+        notes=[
+            55,65,73,49,
+            82,73,65,58
+        ];
 
+    }else{
 
-function stopMusic(){
+        notes=[
+            73,82,98,110,
+            98,82,65,55
+        ];
+    }
 
-    if(musicTimer){
+    let i=0;
 
-        clearInterval(
-            musicTimer
+    musicTimer=setInterval(()=>{
+
+        sound(
+            notes[i%notes.length],
+            .55,
+            "sine",
+            .018
         );
 
-        musicTimer = null;
+        i++;
 
-    }
-
+    },420);
 }
 
 
-function startMusic(mode){
+/* =========================================================
+   WORLD
+========================================================= */
 
-    if(!audioStarted){
+const WORLD_W=3600;
+const WORLD_H=2600;
 
-        return;
+const player={
 
-    }
+    x:850,
+    y:1750,
 
-    stopMusic();
+    r:22,
 
-    currentMusicMode =
-        mode;
+    hp:100,
+    maxHp:100,
 
-    const notes =
-        mode === "boss"
-        ? bossMusic
-        : normalMusic;
+    speed:320,
 
-    let index = 0;
+    angle:0,
 
-    musicTimer =
-        setInterval(
-            ()=>{
+    shootCooldown:0,
 
-                if(
-                    !audioStarted
-                ){
+    stepCooldown:0,
 
-                    return;
+    invincible:0,
 
-                }
+    spawnX:850,
+    spawnY:1750
+};
 
-                const note =
-                    notes[
-                        index %
-                        notes.length
-                    ];
-
-                index++;
-
-                playTone(
-                    note,
-                    mode === "boss"
-                    ? .55
-                    : .9,
-                    "triangle",
-                    mode === "boss"
-                    ? .035
-                    : .022,
-                    musicGain
-                );
-
-                if(
-                    mode === "boss" &&
-                    index % 4 === 0
-                ){
-
-                    playTone(
-                        note/2,
-                        .4,
-                        "sine",
-                        .018,
-                        musicGain
-                    );
-
-                }
-
-            },
-            mode === "boss"
-            ? 480
-            : 850
-        );
-
-}
-
-
-/* ---------------- SOUND EFFECTS ---------------- */
-
-function soundFootstep(){
-
-    playTone(
-        72,
-        .045,
-        "square",
-        .014
-    );
-
-}
-
-
-function soundShoot(){
-
-    playSweep(
-        500,
-        1000,
-        .1,
-        "sawtooth",
-        .055
-    );
-
-    playTone(
-        900,
-        .08,
-        "sine",
-        .035
-    );
-
-}
-
-
-function soundHit(){
-
-    playTone(
-        125,
-        .12,
-        "square",
-        .055
-    );
-
-    playTone(
-        210,
-        .07,
-        "sawtooth",
-        .025
-    );
-
-}
-
-
-function soundPlayerDamage(){
-
-    playSweep(
-        150,
-        65,
-        .2,
-        "sawtooth",
-        .065
-    );
-
-}
-
-
-function soundNPC(){
-
-    playTone(
-        320,
-        .08,
-        "sine",
-        .025
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                450,
-                .1,
-                "sine",
-                .025
-            );
-        },
-        90
-    );
-
-}
-
-
-function soundBossAppear(){
-
-    playSweep(
-        38,
-        70,
-        .8,
-        "sawtooth",
-        .08
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                42,
-                .7,
-                "square",
-                .055
-            );
-        },
-        260
-    );
-
-}
-
-
-function soundBossAttack(){
-
-    playSweep(
-        70,
-        30,
-        .35,
-        "sawtooth",
-        .075
-    );
-
-}
-
-
-function soundRevive(){
-
-    playTone(
-        220,
-        .12,
-        "triangle",
-        .035
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                330,
-                .15,
-                "triangle",
-                .04
-            );
-        },
-        130
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                520,
-                .28,
-                "sine",
-                .045
-            );
-        },
-        280
-    );
-
-}
-
-
-function soundStairs(){
-
-    playTone(
-        220,
-        .1,
-        "triangle",
-        .035
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                330,
-                .12,
-                "triangle",
-                .04
-            );
-        },
-        100
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                440,
-                .15,
-                "triangle",
-                .04
-            );
-        },
-        210
-    );
-
-}
-
-
-function soundCollect(){
-
-    playTone(
-        420,
-        .08,
-        "sine",
-        .03
-    );
-
-    setTimeout(
-        ()=>{
-            playTone(
-                620,
-                .12,
-                "sine",
-                .035
-            );
-        },
-        80
-    );
-
-}
-
-
-function soundDoor(){
-
-    playSweep(
-        120,
-        380,
-        .45,
-        "triangle",
-        .04
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 03 — GAME STATE
-============================================================ */
-
-let gameStarted = false;
-
-let gameOver = false;
-
-let gameEnded = false;
-
-let floor = 1;
-
-let totalKills = 0;
-
-let totalShots = 0;
-
-let playTime = 0;
-
-let lastTime = 0;
-
-let deltaTime = 0;
-
-
-/* ============================================================
-   SECTION 04 — WORLD
-============================================================ */
-
-const world = {
-
-    width: 5600,
-
-    height: 4400
-
+const camera={
+    x:0,
+    y:0
 };
 
 
-const camera = {
+/* =========================================================
+   CASTLE
+========================================================= */
 
-    x: 0,
-
-    y: 0,
-
-    smoothing: .12
-
+const castle={
+    x:2050,
+    y:620,
+    w:1150,
+    h:1300
 };
 
-
-/* ============================================================
-   SECTION 05 — PLAYER
-============================================================ */
-
-const player = {
-
-    x: 620,
-
-    y: 670,
-
-    spawnX: 620,
-
-    spawnY: 670,
-
-    radius: 25,
-
-    speed: 4.8,
-
-    hp: 100,
-
-    maxHp: 100,
-
-    stamina: 100,
-
-    maxStamina: 100,
-
-    mana: 100,
-
-    maxMana: 100,
-
-    angle: 0,
-
-    fireCooldown: 0,
-
-    invulnerable: 0,
-
-    moving: false,
-
-    targetId: null
-
+const gate={
+    x:2050,
+    y:1230,
+    w:100,
+    h:170
 };
 
+const stairs={
+    x:2750,
+    y:1020,
+    w:180,
+    h:110
+};
 
-/* ============================================================
-   SECTION 06 — INPUT
-============================================================ */
-
-const keys = {};
-
-let mouseX = 0;
-
-let mouseY = 0;
-
-let mouseDown = false;
-
-let moveInputX = 0;
-
-let moveInputY = 0;
-
-let aimInputX = 0;
-
-let aimInputY = 0;
-
-let mobileShoot = false;
+let castleUnlocked=false;
 
 
-window.addEventListener(
-    "keydown",
-    event=>{
+/* =========================================================
+   SHARDS
+========================================================= */
 
-        keys[
-            event.key.toLowerCase()
-        ] = true;
-
-        if(
-            event.key.toLowerCase() === "e"
-        ){
-
-            interact();
-
-        }
-
-        if(
-            event.code === "Space"
-        ){
-
-            event.preventDefault();
-
-            shoot();
-
-        }
-
-        if(
-            event.key === "Escape"
-        ){
-
-            closeDialog();
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    event=>{
-
-        keys[
-            event.key.toLowerCase()
-        ] = false;
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousemove",
-    event=>{
-
-        mouseX = event.clientX;
-
-        mouseY = event.clientY;
-
-        if(!gameStarted) return;
-
-        player.angle =
-            Math.atan2(
-                mouseY -
-                (player.y + camera.y),
-                mouseX -
-                (player.x + camera.x)
-            );
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousedown",
-    event=>{
-
-        if(
-            event.button === 0
-        ){
-
-            mouseDown = true;
-
-            shoot();
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "mouseup",
-    ()=>{
-
-        mouseDown = false;
-
-    }
-);
-
-
-/* ============================================================
-   SECTION 07 — NPC
-============================================================ */
-
-const npcs = [
+const shards=[
 
     {
-        id: "witch",
-
-        x: 880,
-
-        y: 650,
-
-        emoji: "🧙",
-
-        name: "Phù thủy già",
-
-        text:
-        "Ngươi cuối cùng cũng tỉnh dậy. " +
-        "Forgotten God đang ngủ bên dưới lâu đài. " +
-        "Ba mảnh ấn nằm rải rác trong vùng đất này. " +
-        "Thu thập chúng rồi mở cánh cổng."
-
+        x:550,
+        y:720,
+        name:"Mảnh Rừng",
+        taken:false
     },
 
     {
-        id: "guardian",
-
-        x: 1760,
-
-        y: 1180,
-
-        emoji: "🧝",
-
-        name: "Người canh rừng",
-
-        text:
-        "Rừng này từng là một vương quốc. " +
-        "Những người chết vẫn còn lang thang. " +
-        "Hãy cẩn thận với nghĩa địa phía đông."
-
+        x:1150,
+        y:1200,
+        name:"Mảnh Nghĩa Địa",
+        taken:false
     },
 
     {
-        id: "spirit",
-
-        x: 2980,
-
-        y: 2800,
-
-        emoji: "👻",
-
-        name: "Linh hồn",
-
-        text:
-        "Ta đã từng chiến đấu với Forgotten God. " +
-        "Không có thanh kiếm nào có thể giết hắn. " +
-        "Chỉ phép thuật từ quả cầu mới có thể phá vỡ hắn."
-
+        x:1720,
+        y:1430,
+        name:"Mảnh Cổng",
+        taken:false
     }
 
 ];
 
-
-/* ============================================================
-   SECTION 08 — SEALS
-============================================================ */
-
-const seals = [
-
-    {
-        id: 1,
-        x: 1450,
-        y: 880,
-        collected: false
-    },
-
-    {
-        id: 2,
-        x: 2420,
-        y: 1690,
-        collected: false
-    },
-
-    {
-        id: 3,
-        x: 3310,
-        y: 2760,
-        collected: false
-    }
-
-];
+let shardCount=0;
 
 
-function collectedSealCount(){
+/* =========================================================
+   ENVIRONMENT
+========================================================= */
 
-    let count = 0;
+const trees=[];
+const rocks=[];
 
-    for(
-        const seal of seals
-    ){
+for(let i=0;i<100;i++){
 
-        if(
-            seal.collected
-        ){
+    let x=100+Math.random()*3300;
+    let y=100+Math.random()*2300;
 
-            count++;
+    if(
+        x>2000 &&
+        x<3200 &&
+        y>600 &&
+        y<1950
+    )continue;
 
-        }
+    trees.push({
 
-    }
+        x:x,
+        y:y,
+        r:20+Math.random()*20
 
-    return count;
+    });
+}
 
+for(let i=0;i<50;i++){
+
+    rocks.push({
+
+        x:Math.random()*WORLD_W,
+        y:Math.random()*WORLD_H,
+        r:8+Math.random()*15
+
+    });
 }
 
 
-/* ============================================================
-   SECTION 09 — ENEMIES
-============================================================ */
+/* =========================================================
+   ENEMIES
+========================================================= */
 
-const enemies = [];
+const enemies=[];
 
-
-function spawnEnemy(
-    x,
-    y,
-    type = 0
-){
+function createEnemy(x,y,hp,emoji){
 
     enemies.push({
 
-        id:
-        Math.random()
-        .toString(36)
-        .slice(2),
+        x:x,
+        y:y,
 
-        x,
+        r:24,
 
-        y,
+        hp:hp,
+        maxHp:hp,
 
-        radius:
-        type === 1
-        ? 30
-        : 24,
+        speed:70,
 
-        hp:
-        type === 1
-        ? 90
-        : 45,
+        emoji:emoji,
 
-        maxHp:
-        type === 1
-        ? 90
-        : 45,
-
-        speed:
-        type === 1
-        ? 1.25
-        : 1.05,
-
-        type,
-
-        emoji:
-        type === 1
-        ? "👺"
-        : "👹",
-
-        attackCooldown: 0,
-
-        hurtTimer: 0,
-
-        dead: false
+        cooldown:0
 
     });
-
 }
 
-
-/* fixed enemy locations */
-
-const enemyLocations = [
-
-    [1050,1050],
-    [1180,1250],
-    [1300,1510],
-    [1550,1400],
-    [1680,1700],
-    [1900,850],
-    [2050,1050],
-    [2200,1300],
-    [2350,1450],
-    [2510,1800],
-    [2650,2050],
-    [2820,2200],
-    [3000,2050],
-    [3180,2300],
-    [3400,2450],
-    [3650,2300],
-    [3700,2900],
-    [3500,3150],
-    [3150,3300],
-    [2700,3500],
-    [2200,3200],
-    [1800,2900],
-    [1300,3000],
-    [1000,2600],
-    [700,2300],
-    [850,1900],
-    [1200,1750],
-    [1500,2150],
-    [1950,2400],
-    [2450,2650],
-    [2900,3000],
-    [3300,3500],
-    [3800,3400],
-    [4100,3100],
-    [4300,2750],
-    [4500,2300]
-
-];
+createEnemy(420,900,100,"👹");
+createEnemy(820,680,110,"🧟");
+createEnemy(1400,720,120,"👹");
+createEnemy(1500,1700,130,"💀");
+createEnemy(430,1500,100,"💀");
+createEnemy(1800,1800,140,"👹");
+createEnemy(1850,1000,120,"🧟");
 
 
-for(
-    let i = 0;
-    i < enemyLocations.length;
-    i++
-){
+/* =========================================================
+   BOSS
+========================================================= */
 
-    const location =
-        enemyLocations[i];
+const boss={
 
-    spawnEnemy(
-        location[0],
-        location[1],
-        i % 8 === 0
-        ? 1
-        : 0
+    x:2660,
+    y:1270,
+
+    r:55,
+
+    hp:1000,
+    maxHp:1000,
+
+    speed:75,
+
+    cooldown:1,
+
+    angle:0
+
+};
+
+let bossActive=false;
+let bossDead=false;
+
+
+/* =========================================================
+   PROJECTILES
+========================================================= */
+
+const playerShots=[];
+const bossShots=[];
+const particles=[];
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+const keys={};
+
+let mouse={
+
+    x:W/2,
+    y:H/2,
+
+    down:false
+
+};
+
+addEventListener("keydown",e=>{
+
+    keys[e.key.toLowerCase()]=true;
+
+    if(e.key.toLowerCase()==="e")
+        interact();
+
+});
+
+addEventListener("keyup",e=>{
+
+    keys[e.key.toLowerCase()]=false;
+
+});
+
+canvas.addEventListener("mousemove",e=>{
+
+    mouse.x=e.clientX;
+    mouse.y=e.clientY;
+
+});
+
+canvas.addEventListener("mousedown",()=>{
+
+    mouse.down=true;
+    initAudio();
+
+});
+
+addEventListener("mouseup",()=>{
+
+    mouse.down=false;
+
+});
+
+
+/* =========================================================
+   MOBILE INPUT
+========================================================= */
+
+let joyX=0;
+let joyY=0;
+
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
+
+let joyActive=false;
+
+function updateJoystick(e){
+
+    const rect=
+        joystick.getBoundingClientRect();
+
+    const cx=
+        rect.left+
+        rect.width/2;
+
+    const cy=
+        rect.top+
+        rect.height/2;
+
+    let dx=e.clientX-cx;
+    let dy=e.clientY-cy;
+
+    const max=58;
+
+    let len=Math.hypot(dx,dy);
+
+    if(len>max){
+
+        dx=dx/len*max;
+        dy=dy/len*max;
+
+    }
+
+    joyX=dx/max;
+    joyY=dy/max;
+
+    stick.style.transform=
+        `translate(${dx}px,${dy}px)`;
+}
+
+joystick.addEventListener(
+    "pointerdown",
+    e=>{
+
+        joyActive=true;
+
+        joystick.setPointerCapture(
+            e.pointerId
+        );
+
+        updateJoystick(e);
+
+        initAudio();
+
+    }
+);
+
+joystick.addEventListener(
+    "pointermove",
+    e=>{
+
+        if(joyActive)
+            updateJoystick(e);
+
+    }
+);
+
+joystick.addEventListener(
+    "pointerup",
+    ()=>{
+        joyActive=false;
+        joyX=0;
+        joyY=0;
+        stick.style.transform=
+            "translate(0,0)";
+    }
+);
+
+
+/* =========================================================
+   MOBILE AIM
+   QUAN TRỌNG:
+   atan2(dy,dx) KHÔNG ĐẢO TRÁI PHẢI
+========================================================= */
+
+const aimZone=
+    document.getElementById("aimZone");
+
+const aimDot=
+    document.getElementById("aimDot");
+
+let aimActive=false;
+
+function updateAim(e){
+
+    const rect=
+        aimZone.getBoundingClientRect();
+
+    const cx=
+        rect.left+
+        rect.width/2;
+
+    const cy=
+        rect.top+
+        rect.height/2;
+
+    let dx=e.clientX-cx;
+    let dy=e.clientY-cy;
+
+    let len=Math.hypot(dx,dy)||1;
+
+    const max=75;
+
+    if(len>max){
+
+        dx=dx/len*max;
+        dy=dy/len*max;
+
+    }
+
+    if(Math.hypot(dx,dy)>8){
+
+        /*
+           Đây là phần sửa lỗi hướng.
+           Chuột/vùng ngắm bên trái:
+           dx < 0 → góc sang trái.
+
+           Bên phải:
+           dx > 0 → góc sang phải.
+        */
+
+        player.angle=
+            Math.atan2(dy,dx);
+
+    }
+
+    aimDot.style.transform=
+        `translate(${dx}px,${dy}px)`;
+}
+
+aimZone.addEventListener(
+    "pointerdown",
+    e=>{
+
+        aimActive=true;
+
+        aimZone.setPointerCapture(
+            e.pointerId
+        );
+
+        updateAim(e);
+
+        initAudio();
+
+    }
+);
+
+aimZone.addEventListener(
+    "pointermove",
+    e=>{
+
+        if(aimActive)
+            updateAim(e);
+
+    }
+);
+
+aimZone.addEventListener(
+    "pointerup",
+    ()=>{
+
+        aimActive=false;
+
+        aimDot.style.transform=
+            "translate(0,0)";
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.getElementById(
+    "startButton"
+).onclick=()=>{
+
+    initAudio();
+
+    if(audio)
+        audio.resume();
+
+    document.getElementById(
+        "start"
+    ).style.display="none";
+
+    message(
+        "📜 Hãy tìm 3 mảnh đồ nằm bên ngoài lâu đài."
     );
-
-}
-
-
-/* ============================================================
-   SECTION 10 — BOSS
-============================================================ */
-
-const boss = {
-
-    active: false,
-
-    defeated: false,
-
-    x: 4700,
-
-    y: 3350,
-
-    radius: 65,
-
-    hp: 1500,
-
-    maxHp: 1500,
-
-    speed: 1.25,
-
-    phase: 1,
-
-    attackCooldown: 0,
-
-    specialCooldown: 0,
-
-    hitTimer: 0
 
 };
 
 
-/* ============================================================
-   SECTION 11 — PROJECTILES
-============================================================ */
+/* =========================================================
+   MOVEMENT / COLLISION
+========================================================= */
 
-const playerProjectiles = [];
+function distance(a,b){
 
-const enemyProjectiles = [];
+    return Math.hypot(
+        a.x-b.x,
+        a.y-b.y
+    );
 
-
-/* ============================================================
-   SECTION 12 — PARTICLES
-============================================================ */
-
-const particles = [];
+}
 
 
-function createParticle(
-    x,
-    y,
-    vx,
-    vy,
-    life,
-    size,
-    type
+function circleRect(
+    cx,cy,r,
+    rx,ry,rw,rh
 ){
 
-    particles.push({
+    let x=Math.max(
+        rx,
+        Math.min(cx,rx+rw)
+    );
 
-        x,
+    let y=Math.max(
+        ry,
+        Math.min(cy,ry+rh)
+    );
 
-        y,
+    return Math.hypot(
+        cx-x,
+        cy-y
+    )<r;
 
-        vx,
+}
 
-        vy,
 
-        life,
+function blocked(x,y,r){
 
-        maxLife: life,
+    if(
+        x<r ||
+        y<r ||
+        x>WORLD_W-r ||
+        y>WORLD_H-r
+    )
+        return true;
 
-        size,
 
-        type
+    if(
+        circleRect(
+            x,y,r,
+            castle.x,
+            castle.y,
+            castle.w,
+            castle.h
+        )
+    ){
+
+        let atGate=
+            x>gate.x &&
+            x<gate.x+gate.w &&
+            y>gate.y &&
+            y<gate.y+gate.h;
+
+        let atStairs=
+            x>stairs.x &&
+            x<stairs.x+stairs.w &&
+            y>stairs.y &&
+            y<stairs.y+stairs.h;
+
+        if(
+            !atGate &&
+            !atStairs
+        )
+            return true;
+
+    }
+
+
+    for(const t of trees){
+
+        if(
+            Math.hypot(
+                x-t.x,
+                y-t.y
+            )<
+            r+t.r*.65
+        )
+            return true;
+
+    }
+
+    return false;
+}
+
+
+function movePlayer(dx,dy){
+
+    let nx=
+        player.x+dx;
+
+    if(
+        !blocked(
+            nx,
+            player.y,
+            player.r
+        )
+    )
+        player.x=nx;
+
+
+    let ny=
+        player.y+dy;
+
+    if(
+        !blocked(
+            player.x,
+            ny,
+            player.r
+        )
+    )
+        player.y=ny;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function message(text,time=2200){
+
+    const box=
+        document.getElementById("message");
+
+    box.textContent=text;
+    box.style.display="block";
+
+    clearTimeout(
+        message.timer
+    );
+
+    message.timer=
+        setTimeout(
+            ()=>{
+                box.style.display="none";
+            },
+            time
+        );
+
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+function burst(x,y,count=10){
+
+    for(let i=0;i<count;i++){
+
+        let a=
+            Math.random()*
+            Math.PI*2;
+
+        let s=
+            40+
+            Math.random()*120;
+
+        particles.push({
+
+            x:x,
+            y:y,
+
+            vx:Math.cos(a)*s,
+            vy:Math.sin(a)*s,
+
+            life:.4+
+                Math.random()*.5,
+
+            size:2+
+                Math.random()*5
+
+        });
+
+    }
+}
+
+
+/* =========================================================
+   SHOOT
+========================================================= */
+
+function shoot(){
+
+    if(
+        player.shootCooldown>0 ||
+        player.hp<=0
+    )
+        return;
+
+    player.shootCooldown=.2;
+
+    const speed=760;
+
+    playerShots.push({
+
+        x:
+            player.x+
+            Math.cos(player.angle)*30,
+
+        y:
+            player.y+
+            Math.sin(player.angle)*30,
+
+        vx:
+            Math.cos(player.angle)*speed,
+
+        vy:
+            Math.sin(player.angle)*speed,
+
+        r:8,
+
+        life:1.5
 
     });
 
-}
+    burst(
+        player.x+
+        Math.cos(player.angle)*30,
 
+        player.y+
+        Math.sin(player.angle)*30,
 
-function createExplosion(
-    x,
-    y,
-    amount = 14,
-    type = "magic"
-){
+        5
+    );
 
-    for(
-        let i=0;
-        i<amount;
-        i++
-    ){
-
-        const angle =
-            Math.random() *
-            Math.PI *
-            2;
-
-        const speed =
-            1 +
-            Math.random()*4;
-
-        createParticle(
-
-            x,
-
-            y,
-
-            Math.cos(angle)*speed,
-
-            Math.sin(angle)*speed,
-
-            30 +
-            Math.random()*30,
-
-            2 +
-            Math.random()*5,
-
-            type
-
-        );
-
-    }
+    sfx("shoot");
 
 }
 
 
-/* ============================================================
-   SECTION 13 — MOBILE JOYSTICKS
-============================================================ */
+/* =========================================================
+   SPACE TO SHOOT
+========================================================= */
 
-function setupJoystick(
-    elementId,
-    type
-){
+addEventListener(
+    "keydown",
+    e=>{
 
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-    const knob =
-        element.querySelector(
-            ".knob"
-        );
-
-    let active = false;
-
-    let pointerId = null;
-
-
-    function updateJoystick(
-        clientX,
-        clientY
-    ){
-
-        const rect =
-            element.getBoundingClientRect();
-
-        let dx =
-            clientX -
-            (
-                rect.left +
-                rect.width/2
-            );
-
-        let dy =
-            clientY -
-            (
-                rect.top +
-                rect.height/2
-            );
-
-        const maxDistance = 43;
-
-        const distance =
-            Math.hypot(
-                dx,
-                dy
-            );
-
-        if(
-            distance >
-            maxDistance
-        ){
-
-            dx =
-                dx /
-                distance *
-                maxDistance;
-
-            dy =
-                dy /
-                distance *
-                maxDistance;
-
-        }
-
-        knob.style.left =
-            `calc(50% + ${dx}px)`;
-
-        knob.style.top =
-            `calc(50% + ${dy}px)`;
-
-
-        const nx =
-            dx/maxDistance;
-
-        const ny =
-            dy/maxDistance;
-
-
-        if(
-            type === "move"
-        ){
-
-            moveInputX = nx;
-
-            moveInputY = ny;
-
-        }
-        else{
-
-            aimInputX = nx;
-
-            aimInputY = ny;
-
-            if(
-                Math.hypot(
-                    nx,
-                    ny
-                ) > .15
-            ){
-
-                player.angle =
-                    Math.atan2(
-                        ny,
-                        nx
-                    );
-
-            }
-
-        }
+        if(e.code==="Space")
+            shoot();
 
     }
-
-
-    function reset(){
-
-        active = false;
-
-        pointerId = null;
-
-        knob.style.left = "50%";
-
-        knob.style.top = "50%";
-
-
-        if(
-            type === "move"
-        ){
-
-            moveInputX = 0;
-
-            moveInputY = 0;
-
-        }
-        else{
-
-            aimInputX = 0;
-
-            aimInputY = 0;
-
-        }
-
-    }
-
-
-    element.addEventListener(
-        "pointerdown",
-        event=>{
-
-            event.preventDefault();
-
-            active = true;
-
-            pointerId =
-                event.pointerId;
-
-            element.setPointerCapture(
-                pointerId
-            );
-
-            updateJoystick(
-                event.clientX,
-                event.clientY
-            );
-
-        }
-    );
-
-
-    element.addEventListener(
-        "pointermove",
-        event=>{
-
-            if(
-                !active ||
-                event.pointerId !==
-                pointerId
-            ){
-
-                return;
-
-            }
-
-            event.preventDefault();
-
-            updateJoystick(
-                event.clientX,
-                event.clientY
-            );
-
-        }
-    );
-
-
-    element.addEventListener(
-        "pointerup",
-        reset
-    );
-
-
-    element.addEventListener(
-        "pointercancel",
-        reset
-    );
-
-}
-
-
-setupJoystick(
-    "moveJoystick",
-    "move"
-);
-
-setupJoystick(
-    "aimJoystick",
-    "aim"
 );
 
 
-/* ============================================================
-   SECTION 14 — MOBILE BUTTONS
-============================================================ */
+/* =========================================================
+   INTERACT
+========================================================= */
 
-document
-.getElementById("shootButton")
-.addEventListener(
+function interact(){
+
+    const gateDistance=
+        Math.hypot(
+            player.x-
+            (gate.x+gate.w/2),
+
+            player.y-
+            (gate.y+gate.h/2)
+        );
+
+
+    const stairDistance=
+        Math.hypot(
+            player.x-
+            (stairs.x+
+             stairs.w/2),
+
+            player.y-
+            (stairs.y+
+             stairs.h/2)
+        );
+
+
+    if(gateDistance<140){
+
+        if(shardCount>=3){
+
+            castleUnlocked=true;
+
+            message(
+                "🏰 Cánh cổng lâu đài đã mở!"
+            );
+
+            sfx("pickup");
+
+        }else{
+
+            message(
+                "🔒 Cần đủ 3 mảnh đồ."
+            );
+
+        }
+
+    }
+
+
+    if(
+        stairDistance<140 &&
+        castleUnlocked
+    ){
+
+        player.x=2660;
+        player.y=820;
+
+        player.spawnX=2660;
+        player.spawnY=820;
+
+        sfx("stairs");
+
+        message(
+            "🕯️ Bạn đã lên tầng cao nhất."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+document.getElementById(
+    "shootButton"
+).addEventListener(
     "pointerdown",
-    event=>{
+    e=>{
 
-        event.preventDefault();
+        e.preventDefault();
+
+        initAudio();
 
         shoot();
 
@@ -2180,27 +1452,13 @@ document
 );
 
 
-document
-.getElementById("targetButton")
-.addEventListener(
+document.getElementById(
+    "eButton"
+).addEventListener(
     "pointerdown",
-    event=>{
+    e=>{
 
-        event.preventDefault();
-
-        lockNearestTarget();
-
-    }
-);
-
-
-document
-.getElementById("interactButton")
-.addEventListener(
-    "pointerdown",
-    event=>{
-
-        event.preventDefault();
+        e.preventDefault();
 
         interact();
 
@@ -2208,3690 +1466,1622 @@ document
 );
 
 
-/* ============================================================
-   SECTION 15 — MESSAGE
-============================================================ */
+/* =========================================================
+   TARGET LOCK
+========================================================= */
 
-let messageTimer = null;
+let lockedTarget=null;
 
+function nearestTarget(){
 
-function showMessage(
-    text,
-    duration = 2800
-){
+    let target=null;
+    let best=Infinity;
 
-    const message =
-        document.getElementById(
-            "message"
-        );
+    for(const enemy of enemies){
 
-    message.textContent =
-        text;
-
-    message.style.opacity = "1";
-
-    clearTimeout(
-        messageTimer
-    );
-
-    messageTimer =
-        setTimeout(
-            ()=>{
-
-                message.style.opacity =
-                    "0";
-
-            },
-            duration
-        );
-
-}
-
-
-/* ============================================================
-   SECTION 16 — DIALOGUE
-============================================================ */
-
-function showDialog(
-    name,
-    text
-){
-
-    document
-    .getElementById("dialogName")
-    .textContent =
-    name;
-
-    document
-    .getElementById("dialogText")
-    .textContent =
-    text;
-
-    document
-    .getElementById("dialog")
-    .style.display =
-    "block";
-
-}
-
-
-function closeDialog(){
-
-    document
-    .getElementById("dialog")
-    .style.display =
-    "none";
-
-}
-
-
-/* ============================================================
-   SECTION 17 — QUEST
-============================================================ */
-
-function updateQuest(){
-
-    const quest =
-        document.getElementById(
-            "quest"
-        );
-
-    if(
-        floor === 1
-    ){
-
-        const count =
-            collectedSealCount();
-
-        if(
-            count < 3
-        ){
-
-            quest.textContent =
-                "📜 Thu thập 3 mảnh ấn: " +
-                count +
-                "/3";
-
-        }
-        else{
-
-            quest.textContent =
-                "📜 Đủ mảnh ấn! Đến cổng lâu đài và nhấn E.";
-
-        }
-
-    }
-    else{
-
-        if(
-            boss.active &&
-            !boss.defeated
-        ){
-
-            quest.textContent =
-                "📜 Đánh bại Forgotten God.";
-
-        }
-        else{
-
-            quest.textContent =
-                "📜 Tìm lối vào phòng Boss.";
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 18 — INTERACTION
-============================================================ */
-
-function interact(){
-
-    if(
-        !gameStarted ||
-        gameOver ||
-        gameEnded
-    ){
-
-        return;
-
-    }
-
-
-    const dialog =
-        document.getElementById(
-            "dialog"
-        );
-
-
-    if(
-        dialog.style.display ===
-        "block"
-    ){
-
-        closeDialog();
-
-        return;
-
-    }
-
-
-    /* NPC */
-
-    for(
-        const npc of npcs
-    ){
-
-        const distance =
-            distanceBetween(
-                player,
-                npc
-            );
-
-        if(
-            distance < 110
-        ){
-
-            soundNPC();
-
-            showDialog(
-                npc.name,
-                npc.text
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    /* SEALS */
-
-    for(
-        const seal of seals
-    ){
-
-        if(
-            seal.collected
-        ){
-
+        if(enemy.hp<=0)
             continue;
 
-        }
-
-        const distance =
-            distanceBetween(
+        let d=
+            distance(
                 player,
-                seal
+                enemy
             );
 
-        if(
-            distance < 85
-        ){
+        if(d<best){
 
-            seal.collected =
-                true;
-
-            soundCollect();
-
-            createExplosion(
-                seal.x,
-                seal.y,
-                18,
-                "seal"
-            );
-
-            showMessage(
-                "🔷 Đã thu thập mảnh ấn!"
-            );
-
-            updateQuest();
-
-            return;
+            best=d;
+            target=enemy;
 
         }
 
     }
 
 
-    /* CASTLE GATE */
-
     if(
-        floor === 1 &&
-        player.x > 3950 &&
-        player.x < 4350 &&
-        player.y > 900 &&
-        player.y < 1250
+        bossActive &&
+        !bossDead
     ){
 
-        if(
-            collectedSealCount() < 3
-        ){
-
-            showMessage(
-                "🔒 Cánh cổng cần đủ 3 mảnh ấn."
-            );
-
-            return;
-
-        }
-
-        enterCastle();
-
-        return;
-
-    }
-
-
-    /* STAIRCASE */
-
-    if(
-        floor === 2 &&
-        distance(
-            player.x,
-            player.y,
-            4750,
-            3350
-        ) < 170
-    ){
-
-        activateBoss();
-
-        return;
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 19 — ENTER CASTLE
-============================================================ */
-
-function enterCastle(){
-
-    floor = 2;
-
-    player.x = 4250;
-
-    player.y = 1450;
-
-    player.spawnX =
-        player.x;
-
-    player.spawnY =
-        player.y;
-
-    soundDoor();
-
-    soundStairs();
-
-    document
-    .getElementById("floor")
-    .textContent =
-    "TẦNG 2 — LÂU ĐÀI FORGOTTEN GOD";
-
-    showMessage(
-        "🏰 Cánh cổng đã mở..."
-    );
-
-    updateQuest();
-
-}
-
-
-/* ============================================================
-   SECTION 20 — BOSS ACTIVATION
-============================================================ */
-
-function activateBoss(){
-
-    if(
-        boss.active ||
-        boss.defeated
-    ){
-
-        return;
-
-    }
-
-
-    boss.active =
-        true;
-
-    boss.hp =
-        boss.maxHp;
-
-    boss.phase = 1;
-
-    document
-    .getElementById("bossHUD")
-    .style.display =
-    "block";
-
-
-    startMusic(
-        "boss"
-    );
-
-    soundBossAppear();
-
-    createExplosion(
-        boss.x,
-        boss.y,
-        50,
-        "boss"
-    );
-
-
-    const flash =
-        document.getElementById(
-            "bossFlash"
-        );
-
-    flash.style.opacity = "1";
-
-    setTimeout(
-        ()=>{
-            flash.style.opacity =
-                "0";
-        },
-        600
-    );
-
-
-    showMessage(
-        "👑 FORGOTTEN GOD ĐÃ THỨC TỈNH!",
-        4000
-    );
-
-
-    /* auto target on mobile */
-
-    setTimeout(
-        ()=>{
-            lockNearestTarget();
-        },
-        300
-    );
-
-
-    updateQuest();
-
-}
-
-
-/* ============================================================
-   SECTION 21 — TARGET LOCK
-============================================================ */
-
-function lockNearestTarget(){
-
-    let best = null;
-
-    let bestDistance =
-        Infinity;
-
-
-    /* Boss gets priority */
-
-    if(
-        boss.active &&
-        !boss.defeated &&
-        boss.hp > 0
-    ){
-
-        const bossDistance =
-            distanceBetween(
+        let d=
+            distance(
                 player,
                 boss
             );
 
-        if(
-            bossDistance <
-            1200
-        ){
-
-            best =
-                boss;
-
-            bestDistance =
-                bossDistance;
-
-        }
+        if(d<best)
+            target=boss;
 
     }
 
-
-    /* enemies */
-
-    if(
-        !best
-    ){
-
-        for(
-            const enemy of enemies
-        ){
-
-            if(
-                enemy.dead ||
-                enemy.hp <= 0
-            ){
-
-                continue;
-
-            }
-
-            const d =
-                distanceBetween(
-                    player,
-                    enemy
-                );
-
-            if(
-                d < bestDistance &&
-                d < 850
-            ){
-
-                best =
-                    enemy;
-
-                bestDistance =
-                    d;
-
-            }
-
-        }
-
-    }
+    return target;
+}
 
 
-    if(
-        best
-    ){
+document.getElementById(
+    "lockButton"
+).addEventListener(
+    "pointerdown",
+    e=>{
 
-        player.targetId =
-            best.id ||
-            "BOSS";
+        e.preventDefault();
 
-        player.angle =
-            Math.atan2(
-                best.y-player.y,
-                best.x-player.x
+        lockedTarget=
+            nearestTarget();
+
+        if(lockedTarget){
+
+            message(
+                "🎯 Đã khóa mục tiêu."
             );
 
-        showMessage(
-            best === boss
-            ? "🎯 Đã khóa Forgotten God!"
-            : "🎯 Đã khóa mục tiêu gần nhất!",
-            1300
-        );
-
-    }
-    else{
-
-        player.targetId =
-            null;
-
-        showMessage(
-            "🎯 Không có mục tiêu gần.",
-            1000
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 22 — SHOOT
-============================================================ */
-
-function shoot(){
-
-    if(
-        !gameStarted ||
-        gameOver ||
-        gameEnded
-    ){
-
-        return;
-
-    }
-
-
-    if(
-        player.fireCooldown >
-        0
-    ){
-
-        return;
-
-    }
-
-
-    if(
-        player.mana < 6
-    ){
-
-        showMessage(
-            "🔷 Không đủ năng lượng!",
-            700
-        );
-
-        return;
-
-    }
-
-
-    player.fireCooldown =
-        11;
-
-    player.mana -= 6;
-
-    totalShots++;
-
-
-    /* auto aim */
-
-    if(
-        player.targetId
-    ){
-
-        let target = null;
-
-
-        if(
-            player.targetId ===
-            "BOSS"
-        ){
-
-            if(
-                boss.active &&
-                boss.hp > 0
-            ){
-
-                target =
-                    boss;
-
-            }
-
-        }
-        else{
-
-            target =
-                enemies.find(
-                    enemy =>
-                    enemy.id ===
-                    player.targetId
-                );
-
-        }
-
-
-        if(
-            target &&
-            distanceBetween(
-                player,
-                target
-            ) < 1100
-        ){
-
-            player.angle =
-                Math.atan2(
-                    target.y -
-                    player.y,
-                    target.x -
-                    player.x
-                );
-
-        }
-        else{
-
-            player.targetId =
-                null;
-
         }
 
     }
+);
 
 
-    const startX =
-        player.x +
-        Math.cos(
-            player.angle
-        ) * 36;
+/* =========================================================
+   DAMAGE PLAYER
+========================================================= */
 
-    const startY =
-        player.y +
-        Math.sin(
-            player.angle
-        ) * 36;
+function damagePlayer(amount){
 
-
-    playerProjectiles.push({
-
-        x: startX,
-
-        y: startY,
-
-        vx:
-        Math.cos(
-            player.angle
-        ) * 12,
-
-        vy:
-        Math.sin(
-            player.angle
-        ) * 12,
-
-        life: 90,
-
-        damage: 30,
-
-        radius: 12
-
-    });
-
-
-    soundShoot();
-
-
-    createParticle(
-        startX,
-        startY,
-        0,
-        0,
-        15,
-        5,
-        "muzzle"
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 23 — DAMAGE PLAYER
-============================================================ */
-
-function damagePlayer(
-    amount
-){
-
-    if(
-        player.invulnerable >
-        0
-    ){
-
+    if(player.invincible>0)
         return;
 
-    }
+    player.hp-=amount;
 
+    player.invincible=.5;
 
-    player.hp =
-        Math.max(
-            0,
-            player.hp -
-            amount
-        );
+    sfx("hurt");
 
-    player.invulnerable =
-        30;
-
-    soundPlayerDamage();
-
-
-    const flash =
-        document.getElementById(
-            "damageFlash"
-        );
-
-    flash.style.opacity =
-        "1";
-
-    setTimeout(
-        ()=>{
-            flash.style.opacity =
-                "0";
-        },
-        120
-    );
-
-
-    if(
-        player.hp <= 0
-    ){
-
-        playerDeath();
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 24 — DEATH / WAKE UP
-============================================================ */
-
-function playerDeath(){
-
-    if(
-        gameOver
-    ){
-
-        return;
-
-    }
-
-    gameOver =
-        true;
-
-
-    const death =
-        document.getElementById(
-            "death"
-        );
-
-
-    death.classList.remove(
-        "hidden"
-    );
-
-
-    setTimeout(
-        ()=>{
-            death.style.opacity =
-                "1";
-        },
-        30
-    );
-
-
-    let count = 5;
-
-
-    document
-    .getElementById("count")
-    .textContent =
-    count;
-
-
-    const timer =
-        setInterval(
-            ()=>{
-
-                count--;
-
-                document
-                .getElementById("count")
-                .textContent =
-                count;
-
-
-                if(
-                    count <= 0
-                ){
-
-                    clearInterval(
-                        timer
-                    );
-
-                    revivePlayer();
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-function revivePlayer(){
-
-    player.x =
-        player.spawnX;
-
-    player.y =
-        player.spawnY;
-
-    player.hp =
-        player.maxHp;
-
-    player.stamina =
-        player.maxStamina;
-
-    player.mana =
-        player.maxMana;
-
-    player.invulnerable =
-        90;
-
-    player.targetId =
-        null;
-
-
-    soundRevive();
-
-
-    createExplosion(
+    burst(
         player.x,
         player.y,
-        35,
-        "revive"
+        10
     );
 
 
-    const death =
-        document.getElementById(
-            "death"
-        );
+    if(player.hp<=0){
+
+        player.hp=0;
+
+        revive();
+
+    }
+
+}
 
 
-    death.style.opacity =
-        "0";
+/* =========================================================
+   REVIVE
+========================================================= */
+
+function revive(){
+
+    const wake=
+        document.getElementById("wake");
+
+    const counter=
+        document.getElementById("wakeCount");
+
+    wake.style.display="flex";
+
+    let n=5;
+
+    counter.textContent=n;
+
+    const timer=
+        setInterval(()=>{
+
+            n--;
+
+            counter.textContent=n;
+
+            if(n<=0){
+
+                clearInterval(timer);
+
+                player.x=
+                    player.spawnX;
+
+                player.y=
+                    player.spawnY;
+
+                player.hp=100;
+
+                player.invincible=1.5;
+
+                wake.style.display=
+                    "none";
+
+                sfx("revive");
+
+                message(
+                    "✨ Bạn đã hồi sinh!"
+                );
+
+            }
+
+        },1000);
+
+}
 
 
-    setTimeout(
-        ()=>{
+/* =========================================================
+   BOSS
+========================================================= */
 
-            death.classList.add(
-                "hidden"
-            );
+function startBoss(){
 
-            gameOver =
-                false;
+    if(
+        bossActive ||
+        bossDead
+    )
+        return;
 
-            showMessage(
-                "✨ HỒI SINH TẠI ĐIỂM CHECKPOINT!",
-                2500
-            );
+    bossActive=true;
 
-        },
-        900
+    document.getElementById(
+        "bossUI"
+    ).style.display="block";
+
+    startMusic("boss");
+
+    sfx("boss");
+
+    message(
+        "👑 FORGOTTEN GOD: Kẻ đã đánh thức ta..."
     );
 
-}
-
-
-/* ============================================================
-   SECTION 25 — UPDATE PLAYER
-============================================================ */
-
-function updatePlayer(){
-
-    if(
-        gameOver ||
-        gameEnded
-    ){
-
-        return;
-
-    }
-
-
-    let dx = 0;
-
-    let dy = 0;
-
-
-    if(
-        keys["w"] ||
-        keys["arrowup"]
-    ){
-
-        dy -= 1;
-
-    }
-
-
-    if(
-        keys["s"] ||
-        keys["arrowdown"]
-    ){
-
-        dy += 1;
-
-    }
-
-
-    if(
-        keys["a"] ||
-        keys["arrowleft"]
-    ){
-
-        dx -= 1;
-
-    }
-
-
-    if(
-        keys["d"] ||
-        keys["arrowright"]
-    ){
-
-        dx += 1;
-
-    }
-
-
-    dx +=
-        moveInputX;
-
-    dy +=
-        moveInputY;
-
-
-    const length =
-        Math.hypot(
-            dx,
-            dy
-        );
-
-
-    player.moving =
-        length >
-        .05;
-
-
-    if(
-        length >
-        0
-    ){
-
-        dx /=
-            length;
-
-        dy /=
-            length;
-
-
-        player.x +=
-            dx *
-            player.speed;
-
-        player.y +=
-            dy *
-            player.speed;
-
-
-        if(
-            Math.random() <
-            .07
-        ){
-
-            soundFootstep();
-
-        }
-
-    }
-
-
-    /* mouse hold */
-
-    if(
-        mouseDown
-    ){
-
-        shoot();
-
-    }
-
-
-    /* bounds */
-
-    player.x =
-        Math.max(
-            35,
-            Math.min(
-                world.width-35,
-                player.x
-            )
-        );
-
-
-    player.y =
-        Math.max(
-            35,
-            Math.min(
-                world.height-35,
-                player.y
-            )
-        );
-
-
-    /* regeneration */
-
-    player.stamina =
-        Math.min(
-            player.maxStamina,
-            player.stamina +
-            .28
-        );
-
-
-    player.mana =
-        Math.min(
-            player.maxMana,
-            player.mana +
-            .16
-        );
-
-
-    if(
-        player.fireCooldown >
-        0
-    ){
-
-        player.fireCooldown--;
-
-    }
-
-
-    if(
-        player.invulnerable >
-        0
-    ){
-
-        player.invulnerable--;
-
-    }
-
-
-    /* joystick auto aim */
-
-    if(
-        Math.hypot(
-            aimInputX,
-            aimInputY
-        ) >
-        .15
-    ){
-
-        player.angle =
-            Math.atan2(
-                aimInputY,
-                aimInputX
-            );
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 26 — UPDATE PROJECTILES
-============================================================ */
-
-function updatePlayerProjectiles(){
-
-    for(
-        const projectile of
-        playerProjectiles
-    ){
-
-        projectile.x +=
-            projectile.vx;
-
-        projectile.y +=
-            projectile.vy;
-
-        projectile.life--;
-
-
-        /* enemy hit */
-
-        for(
-            const enemy of enemies
-        ){
-
-            if(
-                enemy.dead ||
-                enemy.hp <= 0
-            ){
-
-                continue;
-
-            }
-
-
-            if(
-                distance(
-                    projectile.x,
-                    projectile.y,
-                    enemy.x,
-                    enemy.y
-                )
-                <
-                enemy.radius +
-                projectile.radius
-            ){
-
-                enemy.hp -=
-                    projectile.damage;
-
-                enemy.hurtTimer =
-                    8;
-
-                projectile.life =
-                    0;
-
-                soundHit();
-
-
-                createExplosion(
-                    projectile.x,
-                    projectile.y,
-                    9,
-                    "hit"
-                );
-
-
-                if(
-                    enemy.hp <= 0
-                ){
-
-                    enemy.dead =
-                        true;
-
-                    totalKills++;
-
-                    createExplosion(
-                        enemy.x,
-                        enemy.y,
-                        16,
-                        "death"
-                    );
-
-                }
-
-
-                break;
-
-            }
-
-        }
-
-
-        /* boss hit */
-
-        if(
-            boss.active &&
-            !boss.defeated &&
-            boss.hp > 0
-        ){
-
-            if(
-                distance(
-                    projectile.x,
-                    projectile.y,
-                    boss.x,
-                    boss.y
-                )
-                <
-                boss.radius +
-                projectile.radius
-            ){
-
-                boss.hp -=
-                    projectile.damage;
-
-                boss.hitTimer =
-                    8;
-
-                projectile.life =
-                    0;
-
-                soundHit();
-
-
-                createExplosion(
-                    projectile.x,
-                    projectile.y,
-                    12,
-                    "bossHit"
-                );
-
-
-                if(
-                    boss.hp <= 0
-                ){
-
-                    boss.hp =
-                        0;
-
-                    defeatBoss();
-
-                }
-
-            }
-
-        }
-
-    }
-
-
-    for(
-        let i =
-        playerProjectiles.length-1;
-
-        i >= 0;
-
-        i--
-    ){
-
-        const projectile =
-            playerProjectiles[i];
-
-
-        if(
-            projectile.life <= 0 ||
-            projectile.x < 0 ||
-            projectile.y < 0 ||
-            projectile.x > world.width ||
-            projectile.y > world.height
-        ){
-
-            playerProjectiles.splice(
-                i,
-                1
-            );
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 27 — UPDATE ENEMIES
-============================================================ */
-
-function updateEnemies(){
-
-    for(
-        const enemy of enemies
-    ){
-
-        if(
-            enemy.dead ||
-            enemy.hp <= 0
-        ){
-
-            continue;
-
-        }
-
-
-        if(
-            enemy.hurtTimer >
-            0
-        ){
-
-            enemy.hurtTimer--;
-
-        }
-
-
-        const dx =
-            player.x -
-            enemy.x;
-
-        const dy =
-            player.y -
-            enemy.y;
-
-        const dist =
-            Math.hypot(
-                dx,
-                dy
-            );
-
-
-        if(
-            dist <
-            750
-        ){
-
-            const angle =
-                Math.atan2(
-                    dy,
-                    dx
-                );
-
-
-            if(
-                dist >
-                50
-            ){
-
-                enemy.x +=
-                    Math.cos(
-                        angle
-                    ) *
-                    enemy.speed;
-
-                enemy.y +=
-                    Math.sin(
-                        angle
-                    ) *
-                    enemy.speed;
-
-            }
-
-
-            enemy.attackCooldown--;
-
-
-            if(
-                dist <
-                55 &&
-                enemy.attackCooldown <=
-                0
-            ){
-
-                enemy.attackCooldown =
-                    enemy.type === 1
-                    ? 70
-                    : 55;
-
-
-                damagePlayer(
-                    enemy.type === 1
-                    ? 9
-                    : 5
-                );
-
-            }
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 28 — UPDATE BOSS
-============================================================ */
-
-function updateBoss(){
-
-    if(
-        !boss.active ||
-        boss.defeated ||
-        boss.hp <= 0 ||
-        gameOver
-    ){
-
-        return;
-
-    }
-
-
-    const dx =
-        player.x -
-        boss.x;
-
-    const dy =
-        player.y -
-        boss.y;
-
-    const dist =
-        Math.hypot(
-            dx,
-            dy
-        );
-
-
-    /* phase */
-
-    if(
-        boss.hp <=
-        boss.maxHp * .5
-    ){
-
-        if(
-            boss.phase === 1
-        ){
-
-            boss.phase =
-                2;
-
-            showMessage(
-                "🔥 PHASE 2 — FORGOTTEN GOD GIẬN DỮ!",
-                3000
-            );
-
-            createExplosion(
-                boss.x,
-                boss.y,
-                45,
-                "boss"
-            );
-
-            soundBossAttack();
-
-        }
-
-    }
-
-
-    const angle =
-        Math.atan2(
-            dy,
-            dx
-        );
-
-
-    const speed =
-        boss.phase === 2
-        ? boss.speed * 1.35
-        : boss.speed;
-
-
-    if(
-        dist >
-        125
-    ){
-
-        boss.x +=
-            Math.cos(angle) *
-            speed;
-
-        boss.y +=
-            Math.sin(angle) *
-            speed;
-
-    }
-
-
-    boss.attackCooldown--;
-
-    boss.specialCooldown--;
-
-
-    /* contact */
-
-    if(
-        dist <
-        120 &&
-        boss.attackCooldown <=
-        0
-    ){
-
-        boss.attackCooldown =
-            boss.phase === 2
-            ? 42
-            : 62;
-
-        damagePlayer(
-            boss.phase === 2
-            ? 18
-            : 12
-        );
-
-    }
-
-
-    /* projectile attack */
-
-    if(
-        boss.attackCooldown <=
-        0
-    ){
-
-        boss.attackCooldown =
-            boss.phase === 2
-            ? 48
-            : 72;
-
-
-        fireBossProjectiles(
-            angle
-        );
-
-        soundBossAttack();
-
-    }
-
-
-    /* special */
-
-    if(
-        boss.phase === 2 &&
-        boss.specialCooldown <=
-        0
-    ){
-
-        boss.specialCooldown =
-            180;
-
-        bossSpecialAttack();
-
-    }
-
-
-    if(
-        boss.hitTimer >
-        0
-    ){
-
-        boss.hitTimer--;
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 29 — BOSS PROJECTILES
-============================================================ */
-
-function fireBossProjectiles(
-    baseAngle
-){
-
-    const amount =
-        boss.phase === 2
-        ? 5
-        : 3;
-
-
-    for(
-        let i=0;
-        i<amount;
-        i++
-    ){
-
-        const spread =
-            (
-                i -
-                (amount-1)/2
-            ) *
-            .16;
-
-
-        const angle =
-            baseAngle +
-            spread;
-
-
-        enemyProjectiles.push({
-
-            x:
-            boss.x,
-
-            y:
-            boss.y,
-
-            vx:
-            Math.cos(
-                angle
-            ) *
-            6.2,
-
-            vy:
-            Math.sin(
-                angle
-            ) *
-            6.2,
-
-            life:
-            170,
-
-            damage:
-            boss.phase === 2
-            ? 16
-            : 11
-
-        });
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 30 — BOSS SPECIAL
-============================================================ */
-
-function bossSpecialAttack(){
-
-    createExplosion(
+    burst(
         boss.x,
         boss.y,
-        70,
-        "boss"
+        50
+    );
+
+}
+
+
+function damageBoss(amount){
+
+    if(
+        !bossActive ||
+        bossDead
+    )
+        return;
+
+    boss.hp-=amount;
+
+    sfx("hit");
+
+    burst(
+        boss.x,
+        boss.y,
+        8
     );
 
 
-    const distanceToPlayer =
-        distanceBetween(
-            boss,
-            player
-        );
+    if(boss.hp<=0){
 
+        boss.hp=0;
 
-    if(
-        distanceToPlayer <
-        350
-    ){
+        bossDead=true;
 
-        damagePlayer(
-            22
-        );
+        bossActive=false;
 
-    }
+        document.getElementById(
+            "bossUI"
+        ).style.display="none";
 
+        startMusic("field");
 
-    for(
-        let i=0;
-        i<12;
-        i++
-    ){
+        sfx("ending");
 
-        const angle =
-            i *
-            Math.PI*2 /
-            12;
+        setTimeout(()=>{
 
+            document.getElementById(
+                "ending"
+            ).style.display="flex";
 
-        enemyProjectiles.push({
-
-            x:
-            boss.x,
-
-            y:
-            boss.y,
-
-            vx:
-            Math.cos(
-                angle
-            ) *
-            4.4,
-
-            vy:
-            Math.sin(
-                angle
-            ) *
-            4.4,
-
-            life:
-            130,
-
-            damage:
-            12
-
-        });
+        },1200);
 
     }
 
 }
 
 
-/* ============================================================
-   SECTION 31 — ENEMY PROJECTILES
-============================================================ */
+/* =========================================================
+   UPDATE
+========================================================= */
 
-function updateEnemyProjectiles(){
+function update(dt){
 
-    for(
-        const projectile of
-        enemyProjectiles
+    player.shootCooldown=
+        Math.max(
+            0,
+            player.shootCooldown-dt
+        );
+
+    player.stepCooldown=
+        Math.max(
+            0,
+            player.stepCooldown-dt
+        );
+
+    player.invincible=
+        Math.max(
+            0,
+            player.invincible-dt
+        );
+
+
+    /* Movement */
+
+    let dx=0;
+    let dy=0;
+
+    if(keys.w)dy--;
+    if(keys.s)dy++;
+    if(keys.a)dx--;
+    if(keys.d)dx++;
+
+    if(joyActive){
+
+        dx=joyX;
+        dy=joyY;
+
+    }
+
+
+    let len=
+        Math.hypot(dx,dy);
+
+    if(len>1){
+
+        dx/=len;
+        dy/=len;
+
+    }
+
+
+    if(len>.1){
+
+        movePlayer(
+            dx*
+            player.speed*
+            dt,
+
+            dy*
+            player.speed*
+            dt
+        );
+
+        if(
+            player.stepCooldown<=0
+        ){
+
+            sfx("step");
+
+            player.stepCooldown=.32;
+
+        }
+
+    }
+
+
+    /* PC AIM */
+
+    if(!aimActive){
+
+        const sx=
+            player.x-camera.x;
+
+        const sy=
+            player.y-camera.y;
+
+        const mx=
+            mouse.x-sx;
+
+        const my=
+            mouse.y-sy;
+
+        if(
+            Math.hypot(mx,my)>5
+        ){
+
+            /*
+              SỬA LỖI NGƯỢC CHUỘT:
+              Không dùng abs() hoặc đảo dx.
+              dx âm = trái.
+              dx dương = phải.
+            */
+
+            player.angle=
+                Math.atan2(
+                    my,
+                    mx
+                );
+
+        }
+
+    }
+
+
+    if(mouse.down)
+        shoot();
+
+
+    /* TARGET LOCK */
+
+    if(
+        lockedTarget &&
+        lockedTarget.hp<=0
     ){
 
-        projectile.x +=
-            projectile.vx;
+        lockedTarget=null;
 
-        projectile.y +=
-            projectile.vy;
+    }
 
-        projectile.life--;
 
+    if(lockedTarget){
+
+        player.angle=
+            Math.atan2(
+                lockedTarget.y-player.y,
+                lockedTarget.x-player.x
+            );
 
         if(
             distance(
-                projectile.x,
-                projectile.y,
-                player.x,
-                player.y
+                player,
+                lockedTarget
+            )<1100
+        )
+            shoot();
+
+    }
+
+
+    /* SHARDS */
+
+    for(const s of shards){
+
+        if(
+            !s.taken &&
+            Math.hypot(
+                player.x-s.x,
+                player.y-s.y
+            )<55
+        ){
+
+            s.taken=true;
+
+            shardCount++;
+
+            sfx("pickup");
+
+            burst(
+                s.x,
+                s.y,
+                20
+            );
+
+            message(
+                "🧩 Đã lấy "+
+                s.name+
+                " — "+
+                shardCount+
+                "/3"
+            );
+
+            if(shardCount>=3){
+
+                castleUnlocked=true;
+
+                message(
+                    "🏰 Đủ 3 mảnh! Cổng lâu đài đã mở."
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /* ENEMIES */
+
+    for(const enemy of enemies){
+
+        if(enemy.hp<=0)
+            continue;
+
+        enemy.cooldown=
+            Math.max(
+                0,
+                enemy.cooldown-dt
+            );
+
+        let d=
+            distance(
+                enemy,
+                player
+            );
+
+        if(d<650){
+
+            let a=
+                Math.atan2(
+                    player.y-enemy.y,
+                    player.x-enemy.x
+                );
+
+            let mx=
+                Math.cos(a)*
+                enemy.speed*
+                dt;
+
+            let my=
+                Math.sin(a)*
+                enemy.speed*
+                dt;
+
+            if(
+                d>55
             )
-            <
-            player.radius +
-            15
-        ){
+                moveEnemy(
+                    enemy,
+                    mx,
+                    my
+                );
 
-            damagePlayer(
-                projectile.damage
-            );
 
-            projectile.life =
-                0;
+            if(
+                d<55 &&
+                enemy.cooldown<=0
+            ){
+
+                damagePlayer(8);
+
+                enemy.cooldown=.8;
+
+            }
 
         }
 
     }
 
 
+    /* PLAYER SHOTS */
+
     for(
-        let i =
-        enemyProjectiles.length-1;
-
-        i >= 0;
-
+        let i=playerShots.length-1;
+        i>=0;
         i--
     ){
 
+        const p=
+            playerShots[i];
+
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
+
+        p.life-=dt;
+
+        let remove=
+            p.life<=0;
+
+
+        for(const enemy of enemies){
+
+            if(
+                !remove &&
+                enemy.hp>0 &&
+                Math.hypot(
+                    p.x-enemy.x,
+                    p.y-enemy.y
+                )<
+                p.r+enemy.r
+            ){
+
+                enemy.hp-=35;
+
+                remove=true;
+
+                sfx("hit");
+
+                burst(
+                    p.x,
+                    p.y,
+                    8
+                );
+
+            }
+
+        }
+
+
         if(
-            enemyProjectiles[i].life <=
-            0
+            !remove &&
+            bossActive &&
+            !bossDead &&
+            Math.hypot(
+                p.x-boss.x,
+                p.y-boss.y
+            )<
+            p.r+boss.r
         ){
 
-            enemyProjectiles.splice(
-                i,
-                1
+            damageBoss(28);
+
+            remove=true;
+
+        }
+
+
+        if(remove)
+            playerShots.splice(i,1);
+
+    }
+
+
+    /* BOSS */
+
+    if(
+        bossActive &&
+        !bossDead
+    ){
+
+        boss.cooldown-=dt;
+
+        let d=
+            distance(
+                boss,
+                player
             );
+
+        let a=
+            Math.atan2(
+                player.y-boss.y,
+                player.x-boss.x
+            );
+
+        boss.angle=a;
+
+
+        if(d>130){
+
+            moveEnemy(
+                boss,
+                Math.cos(a)*
+                boss.speed*dt,
+
+                Math.sin(a)*
+                boss.speed*dt
+            );
+
+        }
+
+
+        if(
+            d<145 &&
+            boss.cooldown<=0
+        ){
+
+            damagePlayer(18);
+
+            boss.cooldown=1.3;
+
+            sfx("bossAttack");
+
+        }
+
+
+        if(
+            Math.random()<dt*.7
+        ){
+
+            bossShots.push({
+
+                x:
+                    boss.x+
+                    Math.cos(a)*50,
+
+                y:
+                    boss.y+
+                    Math.sin(a)*50,
+
+                vx:
+                    Math.cos(a)*340,
+
+                vy:
+                    Math.sin(a)*340,
+
+                r:10,
+
+                life:2
+
+            });
 
         }
 
     }
 
-}
 
-
-/* ============================================================
-   SECTION 32 — PARTICLES UPDATE
-============================================================ */
-
-function updateParticles(){
+    /* BOSS SHOTS */
 
     for(
-        const particle of particles
-    ){
-
-        particle.x +=
-            particle.vx;
-
-        particle.y +=
-            particle.vy;
-
-        particle.vx *=
-            .97;
-
-        particle.vy *=
-            .97;
-
-        particle.life--;
-
-    }
-
-
-    for(
-        let i =
-        particles.length-1;
-
-        i >= 0;
-
+        let i=bossShots.length-1;
+        i>=0;
         i--
     ){
 
-        if(
-            particles[i].life <=
-            0
-        ){
+        const p=
+            bossShots[i];
 
-            particles.splice(
-                i,
-                1
-            );
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
 
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 33 — CAMERA
-============================================================ */
-
-function updateCamera(){
-
-    const targetX =
-        W/2 -
-        player.x;
-
-    const targetY =
-        H/2 -
-        player.y;
-
-
-    camera.x +=
-        (
-            targetX -
-            camera.x
-        ) *
-        camera.smoothing;
-
-
-    camera.y +=
-        (
-            targetY -
-            camera.y
-        ) *
-        camera.smoothing;
-
-}
-
-
-/* ============================================================
-   SECTION 34 — CHECKPOINTS
-============================================================ */
-
-function updateCheckpoint(){
-
-    /* checkpoint before castle */
-
-    if(
-        floor === 1 &&
-        player.x > 3300 &&
-        player.y > 2500
-    ){
+        p.life-=dt;
 
         if(
-            player.spawnX !==
-            3400
+            Math.hypot(
+                p.x-player.x,
+                p.y-player.y
+            )<
+            p.r+player.r
         ){
 
-            player.spawnX =
-                3400;
+            damagePlayer(12);
 
-            player.spawnY =
-                2700;
-
-            showMessage(
-                "🕯️ CHECKPOINT ĐÃ KÍCH HOẠT!",
-                2200
-            );
-
-        }
-
-    }
-
-
-    /* castle checkpoint */
-
-    if(
-        floor === 2 &&
-        player.y > 1400
-    ){
-
-        if(
-            player.spawnX !==
-            4250
-        ){
-
-            player.spawnX =
-                4250;
-
-            player.spawnY =
-                1450;
-
-            showMessage(
-                "🕯️ CHECKPOINT LÂU ĐÀI ĐÃ KÍCH HOẠT!",
-                2200
-            );
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 35 — END BOSS
-============================================================ */
-
-function defeatBoss(){
-
-    if(
-        boss.defeated
-    ){
-
-        return;
-
-    }
-
-
-    boss.defeated =
-        true;
-
-    boss.active =
-        false;
-
-    boss.hp =
-        0;
-
-
-    player.targetId =
-        null;
-
-
-    createExplosion(
-        boss.x,
-        boss.y,
-        100,
-        "bossDeath"
-    );
-
-
-    stopMusic();
-
-
-    soundBossAttack();
-
-
-    showMessage(
-        "👑 FORGOTTEN GOD ĐÃ BỊ ĐÁNH BẠI!",
-        5000
-    );
-
-
-    setTimeout(
-        ()=>{
-            showEnding();
-        },
-        4200
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 36 — ENDING
-============================================================ */
-
-function showEnding(){
-
-    gameEnded =
-        true;
-
-    gameStarted =
-        false;
-
-
-    document
-    .getElementById("bossHUD")
-    .style.display =
-    "none";
-
-
-    document
-    .getElementById("stats")
-    .textContent =
-    "Quái đã hạ: " +
-    totalKills +
-    " • Phép đã bắn: " +
-    totalShots;
-
-
-    document
-    .getElementById("ending")
-    .classList.remove(
-        "hidden"
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 37 — DISTANCE
-============================================================ */
-
-function distance(
-    x1,
-    y1,
-    x2,
-    y2
-){
-
-    return Math.hypot(
-        x2-x1,
-        y2-y1
-    );
-
-}
-
-
-function distanceBetween(
-    a,
-    b
-){
-
-    return distance(
-        a.x,
-        a.y,
-        b.x,
-        b.y
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 38 — DRAW BACKGROUND
-============================================================ */
-
-function drawBackground(){
-
-    ctx.fillStyle =
-        "#05050a";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    const gradient =
-        ctx.createRadialGradient(
-            W/2,
-            H/2,
-            100,
-            W/2,
-            H/2,
-            Math.max(W,H)
-        );
-
-
-    gradient.addColorStop(
-        0,
-        floor === 2
-        ? "#17101d"
-        : "#0d1011"
-    );
-
-
-    gradient.addColorStop(
-        1,
-        "#030307"
-    );
-
-
-    ctx.fillStyle =
-        gradient;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 39 — DRAW WORLD
-============================================================ */
-
-function drawWorld(){
-
-    ctx.save();
-
-
-    ctx.translate(
-        camera.x,
-        camera.y
-    );
-
-
-    /* ground */
-
-    ctx.fillStyle =
-        floor === 1
-        ? "#0a100d"
-        : "#100c15";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        world.width,
-        world.height
-    );
-
-
-    /* grid */
-
-    ctx.lineWidth = 1;
-
-
-    for(
-        let x=0;
-        x<world.width;
-        x+=100
-    ){
-
-        ctx.strokeStyle =
-            floor === 1
-            ? "rgba(80,120,95,.035)"
-            : "rgba(130,95,150,.04)";
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            0
-        );
-
-        ctx.lineTo(
-            x,
-            world.height
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    for(
-        let y=0;
-        y<world.height;
-        y+=100
-    ){
-
-        ctx.strokeStyle =
-            floor === 1
-            ? "rgba(80,120,95,.035)"
-            : "rgba(130,95,150,.04)";
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            y
-        );
-
-        ctx.lineTo(
-            world.width,
-            y
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    drawForest();
-
-    drawGraveyard();
-
-    drawCastle();
-
-    drawNPCs();
-
-    drawSeals();
-
-    drawEnemies();
-
-    drawBoss();
-
-    drawProjectiles();
-
-    drawParticles();
-
-    drawPlayer();
-
-    drawCheckpoint();
-
-
-    ctx.restore();
-
-}
-
-
-/* ============================================================
-   SECTION 40 — FOREST
-============================================================ */
-
-function drawForest(){
-
-    const trees = 145;
-
-
-    for(
-        let i=0;
-        i<trees;
-        i++
-    ){
-
-        const x =
-            (
-                i*719
-            ) %
-            3600 +
-            100;
-
-
-        const y =
-            (
-                i*433
-            ) %
-            3600 +
-            120;
-
-
-        if(
-            x > 3900 &&
-            y < 1300
-        ){
+            bossShots.splice(i,1);
 
             continue;
 
         }
 
 
-        ctx.font =
-            "40px Arial";
-
-
-        ctx.fillText(
-            "🌲",
-            x-20,
-            y
-        );
+        if(p.life<=0)
+            bossShots.splice(i,1);
 
     }
 
-}
 
-
-/* ============================================================
-   SECTION 41 — GRAVEYARD
-============================================================ */
-
-function drawGraveyard(){
-
-    ctx.fillStyle =
-        "#111016";
-
-
-    ctx.fillRect(
-        2450,
-        2400,
-        1250,
-        1050
-    );
-
-
-    ctx.strokeStyle =
-        "#3a3340";
-
-
-    ctx.strokeRect(
-        2450,
-        2400,
-        1250,
-        1050
-    );
-
+    /* PARTICLES */
 
     for(
-        let row=0;
-        row<6;
-        row++
+        let i=particles.length-1;
+        i>=0;
+        i--
     ){
 
-        for(
-            let col=0;
-            col<6;
-            col++
-        ){
+        const p=
+            particles[i];
 
-            const x =
-                2550 +
-                col*180;
+        p.x+=p.vx*dt;
+        p.y+=p.vy*dt;
 
-            const y =
-                2520 +
-                row*150;
+        p.vx*=.97;
+        p.vy*=.97;
 
+        p.life-=dt;
 
-            ctx.font =
-                "32px Arial";
-
-
-            ctx.fillText(
-                "🪦",
-                x,
-                y
-            );
-
-        }
+        if(p.life<=0)
+            particles.splice(i,1);
 
     }
 
 
-    ctx.font =
-        "34px Arial";
-
-
-    ctx.fillText(
-        "🕯️",
-        3080,
-        3350
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 42 — CASTLE
-============================================================ */
-
-function drawCastle(){
-
-    /* lower castle */
-
-    ctx.fillStyle =
-        "#17131d";
-
-
-    ctx.fillRect(
-        3900,
-        250,
-        1000,
-        1100
-    );
-
-
-    ctx.strokeStyle =
-        "#64506f";
-
-
-    ctx.lineWidth =
-        8;
-
-
-    ctx.strokeRect(
-        3900,
-        250,
-        1000,
-        1100
-    );
-
-
-    /* towers */
-
-    ctx.fillStyle =
-        "#1d1724";
-
-
-    ctx.fillRect(
-        3900,
-        150,
-        240,
-        1200
-    );
-
-
-    ctx.fillRect(
-        4660,
-        150,
-        240,
-        1200
-    );
-
-
-    ctx.font =
-        "90px Arial";
-
-
-    ctx.fillText(
-        "🏰",
-        4310,
-        500
-    );
-
-
-    ctx.font =
-        "45px Arial";
-
-
-    ctx.fillText(
-        "🚪",
-        4310,
-        1160
-    );
-
-
-    /* upper castle */
+    /* BOSS ROOM */
 
     if(
-        floor === 2
-    ){
-
-        ctx.fillStyle =
-            "#100c16";
-
-
-        ctx.fillRect(
-            3900,
-            1300,
-            1050,
-            2200
-        );
-
-
-        ctx.strokeStyle =
-            "#584565";
-
-
-        ctx.strokeRect(
-            3900,
-            1300,
-            1050,
-            2200
-        );
-
-
-        for(
-            let i=0;
-            i<12;
-            i++
-        ){
-
-            ctx.font =
-                "28px Arial";
-
-
-            ctx.fillText(
-                "🕯️",
-                4040 +
-                (i%4)*260,
-                1500 +
-                Math.floor(i/4)*650
-            );
-
-        }
-
-
-        ctx.font =
-            "55px Arial";
-
-
-        ctx.fillText(
-            "🪜",
-            4680,
-            3350
-        );
-
-
-        ctx.font =
-            "32px Arial";
-
-
-        ctx.fillText(
-            "👑",
-            4655,
-            3450
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 43 — NPC DRAW
-============================================================ */
-
-function drawNPCs(){
-
-    for(
-        const npc of npcs
-    ){
-
-        ctx.font =
-            "44px Arial";
-
-
-        ctx.fillText(
-            npc.emoji,
-            npc.x-22,
-            npc.y+18
-        );
-
-
-        ctx.font =
-            "13px Arial";
-
-
-        ctx.fillStyle =
-            "#d0c4df";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.fillText(
-            npc.name,
-            npc.x,
-            npc.y-38
-        );
-
-
-        ctx.textAlign =
-            "left";
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 44 — SEALS DRAW
-============================================================ */
-
-function drawSeals(){
-
-    for(
-        const seal of seals
+        castleUnlocked &&
+        player.x>2350 &&
+        player.x<3000 &&
+        player.y>850 &&
+        player.y<1800
     ){
 
         if(
-            seal.collected
-        ){
-
-            continue;
-
-        }
-
-
-        const pulse =
-            Math.sin(
-                performance.now()/180
-            ) *
-            4;
-
-
-        ctx.font =
-            `${34+pulse}px Arial`;
-
-
-        ctx.fillText(
-            "🔷",
-            seal.x-17,
-            seal.y+12
-        );
+            !bossActive &&
+            !bossDead
+        )
+            startBoss();
 
     }
 
-}
-
-
-/* ============================================================
-   SECTION 45 — ENEMY DRAW
-============================================================ */
-
-function drawEnemies(){
-
-    for(
-        const enemy of enemies
-    ){
-
-        if(
-            enemy.dead ||
-            enemy.hp <= 0
-        ){
-
-            continue;
-
-        }
-
-
-        ctx.font =
-            enemy.type === 1
-            ? "44px Arial"
-            : "38px Arial";
-
-
-        ctx.fillText(
-            enemy.emoji,
-            enemy.x -
-            (
-                enemy.type === 1
-                ? 22
-                : 19
-            ),
-            enemy.y+15
-        );
-
-
-        /* health bar */
-
-        if(
-            enemy.hp <
-            enemy.maxHp
-        ){
-
-            const width =
-                48;
-
-            ctx.fillStyle =
-                "#250912";
-
-
-            ctx.fillRect(
-                enemy.x-width/2,
-                enemy.y-45,
-                width,
-                5
-            );
-
-
-            ctx.fillStyle =
-                "#e03c61";
-
-
-            ctx.fillRect(
-                enemy.x-width/2,
-                enemy.y-45,
-                width *
-                (
-                    enemy.hp/
-                    enemy.maxHp
-                ),
-                5
-            );
-
-        }
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 46 — BOSS DRAW
-============================================================ */
-
-function drawBoss(){
-
-    if(
-        !boss.active ||
-        boss.defeated
-    ){
-
-        return;
-
-    }
-
-
-    const pulse =
-        Math.sin(
-            performance.now()/130
-        ) *
-        5;
-
-
-    /* aura */
-
-    const aura =
-        ctx.createRadialGradient(
-            boss.x,
-            boss.y,
-            15,
-            boss.x,
-            boss.y,
-            150
-        );
-
-
-    aura.addColorStop(
-        0,
-        "rgba(170,40,220,.30)"
-    );
-
-
-    aura.addColorStop(
-        .5,
-        "rgba(90,0,130,.12)"
-    );
-
-
-    aura.addColorStop(
-        1,
-        "rgba(0,0,0,0)"
-    );
-
-
-    ctx.fillStyle =
-        aura;
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        boss.x,
-        boss.y,
-        150,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.font =
-        `${100+pulse}px Arial`;
-
-
-    ctx.fillText(
-        "👑",
-        boss.x-50,
-        boss.y+30
-    );
-
-
-    ctx.font =
-        "34px Arial";
-
-
-    ctx.fillText(
-        "👁️",
-        boss.x-17,
-        boss.y+65
-    );
-
-
-    /* phase */
-
-    if(
-        boss.phase === 2
-    ){
-
-        ctx.strokeStyle =
-            "#ff294f88";
-
-        ctx.lineWidth =
-            5;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            boss.x,
-            boss.y,
-            100,
-            0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 47 — PROJECTILE DRAW
-============================================================ */
-
-function drawProjectiles(){
-
-    for(
-        const projectile of
-        playerProjectiles
-    ){
-
-        const glow =
-            ctx.createRadialGradient(
-                projectile.x,
-                projectile.y,
-                2,
-                projectile.x,
-                projectile.y,
-                30
-            );
-
-
-        glow.addColorStop(
-            0,
-            "rgba(255,255,255,.95)"
-        );
-
-
-        glow.addColorStop(
-            .25,
-            "rgba(160,120,255,.8)"
-        );
-
-
-        glow.addColorStop(
-            1,
-            "rgba(100,60,255,0)"
-        );
-
-
-        ctx.fillStyle =
-            glow;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            projectile.x,
-            projectile.y,
-            30,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.font =
-            "25px Arial";
-
-
-        ctx.fillText(
-            "🔮",
-            projectile.x-13,
-            projectile.y+8
-        );
-
-    }
-
-
-    for(
-        const projectile of
-        enemyProjectiles
-    ){
-
-        const glow =
-            ctx.createRadialGradient(
-                projectile.x,
-                projectile.y,
-                2,
-                projectile.x,
-                projectile.y,
-                25
-            );
-
-
-        glow.addColorStop(
-            0,
-            "rgba(255,200,90,.95)"
-        );
-
-
-        glow.addColorStop(
-            .4,
-            "rgba(255,60,60,.6)"
-        );
-
-
-        glow.addColorStop(
-            1,
-            "rgba(255,0,0,0)"
-        );
-
-
-        ctx.fillStyle =
-            glow;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            projectile.x,
-            projectile.y,
-            25,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.font =
-            "25px Arial";
-
-
-        ctx.fillText(
-            "🔥",
-            projectile.x-13,
-            projectile.y+8
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   SECTION 48 — PARTICLE DRAW
-============================================================ */
-
-function drawParticles(){
-
-    for(
-        const particle of
-        particles
-    ){
-
-        const alpha =
-            particle.life /
-            particle.maxLife;
-
-
-        ctx.globalAlpha =
-            alpha;
-
-
-        if(
-            particle.type ===
-            "boss"
-        ){
-
-            ctx.fillStyle =
-                "#c45cff";
-
-        }
-        else if(
-            particle.type ===
-            "revive"
-        ){
-
-            ctx.fillStyle =
-                "#9ee7ff";
-
-        }
-        else if(
-            particle.type ===
-            "seal"
-        ){
-
-            ctx.fillStyle =
-                "#65dfff";
-
-        }
-        else if(
-            particle.type ===
-            "death"
-        ){
-
-            ctx.fillStyle =
-                "#ff4c6a";
-
-        }
-        else{
-
-            ctx.fillStyle =
-                "#c8a9ff";
-
-        }
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            particle.x,
-            particle.y,
-            particle.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-
-    ctx.globalAlpha =
-        1;
-
-}
-
-
-/* ============================================================
-   SECTION 49 — PLAYER DRAW
-============================================================ */
-
-function drawPlayer(){
-
-    ctx.save();
-
-
-    ctx.translate(
-        player.x,
-        player.y
-    );
-
-
-    ctx.rotate(
-        player.angle
-    );
-
-
-    /* shadow */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.45)";
-
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        0,
-        25,
-        28,
-        11,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* character */
-
-    if(
-        player.invulnerable >
-        0 &&
-        Math.floor(
-            player.invulnerable/5
-        ) % 2 === 0
-    ){
-
-        ctx.globalAlpha =
-            .45;
-
-    }
-
-
-    ctx.font =
-        "50px Arial";
-
-
-    ctx.fillText(
-        "🧙",
-        -25,
-        19
-    );
-
-
-    /* magic orb in hand */
-
-    const orb =
-        ctx.createRadialGradient(
-            30,
-            -4,
-            2,
-            30,
-            -4,
-            18
-        );
-
-
-    orb.addColorStop(
-        0,
-        "#ffffff"
-    );
-
-
-    orb.addColorStop(
-        .3,
-        "#c4a3ff"
-    );
-
-
-    orb.addColorStop(
-        1,
-        "rgba(90,40,255,0)"
-    );
-
-
-    ctx.fillStyle =
-        orb;
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        30,
-        -4,
-        18,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.font =
-        "25px Arial";
-
-
-    ctx.fillText(
-        "🔮",
-        17,
-        7
-    );
-
-
-    ctx.globalAlpha =
-        1;
-
-
-    ctx.restore();
-
-}
-
-
-/* ============================================================
-   SECTION 50 — CHECKPOINT DRAW
-============================================================ */
-
-function drawCheckpoint(){
-
-    ctx.font =
-        "27px Arial";
-
-
-    ctx.fillText(
-        "🕯️",
-        player.spawnX-14,
-        player.spawnY+10
-    );
-
-}
-
-
-/* ============================================================
-   SECTION 51 — INTERACTION HINT
-============================================================ */
-
-function updateHint(){
-
-    let near =
-        false;
-
-
-    for(
-        const npc of npcs
-    ){
-
-        if(
-            distanceBetween(
-                player,
-                npc
-            ) < 110
-        ){
-
-            near =
-                true;
-
-        }
-
-    }
-
-
-    for(
-        const seal of seals
-    ){
-
-        if(
-            !seal.collected &&
-            distanceBetween(
-                player,
-                seal
-            ) < 85
-        ){
-
-            near =
-                true;
-
-        }
-
-    }
-
-
-    if(
-        floor === 1 &&
-        player.x > 3950 &&
-        player.x < 4350 &&
-        player.y > 900 &&
-        player.y < 1250
-    ){
-
-        near =
-            true;
-
-    }
-
-
-    if(
-        floor === 2 &&
-        distance(
-            player.x,
-            player.y,
-            4750,
-            3350
-        ) < 170
-    ){
-
-        near =
-            true;
-
-    }
-
-
-    document
-    .getElementById("hint")
-    .style.display =
-    near
-    ? "block"
-    : "none";
-
-}
-
-
-/* ============================================================
-   SECTION 52 — HUD
-============================================================ */
-
-function updateHUD(){
-
-    document
-    .getElementById("hpText")
-    .textContent =
-    Math.ceil(
-        player.hp
-    );
-
-
-    document
-    .getElementById("hpFill")
-    .style.width =
-    (
-        player.hp /
-        player.maxHp *
-        100
-    ) + "%";
-
-
-    document
-    .getElementById("staminaText")
-    .textContent =
-    Math.floor(
-        player.stamina
-    );
-
-
-    document
-    .getElementById("staminaFill")
-    .style.width =
-    (
-        player.stamina /
-        player.maxStamina *
-        100
-    ) + "%";
-
-
-    document
-    .getElementById("manaText")
-    .textContent =
-    Math.floor(
-        player.mana
-    );
-
-
-    document
-    .getElementById("manaFill")
-    .style.width =
-    (
-        player.mana /
-        player.maxMana *
-        100
-    ) + "%";
-
-
-    if(
-        boss.active
-    ){
-
-        document
-        .getElementById("bossFill")
-        .style.width =
-        (
-            boss.hp /
-            boss.maxHp *
-            100
-        ) + "%";
-
-    }
-
-
-    updateQuest();
-
-}
-
-
-/* ============================================================
-   SECTION 53 — GAME UPDATE
-============================================================ */
-
-function update(){
-
-    if(
-        !gameStarted ||
-        gameEnded
-    ){
-
-        return;
-
-    }
-
-
-    if(
-        lastTime === 0
-    ){
-
-        lastTime =
-            performance.now();
-
-    }
-
-
-    const now =
-        performance.now();
-
-
-    deltaTime =
-        Math.min(
-            50,
-            now -
-            lastTime
-        );
-
-
-    lastTime =
-        now;
-
-
-    playTime +=
-        deltaTime;
-
-
-    updatePlayer();
-
-    updatePlayerProjectiles();
-
-    updateEnemyProjectiles();
-
-    updateEnemies();
-
-    updateBoss();
-
-    updateParticles();
-
-    updateCamera();
-
-    updateCheckpoint();
-
-    updateHint();
 
     updateHUD();
 
 }
 
 
-/* ============================================================
-   SECTION 54 — GAME DRAW
-============================================================ */
+/* =========================================================
+   MOVE ENEMY
+========================================================= */
 
-function draw(){
+function moveEnemy(enemy,dx,dy){
 
-    drawBackground();
+    let nx=enemy.x+dx;
 
-    drawWorld();
+    if(
+        !blocked(
+            nx,
+            enemy.y,
+            enemy.r
+        )
+    )
+        enemy.x=nx;
+
+
+    let ny=enemy.y+dy;
+
+    if(
+        !blocked(
+            enemy.x,
+            ny,
+            enemy.r
+        )
+    )
+        enemy.y=ny;
 
 }
 
 
-/* ============================================================
-   SECTION 55 — GAME LOOP
-============================================================ */
+/* =========================================================
+   HUD
+========================================================= */
 
-function gameLoop(){
+function updateHUD(){
 
-    update();
+    document.getElementById(
+        "hpText"
+    ).textContent=
+        Math.ceil(player.hp)+
+        "/100";
 
-    draw();
 
-    requestAnimationFrame(
-        gameLoop
+    document.getElementById(
+        "hpFill"
+    ).style.width=
+        Math.max(
+            0,
+            player.hp
+        )+"%";
+
+
+    document.getElementById(
+        "shardText"
+    ).textContent=
+        shardCount+"/3";
+
+
+    if(bossActive){
+
+        document.getElementById(
+            "bossFill"
+        ).style.width=
+            boss.hp/
+            boss.maxHp*
+            100+"%";
+
+
+        document.getElementById(
+            "bossHPText"
+        ).textContent=
+            Math.ceil(boss.hp)+
+            "/1000";
+
+    }
+
+
+    if(shardCount<3){
+
+        document.getElementById(
+            "questText"
+        ).textContent=
+            "Tìm 3 mảnh đồ bên ngoài lâu đài. ("+
+            shardCount+
+            "/3)";
+
+    }else if(!bossDead){
+
+        document.getElementById(
+            "questText"
+        ).textContent=
+            "🏰 Vào lâu đài và lên tầng cao nhất.";
+
+    }
+
+
+    const gd=
+        Math.hypot(
+            player.x-
+            (gate.x+gate.w/2),
+
+            player.y-
+            (gate.y+gate.h/2)
+        );
+
+
+    const sd=
+        Math.hypot(
+            player.x-
+            (stairs.x+stairs.w/2),
+
+            player.y-
+            (stairs.y+stairs.h/2)
+        );
+
+
+    if(
+        gd<140 ||
+        (sd<140 && castleUnlocked)
+    ){
+
+        document.getElementById(
+            "interact"
+        ).style.display="block";
+
+    }else{
+
+        document.getElementById(
+            "interact"
+        ).style.display="none";
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW
+========================================================= */
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    camera.x=
+        Math.max(
+            0,
+            Math.min(
+                player.x-W/2,
+                WORLD_W-W
+            )
+        );
+
+
+    camera.y=
+        Math.max(
+            0,
+            Math.min(
+                player.y-H/2,
+                WORLD_H-H
+            )
+        );
+
+
+    ctx.save();
+
+    ctx.translate(
+        -camera.x,
+        -camera.y
+    );
+
+
+    /* GROUND */
+
+    ctx.fillStyle="#0d0d13";
+
+    ctx.fillRect(
+        0,
+        0,
+        WORLD_W,
+        WORLD_H
+    );
+
+
+    for(
+        let y=0;
+        y<WORLD_H;
+        y+=100
+    ){
+
+        for(
+            let x=0;
+            x<WORLD_W;
+            x+=100
+        ){
+
+            ctx.fillStyle=
+                ((x+y)/100)%2===0
+                ?" #111118"
+                :"#0e0e14";
+
+            ctx.fillRect(
+                x,
+                y,
+                100,
+                100
+            );
+
+        }
+
+    }
+
+
+    /* FOREST */
+
+    for(const tree of trees){
+
+        ctx.fillStyle="#182219";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            tree.x,
+            tree.y-15,
+            tree.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.fillStyle="#2a1b13";
+
+        ctx.fillRect(
+            tree.x-5,
+            tree.y,
+            10,
+            35
+        );
+
+    }
+
+
+    /* ROCKS */
+
+    for(const rock of rocks){
+
+        ctx.fillStyle="#292730";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            rock.x,
+            rock.y,
+            rock.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* CEMETERY */
+
+    ctx.fillStyle="#15131a";
+
+    ctx.fillRect(
+        950,
+        1080,
+        600,
+        430
+    );
+
+
+    for(let i=0;i<24;i++){
+
+        let x=
+            980+
+            (i%6)*90;
+
+        let y=
+            1120+
+            Math.floor(i/6)*95;
+
+        ctx.fillStyle="#56515d";
+
+        ctx.fillRect(
+            x,
+            y,
+            34,
+            48
+        );
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x+17,
+            y,
+            17,
+            Math.PI,
+            0
+        );
+
+        ctx.fill();
+
+
+        ctx.fillStyle="#08080c";
+
+        ctx.font="18px Arial";
+
+        ctx.fillText(
+            "†",
+            x+10,
+            y+32
+        );
+
+    }
+
+
+    ctx.fillStyle="#a99ab6";
+
+    ctx.font="bold 22px Georgia";
+
+    ctx.fillText(
+        "NGHĨA ĐỊA",
+        1130,
+        1080
+    );
+
+
+    /* CASTLE */
+
+    ctx.fillStyle="#1a1523";
+
+    ctx.fillRect(
+        castle.x,
+        castle.y,
+        castle.w,
+        castle.h
+    );
+
+
+    ctx.strokeStyle="#675477";
+
+    ctx.lineWidth=10;
+
+    ctx.strokeRect(
+        castle.x,
+        castle.y,
+        castle.w,
+        castle.h
+    );
+
+
+    /* CASTLE TOWERS */
+
+    for(
+        let x=castle.x+30;
+        x<castle.x+castle.w;
+        x+=100
+    ){
+
+        ctx.fillStyle="#292230";
+
+        ctx.fillRect(
+            x,
+            castle.y-45,
+            65,
+            45
+        );
+
+        ctx.fillRect(
+            x,
+            castle.y+castle.h,
+            65,
+            45
+        );
+
+    }
+
+
+    /* GATE */
+
+    ctx.fillStyle=
+        castleUnlocked
+        ?" #44331d"
+        :"#100d13";
+
+    ctx.fillRect(
+        gate.x,
+        gate.y,
+        gate.w,
+        gate.h
+    );
+
+
+    ctx.strokeStyle=
+        castleUnlocked
+        ?" #d0ad58"
+        :"#63556b";
+
+    ctx.lineWidth=4;
+
+    ctx.strokeRect(
+        gate.x,
+        gate.y,
+        gate.w,
+        gate.h
+    );
+
+
+    ctx.fillStyle="#d9c8e8";
+
+    ctx.font="bold 28px Georgia";
+
+    ctx.fillText(
+        "FORGOTTEN CASTLE",
+        2300,
+        760
+    );
+
+
+    /* STAIRS */
+
+    ctx.fillStyle="#54485e";
+
+    ctx.fillRect(
+        stairs.x,
+        stairs.y,
+        stairs.w,
+        stairs.h
+    );
+
+
+    for(
+        let y=stairs.y;
+        y<stairs.y+stairs.h;
+        y+=18
+    ){
+
+        ctx.fillStyle="#82708d";
+
+        ctx.fillRect(
+            stairs.x,
+            y,
+            stairs.w,
+            4
+        );
+
+    }
+
+
+    ctx.fillStyle="#d7c9e5";
+
+    ctx.font="18px Arial";
+
+    ctx.fillText(
+        "CẦU THANG",
+        stairs.x,
+        stairs.y-12
+    );
+
+
+    /* SHARDS */
+
+    for(const shard of shards){
+
+        if(shard.taken)
+            continue;
+
+        const pulse=
+            1+
+            Math.sin(
+                performance.now()/180
+            )*.12;
+
+        ctx.save();
+
+        ctx.translate(
+            shard.x,
+            shard.y
+        );
+
+        ctx.scale(
+            pulse,
+            pulse
+        );
+
+        ctx.rotate(
+            performance.now()/800
+        );
+
+        ctx.shadowColor="#a86cff";
+        ctx.shadowBlur=25;
+
+        ctx.fillStyle="#a06bff";
+
+        ctx.beginPath();
+
+        ctx.moveTo(0,-20);
+        ctx.lineTo(15,0);
+        ctx.lineTo(0,22);
+        ctx.lineTo(-15,0);
+
+        ctx.closePath();
+
+        ctx.fill();
+
+        ctx.restore();
+
+
+        ctx.fillStyle="#d5c5e9";
+
+        ctx.font="13px Arial";
+
+        ctx.fillText(
+            shard.name,
+            shard.x-35,
+            shard.y+42
+        );
+
+    }
+
+
+    /* ENEMIES */
+
+    for(const enemy of enemies){
+
+        if(enemy.hp<=0)
+            continue;
+
+        ctx.font="40px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            enemy.emoji,
+            enemy.x,
+            enemy.y+14
+        );
+
+        ctx.textAlign="left";
+
+
+        ctx.fillStyle="#281019";
+
+        ctx.fillRect(
+            enemy.x-25,
+            enemy.y-38,
+            50,
+            5
+        );
+
+
+        ctx.fillStyle="#bd3d54";
+
+        ctx.fillRect(
+            enemy.x-25,
+            enemy.y-38,
+            50*
+            enemy.hp/
+            enemy.maxHp,
+            5
+        );
+
+    }
+
+
+    /* BOSS */
+
+    if(
+        bossActive &&
+        !bossDead
+    ){
+
+        ctx.save();
+
+        ctx.translate(
+            boss.x,
+            boss.y
+        );
+
+        ctx.rotate(
+            boss.angle
+        );
+
+        ctx.shadowColor="#a848dd";
+        ctx.shadowBlur=35;
+
+        ctx.fillStyle="#341342";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            boss.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+
+        ctx.shadowBlur=0;
+
+        ctx.font="65px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "👑",
+            0,
+            22
+        );
+
+
+        ctx.strokeStyle="#ae4de3";
+
+        ctx.lineWidth=4;
+
+        ctx.stroke();
+
+
+        ctx.restore();
+
+    }
+
+
+    /* PLAYER */
+
+    ctx.save();
+
+    ctx.translate(
+        player.x,
+        player.y
+    );
+
+    ctx.rotate(
+        player.angle
+    );
+
+
+    if(
+        player.invincible>0 &&
+        Math.floor(
+            performance.now()/70
+        )%2
+    ){
+
+        ctx.globalAlpha=.4;
+
+    }
+
+
+    ctx.font="42px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.fillText(
+        "🧙",
+        0,
+        15
+    );
+
+
+    /* MAGIC ORB */
+
+    ctx.shadowColor="#9b63ff";
+
+    ctx.shadowBlur=25;
+
+    ctx.font="25px Arial";
+
+    ctx.fillText(
+        "🔮",
+        31,
+        -8
+    );
+
+
+    ctx.shadowBlur=0;
+
+
+    /* ARM / DIRECTION */
+
+    ctx.strokeStyle="#d2baff";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        14,
+        -5
+    );
+
+    ctx.lineTo(
+        35,
+        -8
+    );
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+
+    /* PLAYER SHOTS */
+
+    for(const p of playerShots){
+
+        ctx.shadowColor="#ad75ff";
+
+        ctx.shadowBlur=20;
+
+        ctx.fillStyle="#dfceff";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.shadowBlur=0;
+
+    }
+
+
+    /* BOSS SHOTS */
+
+    for(const p of bossShots){
+
+        ctx.shadowColor="#ff326d";
+
+        ctx.shadowBlur=20;
+
+        ctx.fillStyle="#dc315f";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.shadowBlur=0;
+
+    }
+
+
+    /* PARTICLES */
+
+    for(const p of particles){
+
+        ctx.globalAlpha=
+            Math.max(
+                0,
+                p.life*2
+            );
+
+        ctx.fillStyle="#b78cff";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+    ctx.globalAlpha=1;
+
+    ctx.restore();
+
+
+    /* DARK VIGNETTE */
+
+    const gradient=
+        ctx.createRadialGradient(
+            W/2,
+            H/2,
+            100,
+            W/2,
+            H/2,
+            Math.max(W,H)*.7
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,.65)"
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
     );
 
 }
 
 
-gameLoop();
+/* =========================================================
+   GAME LOOP
+========================================================= */
 
+let lastTime=
+    performance.now();
 
-/* ============================================================
-   SECTION 56 — START GAME
-============================================================ */
+function loop(time){
 
-document
-.getElementById("startButton")
-.addEventListener(
-    "click",
-    ()=>{
-
-        initAudio();
-
-        gameStarted =
-            true;
-
-        gameOver =
-            false;
-
-        gameEnded =
-            false;
-
-        document
-        .getElementById("start")
-        .classList.add(
-            "hidden"
+    let dt=
+        Math.min(
+            .033,
+            (time-lastTime)/1000
         );
 
+    lastTime=time;
 
-        showMessage(
-            "WASD: di chuyển • Chuột: ngắm • SPACE/CLICK: bắn • E: tương tác",
-            4500
-        );
+    update(dt);
 
+    draw();
 
-        updateQuest();
+    requestAnimationFrame(loop);
 
-    }
-);
+}
 
-
-/* ============================================================
-   SECTION 57 — RESTART
-============================================================ */
-
-document
-.getElementById("restartButton")
-.addEventListener(
-    "click",
-    ()=>{
-
-        location.reload();
-
-    }
-);
-
-
-/* ============================================================
-   SECTION 58 — MOBILE DOUBLE TAP TARGET
-============================================================ */
-
-let lastTargetTap = 0;
-
-
-document
-.getElementById("targetButton")
-.addEventListener(
-    "pointerdown",
-    ()=>{
-        
-        const now =
-            performance.now();
-
-        if(
-            now -
-            lastTargetTap <
-            350
-        ){
-
-            lockNearestTarget();
-
-        }
-
-        lastTargetTap =
-            now;
-
-    }
-);
-
-
-/* ============================================================
-   SECTION 59 — AUTO BOSS TARGET
-============================================================ */
-
-setInterval(
-    ()=>{
-
-        if(
-            gameStarted &&
-            boss.active &&
-            !boss.defeated
-        ){
-
-            if(
-                player.targetId ===
-                null
-            ){
-
-                lockNearestTarget();
-
-            }
-
-        }
-
-    },
-    1500
-);
-
-
-/* ============================================================
-   SECTION 60 — AUTO MUSIC SAFETY
-============================================================ */
-
-document.addEventListener(
-    "visibilitychange",
-    ()=>{
-
-        if(
-            document.visibilityState ===
-            "visible"
-        ){
-
-            if(
-                audioStarted &&
-                audioContext &&
-                audioContext.state ===
-                "suspended"
-            ){
-
-                audioContext.resume();
-
-            }
-
-        }
-
-    }
-);
-
-
-/* ============================================================
-   SECTION 61 — TOUCH SAFETY
-============================================================ */
-
-document.addEventListener(
-    "contextmenu",
-    event=>{
-        event.preventDefault();
-    }
-);
-
-
-/* ============================================================
-   SECTION 62 — PREVENT SCROLL
-============================================================ */
-
-document.addEventListener(
-    "touchmove",
-    event=>{
-
-        event.preventDefault();
-
-    },
-    {
-        passive:false
-    }
-);
-
-
-/* ============================================================
-   SECTION 63 — INITIAL UI
-============================================================ */
-
-document
-.getElementById("bossHUD")
-.style.display =
-"none";
-
-
-document
-.getElementById("hint")
-.style.display =
-"none";
-
-
-/* ============================================================
-   END
-============================================================ */
+requestAnimationFrame(loop);
 
 </script>
 
