@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE FORGOTTEN GOD</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #050507;
+    color: #ddd;
+    font-family: Georgia, "Times New Roman", serif;
+    overflow: hidden;
+}
+
+/* ================= MENU ================= */
+
+#menu {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at center, #21151c 0%, #09080b 45%, #020203 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.menu-box {
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+}
+
+.logo {
+    font-size: clamp(42px, 7vw, 90px);
+    letter-spacing: 12px;
+    color: #d8c7a0;
+    text-shadow:
+        0 0 10px #8b1e2d,
+        0 0 30px #8b1e2d;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    color: #8e7d7d;
+    font-size: 18px;
+    letter-spacing: 5px;
+    margin-bottom: 70px;
+}
+
+.menu-button {
+    display: block;
+    width: 300px;
+    max-width: 90%;
+    margin: 15px auto;
+    padding: 17px;
+    background: transparent;
+    border: 1px solid #685052;
+    color: #d8c7a0;
+    font-size: 17px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-button:hover {
+    background: #5c1722;
+    border-color: #b76a76;
+    box-shadow: 0 0 25px #5c1722;
+    transform: scale(1.03);
+}
+
+.warning {
+    margin-top: 70px;
+    color: #55494b;
+    font-size: 13px;
+}
+
+/* ================= GAME ================= */
+
+#game {
+    display: none;
+    position: fixed;
+    inset: 0;
+}
+
+#world {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 50%, #253021 0%, #111713 35%, #080b09 75%);
+    overflow: hidden;
+}
+
+/* mặt trăng */
+
+.moon {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: #b9a99a;
+    box-shadow:
+        0 0 30px #8b5c60,
+        0 0 80px rgba(139, 40, 50, 0.4);
+    right: 10%;
+    top: 8%;
+}
+
+/* cây */
+
+.tree {
+    position: absolute;
+    width: 55px;
+    height: 110px;
+}
+
+.tree::before {
+    content: "";
+    position: absolute;
+    left: 21px;
+    bottom: 0;
+    width: 14px;
+    height: 55px;
+    background: #38261c;
+}
+
+.tree::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 55px;
+    height: 70px;
+    background: #182518;
+    clip-path: polygon(50% 0%, 100% 80%, 75% 65%, 95% 100%, 5% 100%, 25% 65%, 0% 80%);
+}
+
+/* player */
+
+#player {
+    position: absolute;
+    width: 38px;
+    height: 48px;
+    background: #252b36;
+    border: 2px solid #c5b28d;
+    border-radius: 45% 45% 35% 35%;
+    z-index: 5;
+    box-shadow: 0 0 15px rgba(200, 170, 120, 0.3);
+}
+
+#player::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 18px;
+    background: #b9a27d;
+    right: -8px;
+    top: 18px;
+    transform: rotate(-25deg);
+}
+
+/* enemy */
+
+.enemy {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    background: #241018;
+    border: 2px solid #9e3c4b;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #661d29;
+}
+
+.enemy::before,
+.enemy::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #d45b64;
+    border-radius: 50%;
+    top: 13px;
+}
+
+.enemy::before {
+    left: 9px;
+}
+
+.enemy::after {
+    right: 9px;
+}
+
+/* altar */
+
+.altar {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: #17131a;
+    border: 2px solid #66556b;
+    box-shadow: 0 0 30px rgba(120, 70, 130, 0.4);
+}
+
+.altar::before {
+    content: "☠";
+    position: absolute;
+    font-size: 45px;
+    left: 20px;
+    top: 17px;
+    color: #a17aab;
+}
+
+/* ================= HUD ================= */
+
+#hud {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 270px;
+    z-index: 10;
+}
+
+.panel {
+    background: rgba(7, 7, 10, 0.85);
+    border: 1px solid #4e4145;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,.5);
+}
+
+.player-name {
+    color: #d8c7a0;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.bar {
+    height: 13px;
+    background: #25171a;
+    border: 1px solid #53353a;
+    margin-top: 5px;
+}
+
+#health {
+    height: 100%;
+    width: 100%;
+    background: #8f2838;
+    transition: width .2s;
+}
+
+.quest-title {
+    color: #c7a56c;
+    margin-bottom: 7px;
+}
+
+.quest-text {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#message {
+    position: fixed;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(5,5,7,.9);
+    border: 1px solid #635057;
+    padding: 15px 25px;
+    color: #d8c7a0;
+    opacity: 0;
+    transition: .4s;
+    z-index: 15;
+}
+
+#controls {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    color: #777;
+    font-size: 13px;
+    z-index: 10;
+    text-align: right;
+}
+
+#logout {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 10;
+    background: transparent;
+    border: 1px solid #493c40;
+    color: #999;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+#logout:hover {
+    color: white;
+    border-color: #9b4c57;
+}
+
+/* mobile */
+
+@media(max-width:600px) {
+    #hud {
+        width: 210px;
+        left: 10px;
+        top: 10px;
+    }
+
+    .panel {
+        padding: 10px;
+    }
+
+    .moon {
+        width: 80px;
+        height: 80px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= MENU ================= -->
+
+<div id="menu">
+    <div class="menu-box">
+
+        <div class="logo">THE FORGOTTEN GOD</div>
+
+        <div class="subtitle">
+            HE REMEMBERS YOU
+        </div>
+
+        <button class="menu-button" onclick="startGame()">
+            ENTER THE WORLD
+        </button>
+
+        <button class="menu-button" onclick="showLore()">
+            THE LORE
+        </button>
+
+        <div class="warning">
+            THE GODS FORGOT THE WORLD.<br>
+            THE WORLD DID NOT FORGET THEM.
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= GAME ================= -->
+
+<div id="game">
+
+    <div id="world">
+
+        <div class="moon"></div>
+
+        <!-- trees -->
+        <div class="tree" style="left:8%;top:20%;"></div>
+        <div class="tree" style="left:20%;top:65%;"></div>
+        <div class="tree" style="left:75%;top:30%;"></div>
+        <div class="tree" style="left:88%;top:70%;"></div>
+        <div class="tree" style="left:45%;top:15%;"></div>
+        <div class="tree" style="left:60%;top:75%;"></div>
+
+        <!-- altar -->
+        <div class="altar" id="altar" style="left:72%;top:60%;"></div>
+
+        <!-- enemies -->
+        <div class="enemy" id="enemy1" style="left:35%;top:30%;"></div>
+        <div class="enemy" id="enemy2" style="left:65%;top:55%;"></div>
+        <div class="enemy" id="enemy3" style="left:30%;top:75%;"></div>
+
+        <!-- player -->
+        <div id="player"></div>
+
+    </div>
+
+    <!-- HUD -->
+
+    <div id="hud">
+
+        <div class="panel">
+
+            <div class="player-name">
+                THE WANDERER
+            </div>
+
+            <div>
+                HP
+                <div class="bar">
+                    <div id="health"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <div class="quest-title">
+                ✦ THE FIRST WHISPER
+            </div>
+
+            <div class="quest-text" id="quest">
+                Tìm đến bàn thờ cổ.
+            </div>
+
+        </div>
+
+    </div>
+
+    <button id="logout" onclick="backToMenu()">
+        MENU
+    </button>
+
+    <div id="controls">
+        W A S D — MOVE<br>
+        E — INTERACT
+    </div>
+
+    <div id="message"></div>
+
+</div>
+
+<script>
+
+/* ================= GAME VARIABLES ================= */
+
+const player = document.getElementById("player");
+const world = document.getElementById("world");
+const healthBar = document.getElementById("health");
+const quest = document.getElementById("quest");
+const message = document.getElementById("message");
+
+let playerX = window.innerWidth / 2;
+let playerY = window.innerHeight / 2;
+
+let health = 100;
+let speed = 4;
+
+let keys = {};
+
+let questCompleted = false;
+
+
+/* ================= MENU ================= */
+
+function startGame() {
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("game").style.display = "block";
+
+    playerX = window.innerWidth / 2;
+    playerY = window.innerHeight / 2;
+
+    updatePlayer();
+
+    showMessage(
+        "The forgotten world has awakened..."
+    );
+}
+
+
+function backToMenu() {
+
+    document.getElementById("game").style.display = "none";
+    document.getElementById("menu").style.display = "flex";
+
+}
+
+
+function showLore() {
+
+    alert(
+`THE FORGOTTEN GOD
+
+700 năm trước, có 8 vị thần.
+
+Con người chỉ nhớ 7 vị.
+
+Vị thần thứ 8 đã bị xóa khỏi lịch sử.
+
+Nhưng một ngày...
+
+Nó nhớ lại tên của chính mình.
+
+Và nó cũng nhớ đến con người.
+
+"HE REMEMBERS YOU."`
+    );
+
+}
+
+
+/* ================= MOVEMENT ================= */
+
+document.addEventListener("keydown", function(e) {
+
+    keys[e.key.toLowerCase()] = true;
+
+    if(e.key.toLowerCase() === "e") {
+        interact();
+    }
+
+});
+
+
+document.addEventListener("keyup", function(e) {
+
+    keys[e.key.toLowerCase()] = false;
+
+});
+
+
+function gameLoop() {
+
+    if(document.getElementById("game").style.display !== "none") {
+
+        if(keys["w"]) playerY -= speed;
+        if(keys["s"]) playerY += speed;
+        if(keys["a"]) playerX -= speed;
+        if(keys["d"]) playerX += speed;
+
+        // giới hạn bản đồ
+
+        playerX = Math.max(0, Math.min(window.innerWidth - 40, playerX));
+        playerY = Math.max(0, Math.min(window.innerHeight - 50, playerY));
+
+        updatePlayer();
+
+        checkEnemyCollision();
+
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+
+function updatePlayer() {
+
+    player.style.left = playerX + "px";
+    player.style.top = playerY + "px";
+
+}
+
+
+/* ================= ENEMY ================= */
+
+function checkEnemyCollision() {
+
+    const enemies = document.querySelectorAll(".enemy");
+
+    enemies.forEach(enemy => {
+
+        const ex = enemy.offsetLeft;
+        const ey = enemy.offsetTop;
+
+        const distance = Math.sqrt(
+            Math.pow(playerX - ex, 2) +
+            Math.pow(playerY - ey, 2)
+        );
+
+        if(distance < 45) {
+
+            health -= 0.3;
+
+            if(health < 0) health = 0;
+
+            healthBar.style.width = health + "%";
+
+            if(health <= 0) {
+
+                showMessage("YOU HAVE FALLEN...");
+
+                setTimeout(() => {
+
+                    health = 100;
+                    healthBar.style.width = "100%";
+
+                    playerX = window.innerWidth / 2;
+                    playerY = window.innerHeight / 2;
+
+                    updatePlayer();
+
+                    showMessage(
+                        "You returned from the Afterworld."
+                    );
+
+                }, 2000);
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* ================= INTERACTION ================= */
+
+function interact() {
+
+    const altar = document.getElementById("altar");
+
+    const ax = altar.offsetLeft;
+    const ay = altar.offsetTop;
+
+    const distance = Math.sqrt(
+        Math.pow(playerX - ax, 2) +
+        Math.pow(playerY - ay, 2)
+    );
+
+    if(distance < 130 && !questCompleted) {
+
+        questCompleted = true;
+
+        quest.innerHTML =
+            "Bàn thờ đã thức tỉnh. Một tiếng thì thầm vang lên...";
+
+        showMessage(
+            "THE FORGOTTEN GOD: I REMEMBER YOU."
+        );
+
+        setTimeout(() => {
+
+            quest.innerHTML =
+                "Nhiệm vụ tiếp theo: Tìm nguồn gốc của tiếng thì thầm.";
+
+        }, 4000);
+
+    } else if(distance >= 130) {
+
+        showMessage(
+            "Không có gì ở đây..."
+        );
+
+    }
+
+}
+
+
+/* ================= MESSAGE ================= */
+
+function showMessage(text) {
+
+    message.innerText = text;
+    message.style.opacity = "1";
+
+    setTimeout(() => {
+
+        message.style.opacity = "0";
+
+    }, 3000);
+
+}
+
+
+/* ================= START ================= */
+
+gameLoop();
+
+</script>
+
+</body>
+</html>
