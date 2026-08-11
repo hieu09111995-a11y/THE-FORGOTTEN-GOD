@@ -73,6 +73,18 @@
             box-shadow: 0 0 30px rgba(157, 78, 221, 0.8);
         }
 
+        .key-hint {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--primary-glow);
+            color: var(--gold-glow);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
         /* Main Container */
         .game-container {
             width: 100%;
@@ -219,11 +231,14 @@
 </head>
 <body>
 
-<!-- Màn hình bắt đầu để giải quyết lỗi Autoplay Audio -->
+<!-- Màn hình bắt đầu -->
 <div id="start-overlay" class="start-overlay">
     <h1 class="title" style="margin-bottom: 10px;">The Forgotten God</h1>
     <p style="color: #a0a0ba;">Hành trình tìm lại ký ức đã bị lãng quên...</p>
-    <button class="start-btn" onclick="startGame()">BẮT ĐẦU HÀNH TRÌNH 🧙‍♂️</button>
+    <button class="start-btn" onclick="startGame()">
+        BẮT ĐẦU HÀNH TRÌNH 🧙‍♂️ <br>
+        <span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">(Nhấn phím E hoặc Enter)</span>
+    </button>
 </div>
 
 <div class="game-container">
@@ -244,7 +259,7 @@
     <div id="choices-container" class="choices-container"></div>
 
     <div class="footer">
-        GitHub Pages Edition • Tích hợp Âm thanh Web Audio API
+        Hỗ trợ phím tắt: <b>[E]</b> hoặc <b>[1, 2, 3...]</b> để chọn nhanh • GitHub Pages Edition
     </div>
 </div>
 
@@ -274,7 +289,6 @@
         }
     }
 
-    // Tiếng click nút bấm
     function playClickSFX() {
         if (!audioCtx || isMuted) return;
         const osc = audioCtx.createOscillator();
@@ -290,7 +304,6 @@
         osc.stop(audioCtx.currentTime + 0.05);
     }
 
-    // Tiếng thu thập linh hồn / phép thuật
     function playSoulSFX() {
         if (!audioCtx || isMuted) return;
         const now = audioCtx.currentTime;
@@ -308,7 +321,6 @@
         });
     }
 
-    // Tiếng chiến đấu quái vật
     function playFightSFX() {
         if (!audioCtx || isMuted) return;
         const now = audioCtx.currentTime;
@@ -325,7 +337,6 @@
         osc.stop(now + 0.25);
     }
 
-    // Tiếng bộc lộ sự thật bí ẩn
     function playRevealSFX() {
         if (!audioCtx || isMuted) return;
         const now = audioCtx.currentTime;
@@ -342,13 +353,12 @@
         osc.stop(now + 2.0);
     }
 
-    // Nhạc nền u ám (Ambient Drone)
     function startAmbientDrone() {
         if (!audioCtx) return;
         ambientOsc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         ambientOsc.type = 'sine';
-        ambientOsc.frequency.setValueAtTime(65.41, audioCtx.currentTime); // C2 Note
+        ambientOsc.frequency.setValueAtTime(65.41, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
         ambientOsc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -480,49 +490,84 @@
 
         const node = storyNodes[nodeKey];
         
-        // Chạy logic khi vào node
         if (node.onEnter) {
             node.onEnter();
         }
 
-        // Cập nhật giao diện Stats
         document.getElementById('location-text').innerText = node.location;
         document.getElementById('souls-count').innerText = gameState.souls;
         
-        // Cập nhật văn bản câu chuyện
         const storyBox = document.getElementById('story-box');
         storyBox.innerHTML = typeof node.text === 'function' ? node.text() : node.text;
         
-        // Reset hiệu ứng mượt
         storyBox.style.animation = 'none';
         storyBox.offsetHeight;
         storyBox.style.animation = 'fadeIn 0.4s ease-in-out';
 
-        // Cập nhật danh sách lựa chọn
         const choicesContainer = document.getElementById('choices-container');
         choicesContainer.innerHTML = '';
 
-        node.choices.forEach(choice => {
+        node.choices.forEach((choice, index) => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
             
             const choiceText = typeof choice.text === 'function' ? choice.text() : choice.text;
             const meetsCondition = !choice.condition || choice.condition();
 
+            // Hiển thị nhãn phím tắt [E / 1] cho nút đầu tiên, [2], [3] cho các nút tiếp theo
+            const keyLabel = index === 0 ? `E / 1` : `${index + 1}`;
+
             if (meetsCondition) {
-                btn.innerHTML = `<span>${choiceText}</span> <span>➔</span>`;
+                btn.innerHTML = `<span><span class="key-hint">[${keyLabel}]</span>${choiceText}</span> <span>➔</span>`;
                 btn.onclick = () => {
                     playClickSFX();
                     updatePage(choice.target);
                 };
             } else {
                 btn.disabled = true;
-                btn.innerHTML = `<span>${choice.disabledHint || choiceText}</span> <span>🔒</span>`;
+                btn.innerHTML = `<span><span class="key-hint" style="opacity:0.4">[${keyLabel}]</span>${choice.disabledHint || choiceText}</span> <span>🔒</span>`;
             }
 
             choicesContainer.appendChild(btn);
         });
     }
+
+    // ==========================================
+    // BẮT SỰ KIỆN BÀN PHÍM (KEYBOARD CONTROLS)
+    // ==========================================
+    document.addEventListener('keydown', (event) => {
+        const key = event.key.toLowerCase();
+        const startOverlay = document.getElementById('start-overlay');
+
+        // 1. Nếu đang ở màn hình Start: Bấm 'E', 'Enter' hoặc 'Space' để Bắt đầu
+        if (startOverlay && startOverlay.style.display !== 'none') {
+            if (key === 'e' || key === 'enter' || key === ' ') {
+                event.preventDefault();
+                startGame();
+            }
+            return;
+        }
+
+        // 2. Xử lý phím 'E', 'Enter' hoặc 'Space' trong game: Chọn lựa chọn đầu tiên khả dụng
+        if (key === 'e' || key === 'enter' || key === ' ') {
+            event.preventDefault();
+            const firstAvailableBtn = document.querySelector('#choices-container .choice-btn:not(:disabled)');
+            if (firstAvailableBtn) {
+                firstAvailableBtn.click();
+            }
+            return;
+        }
+
+        // 3. Xử lý phím số '1', '2', '3', '4' để chọn trực tiếp theo thứ tự
+        if (['1', '2', '3', '4', '5'].includes(key)) {
+            const btnIndex = parseInt(key) - 1;
+            const allButtons = document.querySelectorAll('#choices-container .choice-btn');
+            if (allButtons[btnIndex] && !allButtons[btnIndex].disabled) {
+                event.preventDefault();
+                allButtons[btnIndex].click();
+            }
+        }
+    });
 </script>
 
 </body>
