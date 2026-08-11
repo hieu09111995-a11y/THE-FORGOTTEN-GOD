@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE FORGOTTEN GOD</title>
+<title>The Forgotten God</title>
 
 <style>
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html, body {
+    margin: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #020204;
-    font-family: Georgia, "Times New Roman", serif;
-    color: #dfc89a;
+    background: #050507;
+    font-family: Georgia, serif;
 }
 
-/* =====================================================
-   MENU
-===================================================== */
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 
 #menu {
     position: fixed;
@@ -31,563 +31,267 @@ html, body {
     z-index: 20;
 
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     text-align: center;
 
     background:
-        radial-gradient(
-            circle at 50% 42%,
-            rgba(80, 35, 45, .45),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 50% 50%,
-            #21131a 0%,
-            #0b080c 48%,
-            #020204 100%
-        );
+        radial-gradient(circle at center,
+            #321a25 0%,
+            #100a10 45%,
+            #030304 100%);
+
+    color: #dec38f;
 }
 
-.menuFog {
-    position: absolute;
-    inset: -20%;
-
-    background:
-        radial-gradient(
-            ellipse at 20% 70%,
-            rgba(130, 110, 100, .08),
-            transparent 35%
-        ),
-        radial-gradient(
-            ellipse at 80% 40%,
-            rgba(120, 35, 50, .12),
-            transparent 40%
-        );
-
-    filter: blur(35px);
-
-    animation: fog 12s ease-in-out infinite alternate;
-}
-
-@keyframes fog {
-    from {
-        transform: translateX(-3%);
-    }
-
-    to {
-        transform: translateX(3%);
-    }
-}
-
-.menuContent {
-    position: relative;
-    z-index: 2;
-}
-
-.title {
-    font-size: clamp(50px, 9vw, 110px);
-    line-height: .87;
-    letter-spacing: 10px;
-
-    color: #ead2a0;
+#menu h1 {
+    font-size: clamp(50px, 9vw, 105px);
+    line-height: .85;
+    letter-spacing: 8px;
+    margin: 0;
 
     text-shadow:
-        0 0 10px rgba(255, 215, 160, .35),
-        0 0 30px rgba(140, 40, 60, .7),
-        0 0 70px rgba(80, 15, 30, .5);
-
-    animation: titleGlow 4s infinite alternate;
+        0 0 15px #8c3d50,
+        0 0 45px #451522;
 }
 
-@keyframes titleGlow {
-    from {
-        filter: brightness(.9);
-    }
-
-    to {
-        filter: brightness(1.15);
-    }
-}
-
-.subtitle {
+#menu p {
     margin-top: 30px;
-
-    color: #978878;
-
-    font-size: 14px;
-    letter-spacing: 7px;
+    color: #96877a;
+    letter-spacing: 6px;
 }
 
-.buttons {
-    margin-top: 55px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    gap: 15px;
-}
-
-.gameButton {
-    width: 300px;
+button {
+    width: 290px;
     height: 58px;
+    margin-top: 18px;
 
-    background: rgba(12, 9, 13, .75);
+    border: 1px solid #967b57;
+    background: rgba(15, 9, 14, .8);
 
-    border: 1px solid #806849;
-
-    color: #ddc18c;
+    color: #dfc18c;
 
     font-family: Georgia, serif;
-    font-size: 15px;
-    letter-spacing: 4px;
+    font-size: 14px;
+    letter-spacing: 3px;
 
     cursor: pointer;
-
-    transition: .3s;
 }
 
-.gameButton:hover {
-    background: rgba(65, 27, 39, .55);
-
-    border-color: #c09a63;
-
-    color: #f2d9a6;
-
-    box-shadow:
-        0 0 25px rgba(130, 40, 55, .5);
-
-    transform: translateY(-2px) scale(1.03);
+button:hover {
+    background: #351923;
+    box-shadow: 0 0 25px #6c2839;
 }
 
-.footer {
-    position: absolute;
-
-    bottom: 40px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    width: 90%;
-
-    color: #51494a;
-
-    font-size: 11px;
-    line-height: 18px;
-    letter-spacing: 2px;
-}
-
-/* =====================================================
-   WORLD
-===================================================== */
-
-#world {
+#ui {
     display: none;
 
     position: fixed;
     inset: 0;
-
-    overflow: hidden;
-
-    background: #07070a;
-}
-
-#worldCanvas {
-    position: absolute;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-}
-
-/* =====================================================
-   WORLD UI
-===================================================== */
-
-.worldUI {
-    position: absolute;
-    inset: 0;
-
     z-index: 10;
 
     pointer-events: none;
 }
 
-.location {
+#location {
     position: absolute;
-
-    top: 25px;
+    top: 20px;
     left: 50%;
-
     transform: translateX(-50%);
 
-    color: #d9bf8c;
-
+    color: #d9c18d;
     font-size: 14px;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
 
-    text-shadow:
-        0 0 10px #000;
+    text-shadow: 0 2px 5px #000;
 }
 
-.playerInfo {
+#status {
     position: absolute;
-
-    top: 25px;
-    left: 25px;
+    top: 20px;
+    left: 20px;
 
     width: 230px;
 
-    color: #d8c8aa;
-
+    color: #d8c8ae;
     font-family: Arial, sans-serif;
-
     font-size: 12px;
-    letter-spacing: 2px;
 }
 
-.hpBackground {
-    width: 230px;
-    height: 15px;
+#hpBack {
+    width: 220px;
+    height: 16px;
 
     margin-top: 7px;
 
-    border: 1px solid #927650;
-
-    background: #160a0e;
+    border: 1px solid #886b50;
+    background: #17080c;
 }
 
-.hpBar {
+#hp {
     width: 100%;
     height: 100%;
-
-    background: #8f2638;
-
-    transition: width .2s;
+    background: #a32c40;
 }
 
-.controls {
+#controls {
     position: absolute;
+    bottom: 18px;
+    left: 20px;
 
-    bottom: 20px;
-    left: 25px;
-
-    color: #756d68;
-
+    color: #8d817a;
     font-family: Arial, sans-serif;
-
     font-size: 11px;
-    letter-spacing: 1px;
 }
 
-.dialogue {
+#dialogue {
+    display: none;
+
     position: absolute;
-
     left: 50%;
-    bottom: 35px;
-
+    bottom: 30px;
     transform: translateX(-50%);
 
     width: min(760px, 90%);
+    min-height: 120px;
 
-    min-height: 125px;
+    padding: 20px 25px;
 
-    padding: 22px 28px;
+    background: rgba(8, 6, 9, .94);
+    border: 1px solid #866d50;
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(12, 9, 12, .95),
-            rgba(25, 13, 19, .95)
-        );
+    box-shadow: 0 0 35px #000;
 
-    border: 1px solid rgba(190, 150, 95, .45);
-
-    box-shadow:
-        0 0 35px rgba(0,0,0,.8);
-
-    color: #c8b9a0;
-
-    font-family: Georgia, serif;
-
-    display: none;
+    color: #c9baa2;
 }
 
-.speaker {
-    color: #d8b477;
-
-    font-size: 14px;
-
+#speaker {
+    color: #d8b875;
     letter-spacing: 3px;
-
     margin-bottom: 10px;
 }
 
-.dialogueText {
+#dialogueText {
     line-height: 1.6;
-
-    font-size: 15px;
 }
 
-.nextDialogue {
+#dialogueHint {
     position: absolute;
+    right: 15px;
+    bottom: 10px;
 
-    right: 18px;
-    bottom: 12px;
-
-    color: #75695f;
-
+    color: #776b63;
     font-size: 10px;
-
-    letter-spacing: 2px;
 }
-
-/* =====================================================
-   LORE
-===================================================== */
 
 #lore {
     display: none;
 
     position: fixed;
     inset: 0;
+    z-index: 30;
 
-    z-index: 50;
-
-    align-items: center;
     justify-content: center;
+    align-items: center;
+
+    background: #050407;
+    color: #c8b89d;
 
     text-align: center;
-
     padding: 25px;
-
-    background:
-        radial-gradient(
-            circle,
-            #25151d,
-            #050507 75%
-        );
 }
 
-.loreBox {
-    max-width: 760px;
-    max-height: 85vh;
+#loreBox {
+    max-width: 700px;
+    padding: 40px;
 
-    overflow-y: auto;
-
-    padding: 45px;
-
-    border: 1px solid rgba(190, 150, 95, .4);
-
-    background: rgba(8, 6, 9, .85);
-
-    box-shadow:
-        0 0 60px rgba(80, 20, 35, .4);
+    background: #0d090e;
+    border: 1px solid #80694e;
 }
 
-.loreBox h2 {
-    margin-bottom: 30px;
-
-    font-size: 42px;
-
-    letter-spacing: 6px;
-
-    color: #e0c493;
+#loreBox h2 {
+    letter-spacing: 5px;
+    color: #dec18c;
 }
 
-.loreBox p {
-    color: #a99b8b;
-
-    line-height: 1.9;
-
-    font-size: 16px;
-}
-
-.backButton {
-    margin-top: 30px;
-
-    width: 190px;
-    height: 50px;
-
-    background: transparent;
-
-    border: 1px solid #806849;
-
-    color: #d9bf8c;
-
-    font-family: Georgia, serif;
-
-    cursor: pointer;
-}
-
-/* =====================================================
-   FADE
-===================================================== */
-
-#fade {
-    position: fixed;
-    inset: 0;
-
-    z-index: 100;
-
-    background: #000;
-
-    pointer-events: none;
-
-    opacity: 1;
-
-    transition: opacity 1.5s;
-}
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media(max-width:600px) {
-
-    .title {
-        letter-spacing: 5px;
-    }
-
-    .subtitle {
-        letter-spacing: 4px;
-        font-size: 11px;
-    }
-
-    .gameButton {
-        width: 270px;
-    }
-
-    .dialogue {
-        bottom: 20px;
-        min-height: 140px;
-    }
-
+#loreBox p {
+    line-height: 1.8;
+    color: #a99b8c;
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     FADE
-===================================================== -->
-
-<div id="fade"></div>
-
-
-<!-- =====================================================
-     MAIN MENU
-===================================================== -->
+<!-- ================= MENU ================= -->
 
 <div id="menu">
 
-    <div class="menuFog"></div>
+    <h1>
+        THE<br>
+        FORGOTTEN<br>
+        GOD
+    </h1>
 
-    <div class="menuContent">
+    <p>
+        HE REMEMBERS YOU
+    </p>
 
-        <div class="title">
-            THE<br>
-            FORGOTTEN<br>
-            GOD
-        </div>
+    <button id="startButton">
+        ENTER THE WORLD
+    </button>
 
-        <div class="subtitle">
-            HE REMEMBERS YOU
-        </div>
-
-        <div class="buttons">
-
-            <button
-                class="gameButton"
-                id="enterButton">
-
-                ENTER THE WORLD
-
-            </button>
-
-            <button
-                class="gameButton"
-                id="loreButton">
-
-                THE LORE
-
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="footer">
-        THE GODS FORGOT THE WORLD.<br>
-        THE WORLD DID NOT FORGET THEM.
-    </div>
+    <button id="loreButton">
+        THE LORE
+    </button>
 
 </div>
 
 
-<!-- =====================================================
-     WORLD
-===================================================== -->
+<!-- ================= GAME ================= -->
 
-<div id="world">
+<canvas id="game"></canvas>
 
-    <canvas id="worldCanvas"></canvas>
 
-    <div class="worldUI">
+<div id="ui">
 
-        <div class="location">
-            THE LOST KINGDOM
+    <div id="location">
+        THE LOST KINGDOM
+    </div>
+
+    <div id="status">
+
+        WANDERER
+
+        <div id="hpBack">
+            <div id="hp"></div>
         </div>
 
-        <div class="playerInfo">
-
-            <div>
-                WANDERER
-            </div>
-
-            <div class="hpBackground">
-                <div
-                    class="hpBar"
-                    id="hpBar">
-                </div>
-            </div>
-
-            <div style="margin-top:8px;">
-                SOULS:
-                <span id="souls">0</span>
-            </div>
-
+        <div style="margin-top:8px;">
+            SOULS:
+            <span id="souls">0</span>
         </div>
 
-        <div class="controls">
-            W A S D — MOVE
-            &nbsp;&nbsp;
-            SPACE — ATTACK
-            &nbsp;&nbsp;
-            E — TALK
-        </div>
+    </div>
 
-        <div
-            class="dialogue"
-            id="dialogue">
+    <div id="controls">
+        W A S D — DI CHUYỂN
+        &nbsp;&nbsp;
+        SPACE — TẤN CÔNG
+        &nbsp;&nbsp;
+        E — NÓI CHUYỆN
+    </div>
 
-            <div
-                class="speaker"
-                id="speaker">
-            </div>
+    <div id="dialogue">
 
-            <div
-                class="dialogueText"
-                id="dialogueText">
-            </div>
+        <div id="speaker"></div>
 
-            <div class="nextDialogue">
-                PRESS E
-            </div>
+        <div id="dialogueText"></div>
 
+        <div id="dialogueHint">
+            NHẤN E ĐỂ TIẾP TỤC
         </div>
 
     </div>
@@ -595,75 +299,39 @@ html, body {
 </div>
 
 
-<!-- =====================================================
-     LORE
-===================================================== -->
+<!-- ================= LORE ================= -->
 
 <div id="lore">
 
-    <div class="loreBox">
+    <div id="loreBox">
 
-        <h2>
-            THE LORE
-        </h2>
+        <h2>THE LORE</h2>
 
         <p>
-            Long ago, the gods ruled the world.
+            Hàng trăm năm trước, các vị thần cai trị vùng đất này.
         </p>
 
         <p>
-            Kingdoms were built beneath their shadows.
+            Nhưng rồi con người quên tên họ.
+            Những ngôi đền sụp đổ.
+            Các vương quốc biến mất.
         </p>
 
         <p>
-            Humanity worshipped them.
-        </p>
-
-        <br>
-
-        <p>
-            Then humanity forgot.
+            Chỉ có một vị thần chưa bao giờ biến mất.
         </p>
 
         <p>
-            The temples fell.
-            The statues broke.
-            The names disappeared.
-        </p>
-
-        <br>
-
-        <p>
-            But one god remained.
+            Người ta gọi hắn là...
+            <b>Forgotten God.</b>
         </p>
 
         <p>
-            A god without worshippers.
-            A god without a name.
+            Và đêm nay, một người lữ hành đã bước vào vương quốc của hắn.
         </p>
 
-        <br>
-
-        <p>
-            He waited in the darkness.
-        </p>
-
-        <p>
-            Until someone finally entered his kingdom.
-        </p>
-
-        <br>
-
-        <p>
-            You.
-        </p>
-
-        <button
-            class="backButton"
-            id="closeLore">
-
-            RETURN
-
+        <button id="closeLore">
+            QUAY LẠI
         </button>
 
     </div>
@@ -673,292 +341,157 @@ html, body {
 
 <script>
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const menu =
-    document.getElementById("menu");
-
-const world =
-    document.getElementById("world");
-
-const lore =
-    document.getElementById("lore");
-
-const fade =
-    document.getElementById("fade");
+/* =========================================================
+   CANVAS
+========================================================= */
 
 const canvas =
-    document.getElementById("worldCanvas");
+    document.getElementById("game");
 
 const ctx =
     canvas.getContext("2d");
 
 
-/* =====================================================
-   CANVAS
-===================================================== */
+let screenW = 0;
+let screenH = 0;
 
-let W = 0;
-let H = 0;
 
-function resizeCanvas() {
+function resize() {
 
-    W = canvas.width =
+    screenW =
         window.innerWidth;
 
-    H = canvas.height =
+    screenH =
         window.innerHeight;
+
+    canvas.width =
+        screenW;
+
+    canvas.height =
+        screenH;
 
 }
 
-resizeCanvas();
+
+resize();
 
 window.addEventListener(
     "resize",
-    resizeCanvas
+    resize
 );
 
 
-/* =====================================================
-   GAME VARIABLES
-===================================================== */
+/* =========================================================
+   WORLD
+========================================================= */
 
-let gameStarted = false;
-
-let keys = {};
-
-let souls = 0;
-
-let dialogueOpen = false;
-
-let dialogueIndex = 0;
+const WORLD_WIDTH = 4000;
+const WORLD_HEIGHT = 3000;
 
 
-/* =====================================================
+/* =========================================================
+   CAMERA
+========================================================= */
+
+const camera = {
+
+    x: 0,
+    y: 0,
+
+    smooth: .12
+
+};
+
+
+/* =========================================================
    PLAYER
-===================================================== */
+========================================================= */
 
 const player = {
 
-    x: 0,
-    y: 0,
+    x: 2000,
+    y: 1500,
 
-    speed: 3.5,
+    speed: 4,
 
     hp: 100,
+
     maxHp: 100,
 
-    attack: 0
+    attackTimer: 0,
+
+    emoji: "🧙‍♂️"
 
 };
 
 
-/* =====================================================
+/* =========================================================
    NPC
-===================================================== */
+========================================================= */
 
 const npc = {
 
-    x: 0,
-    y: 0,
+    x: 2200,
+    y: 1450,
 
-    radius: 25
+    emoji: "🧝",
+
+    radius: 55
 
 };
 
 
-/* =====================================================
+/* =========================================================
    ENEMIES
-===================================================== */
+========================================================= */
 
 let enemies = [];
 
 
-/* =====================================================
-   DECORATIONS
-===================================================== */
+/* =========================================================
+   WORLD OBJECTS
+========================================================= */
 
 let trees = [];
+
 let rocks = [];
-let ruins = [];
-let particles = [];
+
+let graves = [];
+
+let houses = [];
+
+let torches = [];
 
 
-/* =====================================================
-   DIALOGUE
-===================================================== */
+/* =========================================================
+   KEYBOARD
+========================================================= */
 
-const dialogues = [
+const keys = {};
 
-    {
-        speaker: "THE WANDERER",
-        text:
-        "Where... am I?"
-    },
-
-    {
-        speaker: "THE WANDERER",
-        text:
-        "This kingdom should have disappeared centuries ago."
-    },
-
-    {
-        speaker: "THE MYSTERIOUS STRANGER",
-        text:
-        "It did."
-    },
-
-    {
-        speaker: "THE MYSTERIOUS STRANGER",
-        text:
-        "But the Forgotten God never disappeared."
-    },
-
-    {
-        speaker: "THE WANDERER",
-        text:
-        "Who are you?"
-    },
-
-    {
-        speaker: "THE MYSTERIOUS STRANGER",
-        text:
-        "Someone who remembers what the world chose to forget."
-    },
-
-    {
-        speaker: "THE MYSTERIOUS STRANGER",
-        text:
-        "Leave this place while you still can."
-    },
-
-    {
-        speaker: "THE WANDERER",
-        text:
-        "And if I don't?"
-    },
-
-    {
-        speaker: "THE MYSTERIOUS STRANGER",
-        text:
-        "Then the God will remember your name."
-    }
-
-];
-
-
-/* =====================================================
-   ENTER WORLD
-===================================================== */
-
-document
-.getElementById("enterButton")
-.addEventListener(
-    "click",
-    enterWorld
-);
-
-
-function enterWorld() {
-
-    fade.style.opacity = "1";
-
-    setTimeout(() => {
-
-        menu.style.display =
-            "none";
-
-        world.style.display =
-            "block";
-
-        gameStarted = true;
-
-        createWorld();
-
-        fade.style.opacity = "0";
-
-        setTimeout(() => {
-
-            openDialogue();
-
-        }, 1200);
-
-        gameLoop();
-
-    }, 900);
-
-}
-
-
-/* =====================================================
-   LORE
-===================================================== */
-
-document
-.getElementById("loreButton")
-.addEventListener(
-    "click",
-    () => {
-
-        menu.style.display =
-            "none";
-
-        lore.style.display =
-            "flex";
-
-    }
-);
-
-
-document
-.getElementById("closeLore")
-.addEventListener(
-    "click",
-    () => {
-
-        lore.style.display =
-            "none";
-
-        menu.style.display =
-            "flex";
-
-    }
-);
-
-
-/* =====================================================
-   INPUT
-===================================================== */
 
 window.addEventListener(
     "keydown",
-    e => {
+    function(e) {
 
-        keys[e.key.toLowerCase()] =
-            true;
+        const key =
+            e.key.toLowerCase();
+
+        keys[key] = true;
+
 
         if(e.code === "Space") {
+
+            e.preventDefault();
 
             attack();
 
         }
 
-        if(
-            e.key.toLowerCase() === "e"
-        ) {
 
-            if(dialogueOpen) {
+        if(key === "e") {
 
-                nextDialogue();
-
-            }
-            else {
-
-                talk();
-
-            }
+            interact();
 
         }
 
@@ -968,53 +501,199 @@ window.addEventListener(
 
 window.addEventListener(
     "keyup",
-    e => {
+    function(e) {
 
-        keys[e.key.toLowerCase()] =
-            false;
+        keys[
+            e.key.toLowerCase()
+        ] = false;
 
     }
 );
 
 
-/* =====================================================
+/* =========================================================
+   GAME VARIABLES
+========================================================= */
+
+let gameRunning = false;
+
+let souls = 0;
+
+let dialogueOpen = false;
+
+let dialogueIndex = 0;
+
+
+/* =========================================================
+   DIALOGUE
+========================================================= */
+
+const dialogue = [
+
+    [
+        "THE WANDERER",
+        "Đây là đâu...? Ta chưa từng thấy nơi này trên bất kỳ bản đồ nào."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Bởi vì nơi này đã bị xóa khỏi lịch sử."
+    ],
+
+    [
+        "THE WANDERER",
+        "Ngươi là ai?"
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Một kẻ đã chờ ở đây lâu hơn cả ký ức của con người."
+    ],
+
+    [
+        "THE WANDERER",
+        "Ta phải đi đâu?"
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Đến lâu đài."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Nhưng hãy cẩn thận..."
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Những thứ trong khu rừng không còn là con người nữa."
+    ],
+
+    [
+        "THE WANDERER",
+        "Còn vị thần?"
+    ],
+
+    [
+        "MYSTERIOUS NPC",
+        "Hắn đã biết tên ngươi."
+    ]
+
+];
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document
+.getElementById("startButton")
+.addEventListener(
+    "click",
+    startGame
+);
+
+
+function startGame() {
+
+    document
+        .getElementById("menu")
+        .style.display = "none";
+
+    document
+        .getElementById("ui")
+        .style.display = "block";
+
+    gameRunning = true;
+
+    createWorld();
+
+    gameLoop();
+
+    setTimeout(
+        startDialogue,
+        700
+    );
+
+}
+
+
+/* =========================================================
+   LORE
+========================================================= */
+
+document
+.getElementById("loreButton")
+.addEventListener(
+    "click",
+    function() {
+
+        document
+            .getElementById("menu")
+            .style.display = "none";
+
+        document
+            .getElementById("lore")
+            .style.display = "flex";
+
+    }
+);
+
+
+document
+.getElementById("closeLore")
+.addEventListener(
+    "click",
+    function() {
+
+        document
+            .getElementById("lore")
+            .style.display = "none";
+
+        document
+            .getElementById("menu")
+            .style.display = "flex";
+
+    }
+);
+
+
+/* =========================================================
    CREATE WORLD
-===================================================== */
+========================================================= */
 
 function createWorld() {
 
-    player.x =
-        W / 2;
-
-    player.y =
-        H / 2;
-
-    npc.x =
-        player.x + 170;
-
-    npc.y =
-        player.y - 50;
-
-
     trees = [];
     rocks = [];
-    ruins = [];
+    graves = [];
+    houses = [];
+    torches = [];
     enemies = [];
-    particles = [];
 
 
-    /* TREES */
+    /* FOREST */
 
-    for(let i = 0; i < 45; i++) {
+    for(
+        let i = 0;
+        i < 220;
+        i++
+    ) {
 
         trees.push({
 
-            x: Math.random() * W,
-            y: Math.random() * H,
+            x:
+                Math.random()
+                * WORLD_WIDTH,
+
+            y:
+                Math.random()
+                * WORLD_HEIGHT,
 
             size:
-                25 +
-                Math.random() * 35
+                30 +
+                Math.random() * 30
 
         });
 
@@ -1023,12 +702,21 @@ function createWorld() {
 
     /* ROCKS */
 
-    for(let i = 0; i < 50; i++) {
+    for(
+        let i = 0;
+        i < 180;
+        i++
+    ) {
 
         rocks.push({
 
-            x: Math.random() * W,
-            y: Math.random() * H,
+            x:
+                Math.random()
+                * WORLD_WIDTH,
+
+            y:
+                Math.random()
+                * WORLD_HEIGHT,
 
             size:
                 5 +
@@ -1039,27 +727,52 @@ function createWorld() {
     }
 
 
-    /* RUINS */
+    /* GRAVES */
 
-    for(let i = 0; i < 10; i++) {
+    for(
+        let i = 0;
+        i < 60;
+        i++
+    ) {
 
-        ruins.push({
+        graves.push({
 
             x:
-                50 +
-                Math.random() *
-                (W - 100),
+                800 +
+                Math.random() * 900,
 
             y:
-                50 +
-                Math.random() *
-                (H - 100),
+                1100 +
+                Math.random() * 900
 
-            width:
-                60 +
-                Math.random() * 70,
+        });
 
-            height:
+    }
+
+
+    /* HOUSES */
+
+    for(
+        let i = 0;
+        i < 18;
+        i++
+    ) {
+
+        houses.push({
+
+            x:
+                Math.random()
+                * WORLD_WIDTH,
+
+            y:
+                Math.random()
+                * WORLD_HEIGHT,
+
+            w:
+                100 +
+                Math.random() * 100,
+
+            h:
                 70 +
                 Math.random() * 80
 
@@ -1068,194 +781,332 @@ function createWorld() {
     }
 
 
-    /* ENEMIES */
+    /* TORCHES */
 
-    for(let i = 0; i < 6; i++) {
+    for(
+        let i = 0;
+        i < 30;
+        i++
+    ) {
 
-        spawnEnemy();
+        torches.push({
+
+            x:
+                Math.random()
+                * WORLD_WIDTH,
+
+            y:
+                Math.random()
+                * WORLD_HEIGHT
+
+        });
 
     }
 
 
-    /* PARTICLES */
+    /* ENEMIES */
 
-    for(let i = 0; i < 180; i++) {
+    for(
+        let i = 0;
+        i < 25;
+        i++
+    ) {
 
-        particles.push({
-
-            x:
-                Math.random() * W,
-
-            y:
-                Math.random() * H,
-
-            size:
-                .5 +
-                Math.random() * 2,
-
-            speed:
-                .1 +
-                Math.random() * .4,
-
-            alpha:
-                .1 +
-                Math.random() * .4
-
-        });
+        spawnEnemy();
 
     }
 
 }
 
 
-/* =====================================================
-   SPAWN ENEMY
-===================================================== */
+/* =========================================================
+   ENEMY
+========================================================= */
 
 function spawnEnemy() {
 
+    let x;
+    let y;
+
+
+    do {
+
+        x =
+            Math.random()
+            * WORLD_WIDTH;
+
+        y =
+            Math.random()
+            * WORLD_HEIGHT;
+
+    }
+    while(
+        distance(
+            x,
+            y,
+            player.x,
+            player.y
+        ) < 400
+    );
+
+
     enemies.push({
 
-        x:
-            Math.random() * W,
-
-        y:
-            Math.random() * H,
-
-        radius:
-            15 +
-            Math.random() * 8,
+        x: x,
+        y: y,
 
         speed:
-            .4 +
-            Math.random() * .4,
+            0.6 +
+            Math.random() * .7,
 
-        hp: 2
+        hp: 2,
+
+        emoji:
+            Math.random() > .5
+                ? "👹"
+                : "💀"
 
     });
 
 }
 
 
-/* =====================================================
-   TALK
-===================================================== */
+/* =========================================================
+   DISTANCE
+========================================================= */
 
-function talk() {
+function distance(
+    x1,
+    y1,
+    x2,
+    y2
+) {
 
     const dx =
-        npc.x - player.x;
+        x2 - x1;
 
     const dy =
-        npc.y - player.y;
+        y2 - y1;
 
-    const distance =
-        Math.sqrt(dx * dx + dy * dy);
-
-
-    if(distance < 180) {
-
-        openDialogue();
-
-    }
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
 
 }
 
 
-/* =====================================================
-   OPEN DIALOGUE
-===================================================== */
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
 
-function openDialogue() {
+function updatePlayer() {
 
-    dialogueOpen = true;
-
-    dialogueIndex = 0;
-
-    showDialogue();
-
-}
-
-
-/* =====================================================
-   SHOW DIALOGUE
-===================================================== */
-
-function showDialogue() {
-
-    const dialogue =
-        dialogues[dialogueIndex];
-
-
-    document
-    .getElementById("dialogue")
-    .style.display =
-        "block";
-
-
-    document
-    .getElementById("speaker")
-    .textContent =
-        dialogue.speaker;
-
-
-    document
-    .getElementById("dialogueText")
-    .textContent =
-        dialogue.text;
-
-}
-
-
-/* =====================================================
-   NEXT DIALOGUE
-===================================================== */
-
-function nextDialogue() {
-
-    dialogueIndex++;
-
-
-    if(
-        dialogueIndex >=
-        dialogues.length
-    ) {
-
-        dialogueOpen = false;
-
-        document
-        .getElementById("dialogue")
-        .style.display =
-            "none";
-
+    if(dialogueOpen)
         return;
+
+
+    let dx = 0;
+    let dy = 0;
+
+
+    if(keys["w"])
+        dy -= 1;
+
+    if(keys["s"])
+        dy += 1;
+
+    if(keys["a"])
+        dx -= 1;
+
+    if(keys["d"])
+        dx += 1;
+
+
+    if(dx !== 0 || dy !== 0) {
+
+        const length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        dx /= length;
+        dy /= length;
+
+
+        player.x +=
+            dx *
+            player.speed;
+
+        player.y +=
+            dy *
+            player.speed;
 
     }
 
 
-    showDialogue();
+    /* WORLD LIMIT */
+
+    player.x =
+        Math.max(
+            30,
+            Math.min(
+                WORLD_WIDTH - 30,
+                player.x
+            )
+        );
+
+
+    player.y =
+        Math.max(
+            30,
+            Math.min(
+                WORLD_HEIGHT - 30,
+                player.y
+            )
+        );
 
 }
 
 
-/* =====================================================
-   ATTACK
-===================================================== */
+/* =========================================================
+   CAMERA
+========================================================= */
 
-function attack() {
+function updateCamera() {
 
-    if(!gameStarted)
+    const targetX =
+        player.x -
+        screenW / 2;
+
+    const targetY =
+        player.y -
+        screenH / 2;
+
+
+    camera.x +=
+        (
+            targetX -
+            camera.x
+        ) *
+        camera.smooth;
+
+
+    camera.y +=
+        (
+            targetY -
+            camera.y
+        ) *
+        camera.smooth;
+
+
+    camera.x =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_WIDTH -
+                screenW,
+                camera.x
+            )
+        );
+
+
+    camera.y =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_HEIGHT -
+                screenH,
+                camera.y
+            )
+        );
+
+}
+
+
+/* =========================================================
+   ENEMY AI
+========================================================= */
+
+function updateEnemies() {
+
+    if(dialogueOpen)
         return;
-
-    if(player.attack > 0)
-        return;
-
-
-    player.attack = 15;
 
 
     for(
-        let i = enemies.length - 1;
+        const enemy of enemies
+    ) {
+
+        const dx =
+            player.x -
+            enemy.x;
+
+        const dy =
+            player.y -
+            enemy.y;
+
+
+        const d =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if(
+            d > 40 &&
+            d < 700
+        ) {
+
+            enemy.x +=
+                dx /
+                d *
+                enemy.speed;
+
+            enemy.y +=
+                dy /
+                d *
+                enemy.speed;
+
+        }
+
+
+        if(d < 45) {
+
+            player.hp -= .08;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ATTACK
+========================================================= */
+
+function attack() {
+
+    if(!gameRunning)
+        return;
+
+    if(dialogueOpen)
+        return;
+
+    if(player.attackTimer > 0)
+        return;
+
+
+    player.attackTimer = 15;
+
+
+    for(
+        let i =
+            enemies.length - 1;
         i >= 0;
         i--
     ) {
@@ -1264,20 +1115,16 @@ function attack() {
             enemies[i];
 
 
-        const dx =
-            enemy.x - player.x;
-
-        const dy =
-            enemy.y - player.y;
-
-        const distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
+        const d =
+            distance(
+                player.x,
+                player.y,
+                enemy.x,
+                enemy.y
             );
 
 
-        if(distance < 75) {
+        if(d < 100) {
 
             enemy.hp--;
 
@@ -1302,126 +1149,29 @@ function attack() {
 }
 
 
-/* =====================================================
-   PLAYER MOVEMENT
-===================================================== */
+/* =========================================================
+   INTERACTION
+========================================================= */
 
-function updatePlayer() {
+function interact() {
 
-    if(dialogueOpen)
-        return;
-
-
-    let dx = 0;
-    let dy = 0;
-
-
-    if(keys["w"])
-        dy--;
-
-    if(keys["s"])
-        dy++;
-
-    if(keys["a"])
-        dx--;
-
-    if(keys["d"])
-        dx++;
-
-
-    if(dx !== 0 || dy !== 0) {
-
-        const length =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
-
-        dx /= length;
-        dy /= length;
-
-
-        player.x +=
-            dx *
-            player.speed;
-
-        player.y +=
-            dy *
-            player.speed;
-
-    }
-
-
-    player.x =
-        Math.max(
-            30,
-            Math.min(
-                W - 30,
-                player.x
-            )
-        );
-
-
-    player.y =
-        Math.max(
-            30,
-            Math.min(
-                H - 30,
-                player.y
-            )
-        );
-
-}
-
-
-/* =====================================================
-   ENEMY AI
-===================================================== */
-
-function updateEnemies() {
-
-    if(dialogueOpen)
-        return;
-
-
-    for(
-        const enemy
-        of enemies
+    if(
+        distance(
+            player.x,
+            player.y,
+            npc.x,
+            npc.y
+        ) < 160
     ) {
 
-        const dx =
-            player.x -
-            enemy.x;
+        if(!dialogueOpen) {
 
-        const dy =
-            player.y -
-            enemy.y;
-
-        const distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
-
-
-        if(
-            distance > 35
-        ) {
-
-            enemy.x +=
-                dx /
-                distance *
-                enemy.speed;
-
-            enemy.y +=
-                dy /
-                distance *
-                enemy.speed;
+            startDialogue();
 
         }
         else {
 
-            player.hp -= .05;
+            nextDialogue();
 
         }
 
@@ -1430,397 +1180,404 @@ function updateEnemies() {
 }
 
 
-/* =====================================================
-   UPDATE PARTICLES
-===================================================== */
+/* =========================================================
+   DIALOGUE
+========================================================= */
 
-function updateParticles() {
+function startDialogue() {
 
-    for(
-        const p
-        of particles
+    dialogueOpen = true;
+
+    dialogueIndex = 0;
+
+    showDialogue();
+
+}
+
+
+function showDialogue() {
+
+    const d =
+        dialogue[
+            dialogueIndex
+        ];
+
+
+    document
+        .getElementById("dialogue")
+        .style.display = "block";
+
+
+    document
+        .getElementById("speaker")
+        .textContent = d[0];
+
+
+    document
+        .getElementById("dialogueText")
+        .textContent = d[1];
+
+}
+
+
+function nextDialogue() {
+
+    dialogueIndex++;
+
+
+    if(
+        dialogueIndex >=
+        dialogue.length
     ) {
 
-        p.y -=
-            p.speed;
+        dialogueOpen = false;
 
+        document
+            .getElementById("dialogue")
+            .style.display = "none";
 
-        if(p.y < -10) {
-
-            p.y = H + 10;
-
-            p.x =
-                Math.random() * W;
-
-        }
+        return;
 
     }
+
+
+    showDialogue();
 
 }
 
 
-/* =====================================================
-   DRAW BACKGROUND
-===================================================== */
+/* =========================================================
+   DRAW WORLD
+========================================================= */
 
-function drawBackground() {
+function drawWorld() {
+
+    ctx.clearRect(
+        0,
+        0,
+        screenW,
+        screenH
+    );
+
 
     /* SKY */
 
-    const sky =
-        ctx.createLinearGradient(
-            0,
-            0,
-            0,
-            H
-        );
-
-
-    sky.addColorStop(
-        0,
-        "#08070d"
-    );
-
-    sky.addColorStop(
-        .5,
-        "#111017"
-    );
-
-    sky.addColorStop(
-        1,
-        "#050507"
-    );
-
-
     ctx.fillStyle =
-        sky;
+        "#090910";
 
     ctx.fillRect(
         0,
         0,
-        W,
-        H
+        screenW,
+        screenH
     );
-
-
-    /* MOON GLOW */
-
-    const moonX =
-        W * .78;
-
-    const moonY =
-        H * .20;
-
-
-    const moonGlow =
-        ctx.createRadialGradient(
-            moonX,
-            moonY,
-            10,
-            moonX,
-            moonY,
-            220
-        );
-
-
-    moonGlow.addColorStop(
-        0,
-        "rgba(245,225,185,.4)"
-    );
-
-    moonGlow.addColorStop(
-        1,
-        "rgba(245,225,185,0)"
-    );
-
-
-    ctx.fillStyle =
-        moonGlow;
-
-    ctx.beginPath();
-
-    ctx.arc(
-        moonX,
-        moonY,
-        220,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* MOON */
-
-    ctx.fillStyle =
-        "#ddd1b4";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        moonX,
-        moonY,
-        58,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* MOON CRATERS */
-
-    ctx.fillStyle =
-        "rgba(100,90,80,.15)";
-
-    for(let i = 0; i < 9; i++) {
-
-        ctx.beginPath();
-
-        ctx.arc(
-            moonX - 30 + Math.random() * 60,
-            moonY - 30 + Math.random() * 60,
-            3 + Math.random() * 8,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-    }
 
 
     /* GROUND */
 
     ctx.fillStyle =
-        "#101015";
+        "#111218";
 
     ctx.fillRect(
         0,
-        H * .48,
-        W,
-        H * .52
+        0,
+        screenW,
+        screenH
     );
 
 
-    /* MOUNTAINS */
+    /* GRID / GROUND */
+
+    ctx.strokeStyle =
+        "rgba(110,100,100,.07)";
+
+    ctx.lineWidth = 1;
+
+
+    const grid = 100;
+
+
+    for(
+        let x =
+            -camera.x % grid;
+        x < screenW;
+        x += grid
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            0
+        );
+
+        ctx.lineTo(
+            x,
+            screenH
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    for(
+        let y =
+            -camera.y % grid;
+        y < screenH;
+        y += grid
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            screenW,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /* MOON */
+
+    const moonX =
+        3400 -
+        camera.x;
+
+    const moonY =
+        350 -
+        camera.y;
+
 
     ctx.fillStyle =
-        "#09090d";
+        "rgba(230,215,180,.18)";
 
     ctx.beginPath();
 
-    ctx.moveTo(
+    ctx.arc(
+        moonX,
+        moonY,
+        160,
         0,
-        H * .55
+        Math.PI * 2
     );
 
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#ded2b5";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        moonX,
+        moonY,
+        55,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* WORLD OBJECTS */
+
+    drawHouses();
+
+    drawGraves();
+
+    drawTrees();
+
+    drawRocks();
+
+    drawTorches();
+
+    drawCastle();
+
+    drawNPC();
+
+    drawEnemies();
+
+    drawPlayer();
+
+    drawDarkness();
+
+}
+
+
+/* =========================================================
+   HOUSES
+========================================================= */
+
+function drawHouses() {
+
     for(
-        let x = 0;
-        x <= W;
-        x += 80
+        const h of houses
     ) {
 
+        const x =
+            h.x -
+            camera.x;
+
         const y =
-            H * .42 +
-            Math.sin(x * .012) * 70 +
-            Math.sin(x * .026) * 35;
+            h.y -
+            camera.y;
+
+
+        if(
+            x < -200 ||
+            x > screenW + 200 ||
+            y < -200 ||
+            y > screenH + 200
+        )
+            continue;
+
+
+        ctx.fillStyle =
+            "#211b20";
+
+        ctx.fillRect(
+            x,
+            y,
+            h.w,
+            h.h
+        );
+
+
+        ctx.fillStyle =
+            "#120d12";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x - 15,
+            y
+        );
 
         ctx.lineTo(
+            x + h.w / 2,
+            y - 55
+        );
+
+        ctx.lineTo(
+            x + h.w + 15,
+            y
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        ctx.fillStyle =
+            "#4b3027";
+
+        ctx.fillRect(
+            x + h.w / 2 - 8,
+            y + h.h - 35,
+            16,
+            35
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GRAVES
+========================================================= */
+
+function drawGraves() {
+
+    for(
+        const g of graves
+    ) {
+
+        const x =
+            g.x -
+            camera.x;
+
+        const y =
+            g.y -
+            camera.y;
+
+
+        ctx.font = "32px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+        ctx.fillText(
+            "🪦",
             x,
             y
         );
 
     }
 
-    ctx.lineTo(
-        W,
-        H
-    );
-
-    ctx.lineTo(
-        0,
-        H
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* RUINS */
-
-    drawRuins();
-
-
-    /* TREES */
-
-    drawTrees();
-
-
-    /* ROCKS */
-
-    drawRocks();
-
-
-    /* FOG */
-
-    const fog =
-        ctx.createLinearGradient(
-            0,
-            H * .5,
-            0,
-            H
-        );
-
-
-    fog.addColorStop(
-        0,
-        "rgba(100,95,100,0)"
-    );
-
-    fog.addColorStop(
-        .6,
-        "rgba(100,95,100,.06)"
-    );
-
-    fog.addColorStop(
-        1,
-        "rgba(120,110,110,.12)"
-    );
-
-
-    ctx.fillStyle =
-        fog;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* PARTICLES */
-
-    for(
-        const p
-        of particles
-    ) {
-
-        ctx.fillStyle =
-            `rgba(210,190,160,${p.alpha})`;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-    }
-
 }
 
 
-/* =====================================================
-   RUINS
-===================================================== */
-
-function drawRuins() {
-
-    for(
-        const r
-        of ruins
-    ) {
-
-        ctx.fillStyle =
-            "#17151a";
-
-
-        ctx.fillRect(
-            r.x,
-            r.y,
-            r.width,
-            r.height
-        );
-
-
-        ctx.fillStyle =
-            "#242027";
-
-
-        ctx.fillRect(
-            r.x - 8,
-            r.y - 10,
-            r.width + 16,
-            12
-        );
-
-
-        /* WINDOWS */
-
-        ctx.fillStyle =
-            "#050407";
-
-
-        for(
-            let x =
-                r.x + 12;
-            x <
-                r.x +
-                r.width -
-                10;
-            x += 25
-        ) {
-
-            ctx.fillRect(
-                x,
-                r.y + 20,
-                10,
-                25
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
+/* =========================================================
    TREES
-===================================================== */
+========================================================= */
 
 function drawTrees() {
 
     for(
-        const tree
-        of trees
+        const t of trees
     ) {
 
-        ctx.strokeStyle =
-            "#171216";
+        const x =
+            t.x -
+            camera.x;
 
-        ctx.lineWidth = 8;
+        const y =
+            t.y -
+            camera.y;
+
+
+        if(
+            x < -100 ||
+            x > screenW + 100 ||
+            y < -100 ||
+            y > screenH + 100
+        )
+            continue;
+
+
+        ctx.strokeStyle =
+            "#181219";
+
+        ctx.lineWidth =
+            Math.max(
+                5,
+                t.size / 7
+            );
 
 
         ctx.beginPath();
 
         ctx.moveTo(
-            tree.x,
-            tree.y + tree.size
+            x,
+            y + t.size
         );
 
         ctx.lineTo(
-            tree.x,
-            tree.y - tree.size
+            x,
+            y - t.size
         );
 
         ctx.stroke();
@@ -1832,23 +1589,23 @@ function drawTrees() {
         ctx.beginPath();
 
         ctx.moveTo(
-            tree.x,
-            tree.y - 5
+            x,
+            y
         );
 
         ctx.lineTo(
-            tree.x - tree.size,
-            tree.y - tree.size * .7
+            x - t.size,
+            y - t.size * .7
         );
 
         ctx.moveTo(
-            tree.x,
-            tree.y - 15
+            x,
+            y - 15
         );
 
         ctx.lineTo(
-            tree.x + tree.size,
-            tree.y - tree.size * .9
+            x + t.size,
+            y - t.size * .8
         );
 
         ctx.stroke();
@@ -1858,26 +1615,34 @@ function drawTrees() {
 }
 
 
-/* =====================================================
+/* =========================================================
    ROCKS
-===================================================== */
+========================================================= */
 
 function drawRocks() {
 
     for(
-        const r
-        of rocks
+        const r of rocks
     ) {
 
+        const x =
+            r.x -
+            camera.x;
+
+        const y =
+            r.y -
+            camera.y;
+
+
         ctx.fillStyle =
-            "#242229";
+            "#29262d";
 
 
         ctx.beginPath();
 
         ctx.arc(
-            r.x,
-            r.y,
+            x,
+            y,
             r.size,
             0,
             Math.PI * 2
@@ -1890,27 +1655,285 @@ function drawRocks() {
 }
 
 
-/* =====================================================
-   DRAW NPC
-===================================================== */
+/* =========================================================
+   TORCHES
+========================================================= */
+
+function drawTorches() {
+
+    for(
+        const t of torches
+    ) {
+
+        const x =
+            t.x -
+            camera.x;
+
+        const y =
+            t.y -
+            camera.y;
+
+
+        ctx.font = "28px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+        ctx.fillText(
+            "🔥",
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CASTLE
+========================================================= */
+
+function drawCastle() {
+
+    /*
+       Lâu đài nằm gần phía bắc
+       của bản đồ.
+    */
+
+    const x =
+        1750 -
+        camera.x;
+
+    const y =
+        250 -
+        camera.y;
+
+
+    /* MAIN WALL */
+
+    ctx.fillStyle =
+        "#252128";
+
+    ctx.fillRect(
+        x,
+        y,
+        500,
+        300
+    );
+
+
+    /* TOWERS */
+
+    ctx.fillStyle =
+        "#302a31";
+
+    ctx.fillRect(
+        x - 70,
+        y - 80,
+        110,
+        380
+    );
+
+    ctx.fillRect(
+        x + 460,
+        y - 80,
+        110,
+        380
+    );
+
+
+    /* ROOFS */
+
+    ctx.fillStyle =
+        "#110c12";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x - 85,
+        y - 80
+    );
+
+    ctx.lineTo(
+        x - 15,
+        y - 150
+    );
+
+    ctx.lineTo(
+        x + 55,
+        y - 80
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + 445,
+        y - 80
+    );
+
+    ctx.lineTo(
+        x + 515,
+        y - 150
+    );
+
+    ctx.lineTo(
+        x + 585,
+        y - 80
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* GATE */
+
+    ctx.fillStyle =
+        "#0c080c";
+
+    ctx.fillRect(
+        x + 190,
+        y + 160,
+        120,
+        140
+    );
+
+
+    /* WINDOWS */
+
+    ctx.fillStyle =
+        "#9c7041";
+
+
+    for(
+        let i = 0;
+        i < 5;
+        i++
+    ) {
+
+        ctx.fillRect(
+            x + 70 + i * 85,
+            y + 70,
+            22,
+            45
+        );
+
+    }
+
+
+    /* CASTLE SIGN */
+
+    ctx.font =
+        "bold 22px Georgia";
+
+    ctx.fillStyle =
+        "#c7a873";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.fillText(
+        "THE FORGOTTEN CASTLE",
+        x + 250,
+        y + 350
+    );
+
+}
+
+
+/* =========================================================
+   NPC
+========================================================= */
 
 function drawNPC() {
 
-    const x = npc.x;
-    const y = npc.y;
+    const x =
+        npc.x -
+        camera.x;
+
+    const y =
+        npc.y -
+        camera.y;
+
+
+    ctx.font =
+        "60px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+
+    ctx.fillText(
+        npc.emoji,
+        x,
+        y
+    );
+
+
+    ctx.font =
+        "13px Georgia";
+
+    ctx.fillStyle =
+        "#d2b579";
+
+    ctx.fillText(
+        "MYSTERIOUS STRANGER",
+        x,
+        y - 50
+    );
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+function drawPlayer() {
+
+    const x =
+        player.x -
+        camera.x;
+
+    const y =
+        player.y -
+        camera.y;
+
+
+    ctx.font =
+        "65px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
 
 
     /* SHADOW */
 
     ctx.fillStyle =
-        "rgba(0,0,0,.6)";
+        "rgba(0,0,0,.5)";
 
     ctx.beginPath();
 
     ctx.ellipse(
         x,
-        y + 28,
-        28,
+        y + 27,
+        30,
         10,
         0,
         0,
@@ -1920,431 +1943,86 @@ function drawNPC() {
     ctx.fill();
 
 
-    /* CLOAK */
+    /* CHARACTER */
 
-    ctx.fillStyle =
-        "#171019";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x - 24,
-        y + 28
-    );
-
-    ctx.lineTo(
+    ctx.fillText(
+        player.emoji,
         x,
-        y - 10
-    );
-
-    ctx.lineTo(
-        x + 24,
-        y + 28
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* HEAD */
-
-    ctx.fillStyle =
-        "#b69a7a";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y - 22,
-        11,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* HOOD */
-
-    ctx.strokeStyle =
-        "#31202b";
-
-    ctx.lineWidth = 8;
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y - 23,
-        14,
-        Math.PI,
-        Math.PI * 2
-    );
-
-    ctx.stroke();
-
-
-    /* EYES */
-
-    ctx.fillStyle =
-        "#bd5360";
-
-    ctx.fillRect(
-        x - 6,
-        y - 23,
-        4,
-        3
-    );
-
-    ctx.fillRect(
-        x + 2,
-        y - 23,
-        4,
-        3
-    );
-
-}
-
-
-/* =====================================================
-   DRAW PLAYER
-===================================================== */
-
-function drawPlayer() {
-
-    const x = player.x;
-    const y = player.y;
-
-
-    /* SHADOW */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.7)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x,
-        y + 30,
-        30,
-        11,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* AURA */
-
-    const aura =
-        ctx.createRadialGradient(
-            x,
-            y,
-            5,
-            x,
-            y,
-            65
-        );
-
-
-    aura.addColorStop(
-        0,
-        "rgba(150,35,55,.25)"
-    );
-
-    aura.addColorStop(
-        1,
-        "rgba(150,35,55,0)"
+        y
     );
 
 
-    ctx.fillStyle =
-        aura;
+    /* ATTACK EFFECT */
 
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y,
-        65,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* CLOAK */
-
-    ctx.fillStyle =
-        "#141017";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x - 25,
-        y + 30
-    );
-
-    ctx.lineTo(
-        x - 18,
-        y - 5
-    );
-
-    ctx.lineTo(
-        x,
-        y - 18
-    );
-
-    ctx.lineTo(
-        x + 18,
-        y - 5
-    );
-
-    ctx.lineTo(
-        x + 25,
-        y + 30
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* ARMOR */
-
-    ctx.strokeStyle =
-        "#5d4a42";
-
-    ctx.lineWidth = 4;
-
-    ctx.stroke();
-
-
-    /* HEAD */
-
-    ctx.fillStyle =
-        "#b99c7b";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y - 25,
-        11,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* MASK */
-
-    ctx.fillStyle =
-        "#17151a";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y - 25,
-        9,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    /* EYES */
-
-    ctx.fillStyle =
-        "#d34855";
-
-    ctx.fillRect(
-        x - 6,
-        y - 27,
-        4,
-        3
-    );
-
-    ctx.fillRect(
-        x + 2,
-        y - 27,
-        4,
-        3
-    );
-
-
-    /* SWORD */
-
-    ctx.strokeStyle =
-        "#e0d0a8";
-
-    ctx.lineWidth = 5;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x + 13,
-        y - 4
-    );
-
-    ctx.lineTo(
-        x + 45,
-        y - 40
-    );
-
-    ctx.stroke();
-
-
-    /* SWORD GLOW */
-
-    ctx.strokeStyle =
-        "rgba(230,190,120,.25)";
-
-    ctx.lineWidth = 12;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x + 13,
-        y - 4
-    );
-
-    ctx.lineTo(
-        x + 45,
-        y - 40
-    );
-
-    ctx.stroke();
-
-}
-
-
-/* =====================================================
-   DRAW ENEMIES
-===================================================== */
-
-function drawEnemies() {
-
-    for(
-        const enemy
-        of enemies
+    if(
+        player.attackTimer > 0
     ) {
 
-        const x = enemy.x;
-        const y = enemy.y;
+        ctx.strokeStyle =
+            "rgba(220,190,130,.8)";
 
+        ctx.lineWidth = 4;
 
-        /* SHADOW */
-
-        ctx.fillStyle =
-            "rgba(0,0,0,.7)";
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            x,
-            y + enemy.radius,
-            enemy.radius,
-            6,
-            0,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-
-        /* BODY */
-
-        ctx.fillStyle =
-            "#34111c";
 
         ctx.beginPath();
 
         ctx.arc(
             x,
             y,
-            enemy.radius,
+            75,
             0,
             Math.PI * 2
         );
 
-        ctx.fill();
+        ctx.stroke();
+
+    }
+
+}
 
 
-        /* HORNS */
+/* =========================================================
+   ENEMIES
+========================================================= */
 
-        ctx.fillStyle =
-            "#1b0b11";
+function drawEnemies() {
 
-        ctx.beginPath();
+    for(
+        const enemy of enemies
+    ) {
 
-        ctx.moveTo(
-            x - 8,
-            y - 10
-        );
+        const x =
+            enemy.x -
+            camera.x;
 
-        ctx.lineTo(
-            x - 17,
-            y - 27
-        );
-
-        ctx.lineTo(
-            x - 2,
-            y - 16
-        );
-
-        ctx.closePath();
-
-        ctx.fill();
+        const y =
+            enemy.y -
+            camera.y;
 
 
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x + 8,
-            y - 10
-        );
-
-        ctx.lineTo(
-            x + 17,
-            y - 27
-        );
-
-        ctx.lineTo(
-            x + 2,
-            y - 16
-        );
-
-        ctx.closePath();
-
-        ctx.fill();
+        if(
+            x < -80 ||
+            x > screenW + 80 ||
+            y < -80 ||
+            y > screenH + 80
+        )
+            continue;
 
 
-        /* EYES */
+        ctx.font =
+            "48px Arial";
 
-        ctx.fillStyle =
-            "#ff4d5b";
+        ctx.textAlign =
+            "center";
 
-        ctx.fillRect(
-            x - 8,
-            y - 3,
-            5,
-            4
-        );
+        ctx.textBaseline =
+            "middle";
 
-        ctx.fillRect(
-            x + 3,
-            y - 3,
-            5,
-            4
+
+        ctx.fillText(
+            enemy.emoji,
+            x,
+            y
         );
 
     }
@@ -2352,13 +2030,85 @@ function drawEnemies() {
 }
 
 
-/* =====================================================
+/* =========================================================
+   DARKNESS / VIGNETTE
+========================================================= */
+
+function drawDarkness() {
+
+    const gradient =
+        ctx.createRadialGradient(
+            screenW / 2,
+            screenH / 2,
+            100,
+            screenW / 2,
+            screenH / 2,
+            Math.max(
+                screenW,
+                screenH
+            ) * .75
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+    gradient.addColorStop(
+        .7,
+        "rgba(0,0,0,.18)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,.75)"
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        screenW,
+        screenH
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updateUI() {
+
+    document
+        .getElementById("hp")
+        .style.width =
+            Math.max(
+                0,
+                player.hp
+            ) + "%";
+
+
+    document
+        .getElementById("souls")
+        .textContent =
+            souls;
+
+}
+
+
+/* =========================================================
    GAME LOOP
-===================================================== */
+========================================================= */
 
 function gameLoop() {
 
-    if(!gameStarted)
+    if(!gameRunning)
         return;
 
 
@@ -2366,47 +2116,39 @@ function gameLoop() {
 
     updateEnemies();
 
-    updateParticles();
+    updateCamera();
 
 
-    if(player.attack > 0) {
+    if(
+        player.attackTimer > 0
+    ) {
 
-        player.attack--;
+        player.attackTimer--;
 
     }
 
 
-    if(player.hp <= 0) {
+    if(
+        player.hp <= 0
+    ) {
 
-        player.hp = 100;
+        player.hp =
+            player.maxHp;
 
-        player.x = W / 2;
-        player.y = H / 2;
+        player.x =
+            2000;
+
+        player.y =
+            1500;
 
         souls = 0;
 
     }
 
 
-    document
-    .getElementById("hpBar")
-    .style.width =
-        player.hp + "%";
+    updateUI();
 
-
-    document
-    .getElementById("souls")
-    .textContent =
-        souls;
-
-
-    drawBackground();
-
-    drawNPC();
-
-    drawEnemies();
-
-    drawPlayer();
+    drawWorld();
 
 
     requestAnimationFrame(
