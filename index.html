@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Forgotten God</title>
+<title>The Forgotten God V2</title>
 
 <style>
 * {
@@ -12,7 +12,6 @@
 
 html, body {
     margin: 0;
-    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -29,7 +28,7 @@ canvas {
 #menu {
     position: fixed;
     inset: 0;
-    z-index: 10;
+    z-index: 20;
 
     display: flex;
     flex-direction: column;
@@ -39,7 +38,7 @@ canvas {
     background:
         radial-gradient(
             circle,
-            #321827 0%,
+            #351a29 0%,
             #120b13 45%,
             #030305 100%
         );
@@ -62,17 +61,20 @@ canvas {
 
 #menu p {
     margin: 30px 0;
+
     color: #8e817d;
     letter-spacing: 5px;
 }
 
 .menuButton {
-    width: 280px;
+    width: 290px;
     height: 55px;
+
     margin: 8px;
 
     border: 1px solid #80694e;
-    background: rgba(10, 7, 11, .85);
+
+    background: rgba(10,7,11,.9);
 
     color: #d9bd87;
 
@@ -84,7 +86,9 @@ canvas {
 
 .menuButton:hover {
     background: #351924;
-    box-shadow: 0 0 25px #69283a;
+
+    box-shadow:
+        0 0 25px #69283a;
 }
 
 /* ================= UI ================= */
@@ -94,28 +98,41 @@ canvas {
 
     position: fixed;
     inset: 0;
-    z-index: 5;
+    z-index: 10;
 
     pointer-events: none;
 }
 
+/* LOCATION */
+
 #location {
     position: absolute;
-    top: 20px;
+
+    top: 18px;
     left: 50%;
+
     transform: translateX(-50%);
 
     color: #d8bd88;
+
     letter-spacing: 4px;
-    text-shadow: 0 2px 5px black;
+
+    text-shadow:
+        0 2px 5px black;
 }
+
+/* STATUS */
 
 #status {
     position: absolute;
+
     top: 20px;
     left: 20px;
 
+    width: 240px;
+
     color: #d0c0a8;
+
     font-family: Arial, sans-serif;
     font-size: 13px;
 }
@@ -127,22 +144,77 @@ canvas {
     margin-top: 8px;
 
     border: 1px solid #795c4b;
+
     background: #18080c;
 }
 
 #hp {
     width: 100%;
     height: 100%;
+
     background: #a72d43;
+
+    transition: width .15s;
 }
+
+/* ================= QUEST ================= */
+
+#quest {
+    position: absolute;
+
+    top: 70px;
+    left: 20px;
+
+    width: 280px;
+
+    padding: 14px;
+
+    background: rgba(8,6,10,.88);
+
+    border-left: 3px solid #9c794d;
+
+    color: #bdb09d;
+
+    font-family: Arial, sans-serif;
+}
+
+#questTitle {
+    margin-bottom: 8px;
+
+    color: #d9bd87;
+
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#questText {
+    line-height: 1.5;
+}
+
+#distance {
+    margin-top: 8px;
+
+    color: #8f817c;
+
+    font-size: 11px;
+}
+
+/* ================= CONTROLS ================= */
 
 #controls {
     position: absolute;
-    bottom: 18px;
-    left: 20px;
 
-    color: #837977;
+    left: 20px;
+    bottom: 18px;
+
+    padding: 9px 12px;
+
+    background: rgba(5,4,7,.75);
+
+    color: #8b807d;
+
     font-family: Arial, sans-serif;
+
     font-size: 11px;
 }
 
@@ -152,19 +224,24 @@ canvas {
     display: none;
 
     position: absolute;
-    bottom: 25px;
+
     left: 50%;
+    bottom: 25px;
+
     transform: translateX(-50%);
 
-    width: min(750px, 90%);
+    width: min(760px,90%);
+
     min-height: 125px;
 
     padding: 20px;
 
-    background: rgba(7, 5, 9, .96);
+    background: rgba(7,5,9,.97);
+
     border: 1px solid #80694e;
 
-    box-shadow: 0 0 30px black;
+    box-shadow:
+        0 0 30px black;
 
     color: #cfc0aa;
 }
@@ -173,6 +250,7 @@ canvas {
     margin-bottom: 10px;
 
     color: #d8b36d;
+
     letter-spacing: 3px;
 }
 
@@ -182,11 +260,41 @@ canvas {
 
 #dialogueHint {
     position: absolute;
+
     right: 15px;
     bottom: 10px;
 
     color: #70666a;
+
     font-size: 10px;
+}
+
+/* ================= MESSAGE ================= */
+
+#message {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    padding: 15px 25px;
+
+    background: rgba(8,5,10,.94);
+
+    border: 1px solid #8d704d;
+
+    color: #d7bd8c;
+
+    font-size: 15px;
+
+    letter-spacing: 2px;
+
+    opacity: 0;
+
+    transition: opacity .3s;
 }
 
 /* ================= LORE ================= */
@@ -195,8 +303,10 @@ canvas {
     display: none;
 
     position: fixed;
+
     inset: 0;
-    z-index: 20;
+
+    z-index: 30;
 
     justify-content: center;
     align-items: center;
@@ -205,18 +315,22 @@ canvas {
 }
 
 #loreBox {
-    width: min(700px, 90%);
+    width: min(700px,90%);
+
     padding: 40px;
 
     background: #0e090f;
+
     border: 1px solid #80694e;
 
     color: #bcae9c;
+
     text-align: center;
 }
 
 #loreBox h2 {
     color: #d9bd87;
+
     letter-spacing: 5px;
 }
 
@@ -251,12 +365,12 @@ canvas {
 </div>
 
 
-<!-- ================= CANVAS ================= -->
+<!-- ================= GAME ================= -->
 
 <canvas id="game"></canvas>
 
 
-<!-- ================= GAME UI ================= -->
+<!-- ================= UI ================= -->
 
 <div id="ui">
 
@@ -264,28 +378,56 @@ canvas {
         THE LOST KINGDOM
     </div>
 
+
     <div id="status">
 
-        WANDERER
+        🧙‍♂️ WANDERER
 
         <div id="hpBox">
             <div id="hp"></div>
         </div>
 
         <div style="margin-top:8px;">
-            SOULS:
+            👻 SOULS:
             <span id="souls">0</span>
         </div>
 
     </div>
 
-    <div id="controls">
-        W A S D — DI CHUYỂN
-        &nbsp;&nbsp;
-        SPACE — TẤN CÔNG
-        &nbsp;&nbsp;
-        E — NÓI CHUYỆN
+
+    <!-- QUEST -->
+
+    <div id="quest">
+
+        <div id="questTitle">
+            📜 NHIỆM VỤ
+        </div>
+
+        <div id="questText">
+            Khám phá khu rừng và tìm NPC bí ẩn.
+        </div>
+
+        <div id="distance">
+            📍 Đang tìm mục tiêu...
+        </div>
+
     </div>
+
+
+    <!-- CONTROLS -->
+
+    <div id="controls">
+
+        🎮 <b>ĐIỀU KHIỂN</b><br><br>
+
+        W A S D → Di chuyển<br>
+        SPACE → Tấn công<br>
+        E → Nói chuyện / Tương tác
+
+    </div>
+
+
+    <!-- DIALOGUE -->
 
     <div id="dialogue">
 
@@ -299,6 +441,9 @@ canvas {
 
     </div>
 
+
+    <div id="message"></div>
+
 </div>
 
 
@@ -311,13 +456,13 @@ canvas {
         <h2>THE LORE</h2>
 
         <p>
-            Hàng trăm năm trước, một vương quốc hùng mạnh
+            Hàng trăm năm trước, một vương quốc
             từng được bảo vệ bởi các vị thần.
         </p>
 
         <p>
             Nhưng con người dần quên tên của họ.
-            Vương quốc sụp đổ và bóng tối tràn vào.
+            Vương quốc sụp đổ.
         </p>
 
         <p>
@@ -330,12 +475,8 @@ canvas {
         </p>
 
         <p>
-            Một đêm nọ, một phù thủy tỉnh dậy
-            bên ngoài vương quốc mà không nhớ mình là ai.
-        </p>
-
-        <p>
-            Và một NPC bí ẩn đang chờ anh ta trong khu rừng.
+            Một phù thủy tỉnh dậy bên ngoài
+            vương quốc mà không nhớ mình là ai.
         </p>
 
         <button class="menuButton" id="closeLore">
@@ -386,8 +527,31 @@ resize();
    WORLD
 ========================================================= */
 
-const WORLD_W = 3600;
-const WORLD_H = 2800;
+const WORLD_W = 4200;
+const WORLD_H = 3200;
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x: 2100,
+    y: 2200,
+
+    /* V2: TĂNG TỐC */
+
+    speed: 7,
+
+    hp: 100,
+    maxHp: 100,
+
+    attackCooldown: 0,
+
+    emoji: "🧙‍♂️"
+
+};
 
 
 /* =========================================================
@@ -397,28 +561,9 @@ const WORLD_H = 2800;
 const camera = {
 
     x: 0,
-    y: 0
+    y: 0,
 
-};
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-const player = {
-
-    x: 1800,
-    y: 1850,
-
-    speed: 4,
-
-    hp: 100,
-    maxHp: 100,
-
-    attack: 0,
-
-    emoji: "🧙‍♂️"
+    smooth: .12
 
 };
 
@@ -429,8 +574,8 @@ const player = {
 
 const npc = {
 
-    x: 1900,
-    y: 1800,
+    x: 2200,
+    y: 2150,
 
     emoji: "🧝"
 
@@ -438,22 +583,41 @@ const npc = {
 
 
 /* =========================================================
-   OBJECT LISTS
+   CASTLE
+========================================================= */
+
+const castle = {
+
+    x: 1850,
+    y: 350
+
+};
+
+
+/* =========================================================
+   WORLD OBJECTS
 ========================================================= */
 
 let trees = [];
-let graves = [];
 let rocks = [];
+let graves = [];
 let houses = [];
 let enemies = [];
 
 
 /* =========================================================
-   GAME
+   GAME STATE
 ========================================================= */
 
 let running = false;
+
 let souls = 0;
+
+let questStage = 0;
+
+let dialogueOpen = false;
+
+let dialogueIndex = 0;
 
 
 /* =========================================================
@@ -467,21 +631,19 @@ document.addEventListener(
     "keydown",
     function(e) {
 
-        keys[
-            e.key.toLowerCase()
-        ] = true;
+        const key =
+            e.key.toLowerCase();
+
+        keys[key] = true;
 
 
         if(e.code === "Space") {
 
             e.preventDefault();
 
-            attack();
-
         }
 
-
-        if(e.key.toLowerCase() === "e") {
+        if(key === "e") {
 
             interact();
 
@@ -504,36 +666,38 @@ document.addEventListener(
 
 
 /* =========================================================
-   START GAME
+   START
 ========================================================= */
 
 document
 .getElementById("start")
 .addEventListener(
     "click",
-    function() {
+    startGame
+);
 
-        document
+
+function startGame() {
+
+    document
         .getElementById("menu")
         .style.display = "none";
 
-        document
+    document
         .getElementById("ui")
         .style.display = "block";
 
-        running = true;
+    running = true;
 
-        createWorld();
+    createWorld();
 
-        gameLoop();
+    showMessage(
+        "NHIỆM VỤ MỚI: TÌM NPC BÍ ẨN"
+    );
 
-        setTimeout(
-            startDialogue,
-            800
-        );
+    gameLoop();
 
-    }
-);
+}
 
 
 /* =========================================================
@@ -547,12 +711,12 @@ document
     function() {
 
         document
-        .getElementById("menu")
-        .style.display = "none";
+            .getElementById("menu")
+            .style.display = "none";
 
         document
-        .getElementById("lore")
-        .style.display = "flex";
+            .getElementById("lore")
+            .style.display = "flex";
 
     }
 );
@@ -565,12 +729,12 @@ document
     function() {
 
         document
-        .getElementById("lore")
-        .style.display = "none";
+            .getElementById("lore")
+            .style.display = "none";
 
         document
-        .getElementById("menu")
-        .style.display = "flex";
+            .getElementById("menu")
+            .style.display = "flex";
 
     }
 );
@@ -583,24 +747,29 @@ document
 function createWorld() {
 
     trees = [];
-    graves = [];
     rocks = [];
+    graves = [];
     houses = [];
     enemies = [];
 
 
-    /* TREES */
+    /* FOREST */
 
-    for(let i = 0; i < 180; i++) {
+    for(let i = 0; i < 250; i++) {
 
         trees.push({
 
-            x: Math.random() * WORLD_W,
-            y: Math.random() * WORLD_H,
+            x:
+                Math.random()
+                * WORLD_W,
+
+            y:
+                Math.random()
+                * WORLD_H,
 
             size:
                 25 +
-                Math.random() * 30
+                Math.random() * 35
 
         });
 
@@ -609,12 +778,17 @@ function createWorld() {
 
     /* ROCKS */
 
-    for(let i = 0; i < 100; i++) {
+    for(let i = 0; i < 160; i++) {
 
         rocks.push({
 
-            x: Math.random() * WORLD_W,
-            y: Math.random() * WORLD_H,
+            x:
+                Math.random()
+                * WORLD_W,
+
+            y:
+                Math.random()
+                * WORLD_H,
 
             size:
                 6 +
@@ -627,17 +801,17 @@ function createWorld() {
 
     /* GRAVES */
 
-    for(let i = 0; i < 50; i++) {
+    for(let i = 0; i < 70; i++) {
 
         graves.push({
 
             x:
-                650 +
-                Math.random() * 900,
+                700 +
+                Math.random() * 1000,
 
             y:
-                1100 +
-                Math.random() * 900
+                1200 +
+                Math.random() * 1000
 
         });
 
@@ -646,17 +820,17 @@ function createWorld() {
 
     /* HOUSES */
 
-    for(let i = 0; i < 15; i++) {
+    for(let i = 20; i--;) {
 
         houses.push({
 
             x:
-                Math.random() *
-                WORLD_W,
+                Math.random()
+                * WORLD_W,
 
             y:
-                Math.random() *
-                WORLD_H
+                Math.random()
+                * WORLD_H
 
         });
 
@@ -665,7 +839,7 @@ function createWorld() {
 
     /* ENEMIES */
 
-    for(let i = 0; i < 20; i++) {
+    for(let i = 30; i--;) {
 
         createEnemy();
 
@@ -687,12 +861,12 @@ function createEnemy() {
     do {
 
         x =
-            Math.random() *
-            WORLD_W;
+            Math.random()
+            * WORLD_W;
 
         y =
-            Math.random() *
-            WORLD_H;
+            Math.random()
+            * WORLD_H;
 
     }
     while(
@@ -711,15 +885,15 @@ function createEnemy() {
         y: y,
 
         speed:
-            .5 +
+            .7 +
             Math.random() * .7,
 
         hp: 2,
 
         emoji:
             Math.random() > .5
-            ? "👹"
-            : "💀"
+                ? "👹"
+                : "💀"
 
     });
 
@@ -737,8 +911,11 @@ function distance(
     y2
 ) {
 
-    const dx = x2 - x1;
-    const dy = y2 - y1;
+    const dx =
+        x2 - x1;
+
+    const dy =
+        y2 - y1;
 
     return Math.sqrt(
         dx * dx +
@@ -749,7 +926,7 @@ function distance(
 
 
 /* =========================================================
-   UPDATE PLAYER
+   PLAYER
 ========================================================= */
 
 function updatePlayer() {
@@ -763,16 +940,16 @@ function updatePlayer() {
 
 
     if(keys["w"])
-        dy -= 1;
+        dy--;
 
     if(keys["s"])
-        dy += 1;
+        dy++;
 
     if(keys["a"])
-        dx -= 1;
+        dx--;
 
     if(keys["d"])
-        dx += 1;
+        dx++;
 
 
     if(dx !== 0 || dy !== 0) {
@@ -789,15 +966,15 @@ function updatePlayer() {
 
 
         player.x +=
-            dx * player.speed;
+            dx *
+            player.speed;
 
         player.y +=
-            dy * player.speed;
+            dy *
+            player.speed;
 
     }
 
-
-    /* WORLD LIMIT */
 
     player.x =
         Math.max(
@@ -827,13 +1004,29 @@ function updatePlayer() {
 
 function updateCamera() {
 
-    camera.x =
+    const targetX =
         player.x -
         W / 2;
 
-    camera.y =
+    const targetY =
         player.y -
         H / 2;
+
+
+    camera.x +=
+        (
+            targetX -
+            camera.x
+        ) *
+        camera.smooth;
+
+
+    camera.y +=
+        (
+            targetY -
+            camera.y
+        ) *
+        camera.smooth;
 
 
     camera.x =
@@ -880,7 +1073,7 @@ function updateEnemies() {
 
 
         if(
-            d < 600 &&
+            d < 650 &&
             d > 45
         ) {
 
@@ -906,7 +1099,7 @@ function updateEnemies() {
 
         if(d < 45) {
 
-            player.hp -= .1;
+            player.hp -= .12;
 
         }
 
@@ -916,8 +1109,34 @@ function updateEnemies() {
 
 
 /* =========================================================
-   ATTACK
+   FAST ATTACK
 ========================================================= */
+
+function updateAttack() {
+
+    /*
+       V2:
+       Có thể giữ SPACE
+       để đánh liên tục.
+    */
+
+    if(keys[" "] || keys["space"]) {
+
+        attack();
+
+    }
+
+
+    if(
+        player.attackCooldown > 0
+    ) {
+
+        player.attackCooldown--;
+
+    }
+
+}
+
 
 function attack() {
 
@@ -927,11 +1146,16 @@ function attack() {
     if(dialogueOpen)
         return;
 
-    if(player.attack > 0)
+
+    /* V2: HỒI CHIÊU CHỈ 5 */
+
+    if(
+        player.attackCooldown > 0
+    )
         return;
 
 
-    player.attack = 12;
+    player.attackCooldown = 5;
 
 
     for(
@@ -951,7 +1175,7 @@ function attack() {
                 player.y,
                 enemy.x,
                 enemy.y
-            ) < 100
+            ) < 115
         ) {
 
             enemy.hp--;
@@ -968,6 +1192,10 @@ function attack() {
 
                 createEnemy();
 
+                showMessage(
+                    "+1 SOUL"
+                );
+
             }
 
         }
@@ -980,10 +1208,6 @@ function attack() {
 /* =========================================================
    DIALOGUE
 ========================================================= */
-
-let dialogueOpen = false;
-let dialogueIndex = 0;
-
 
 const dialogues = [
 
@@ -999,7 +1223,7 @@ const dialogues = [
 
     [
         "MYSTERIOUS NPC",
-        "Vương quốc đã bị xóa khỏi lịch sử."
+        "Vương quốc này đã bị xóa khỏi lịch sử."
     ],
 
     [
@@ -1024,12 +1248,12 @@ const dialogues = [
 
     [
         "MYSTERIOUS NPC",
-        "Nếu muốn biết mình là ai..."
+        "Nhưng con đường đến đó đầy những sinh vật bóng tối."
     ],
 
     [
-        "MYSTERIOUS NPC",
-        "Hãy đi tìm hắn."
+        "WANDERER",
+        "Ta sẽ tìm ra sự thật."
     ]
 
 ];
@@ -1055,18 +1279,18 @@ function showDialogue() {
 
 
     document
-    .getElementById("dialogue")
-    .style.display = "block";
+        .getElementById("dialogue")
+        .style.display = "block";
 
 
     document
-    .getElementById("speaker")
-    .textContent = d[0];
+        .getElementById("speaker")
+        .textContent = d[0];
 
 
     document
-    .getElementById("dialogueText")
-    .textContent = d[1];
+        .getElementById("dialogueText")
+        .textContent = d[1];
 
 }
 
@@ -1084,8 +1308,15 @@ function nextDialogue() {
         dialogueOpen = false;
 
         document
-        .getElementById("dialogue")
-        .style.display = "none";
+            .getElementById("dialogue")
+            .style.display = "none";
+
+
+        questStage = 1;
+
+        showMessage(
+            "NHIỆM VỤ MỚI: ĐI ĐẾN LÂU ĐÀI"
+        );
 
         return;
 
@@ -1105,7 +1336,7 @@ function interact() {
             player.y,
             npc.x,
             npc.y
-        ) < 150
+        ) < 160
     ) {
 
         if(dialogueOpen) {
@@ -1125,12 +1356,110 @@ function interact() {
 
 
 /* =========================================================
+   QUEST
+========================================================= */
+
+function updateQuest() {
+
+    const quest =
+        document
+        .getElementById("questText");
+
+    const distanceText =
+        document
+        .getElementById("distance");
+
+
+    let target;
+    let name;
+
+
+    if(questStage === 0) {
+
+        target = npc;
+
+        name = "NPC BÍ ẨN";
+
+        quest.innerHTML =
+            "🌲 Khám phá khu rừng.<br>" +
+            "🧝 Tìm NPC bí ẩn.<br>" +
+            "💬 Đến gần và nhấn E.";
+
+    }
+
+    else if(questStage === 1) {
+
+        target = castle;
+
+        name = "LÂU ĐÀI";
+
+        quest.innerHTML =
+            "🏰 Đi đến lâu đài.<br>" +
+            "👹 Đánh bại quái vật trên đường.";
+
+    }
+
+
+    if(target) {
+
+        const d =
+            Math.round(
+                distance(
+                    player.x,
+                    player.y,
+                    target.x,
+                    target.y
+                ) / 10
+            );
+
+
+        distanceText.textContent =
+            "📍 " +
+            name +
+            " — " +
+            d +
+            "m";
+
+    }
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+let messageTimer = 0;
+
+
+function showMessage(text) {
+
+    const message =
+        document
+        .getElementById("message");
+
+
+    message.textContent =
+        text;
+
+
+    message.style.opacity =
+        "1";
+
+
+    messageTimer = 150;
+
+}
+
+
+/* =========================================================
    DRAW BACKGROUND
 ========================================================= */
 
 function drawBackground() {
 
-    ctx.fillStyle = "#111119";
+    ctx.fillStyle =
+        "#101018";
 
     ctx.fillRect(
         0,
@@ -1140,10 +1469,24 @@ function drawBackground() {
     );
 
 
-    /* GROUND GRID */
+    /* GROUND */
+
+    ctx.fillStyle =
+        "#15151c";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* GRID */
 
     ctx.strokeStyle =
-        "rgba(130,120,130,.05)";
+        "rgba(130,120,130,.045)";
+
 
     const grid = 100;
 
@@ -1195,11 +1538,39 @@ function drawBackground() {
 
     }
 
+
+    /* MOON */
+
+    const moonX =
+        3400 -
+        camera.x;
+
+    const moonY =
+        250 -
+        camera.y;
+
+
+    ctx.fillStyle =
+        "#d9cfb0";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        moonX,
+        moonY,
+        45,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
 }
 
 
 /* =========================================================
-   DRAW FOREST
+   TREES
 ========================================================= */
 
 function drawTrees() {
@@ -1260,6 +1631,7 @@ function drawTrees() {
             y - tree.size * .7
         );
 
+
         ctx.moveTo(
             x,
             y - 10
@@ -1278,7 +1650,7 @@ function drawTrees() {
 
 
 /* =========================================================
-   DRAW ROCKS
+   ROCKS
 ========================================================= */
 
 function drawRocks() {
@@ -1316,7 +1688,7 @@ function drawRocks() {
 
 
 /* =========================================================
-   DRAW GRAVES
+   GRAVES
 ========================================================= */
 
 function drawGraves() {
@@ -1354,7 +1726,7 @@ function drawGraves() {
 
 
 /* =========================================================
-   DRAW HOUSES
+   HOUSES
 ========================================================= */
 
 function drawHouses() {
@@ -1383,7 +1755,7 @@ function drawHouses() {
 
 
         ctx.fillStyle =
-            "#120c12";
+            "#100b10";
 
 
         ctx.beginPath();
@@ -1409,7 +1781,8 @@ function drawHouses() {
 
 
         ctx.fillStyle =
-            "#54342a";
+            "#57352b";
+
 
         ctx.fillRect(
             x + 55,
@@ -1424,24 +1797,24 @@ function drawHouses() {
 
 
 /* =========================================================
-   DRAW CASTLE
+   CASTLE
 ========================================================= */
 
 function drawCastle() {
 
     const x =
-        1600 -
+        castle.x -
         camera.x;
 
     const y =
-        300 -
+        castle.y -
         camera.y;
 
 
     /* WALL */
 
     ctx.fillStyle =
-        "#28232b";
+        "#29242d";
 
 
     ctx.fillRect(
@@ -1472,7 +1845,7 @@ function drawCastle() {
     /* ROOFS */
 
     ctx.fillStyle =
-        "#100b11";
+        "#0d090e";
 
 
     ctx.beginPath();
@@ -1536,7 +1909,7 @@ function drawCastle() {
     /* WINDOWS */
 
     ctx.fillStyle =
-        "#aa7946";
+        "#a87745";
 
 
     for(let i = 0; i < 5; i++) {
@@ -1550,8 +1923,6 @@ function drawCastle() {
 
     }
 
-
-    /* NAME */
 
     ctx.font =
         "bold 20px Georgia";
@@ -1573,7 +1944,7 @@ function drawCastle() {
 
 
 /* =========================================================
-   DRAW NPC
+   NPC
 ========================================================= */
 
 function drawNPC() {
@@ -1617,11 +1988,33 @@ function drawNPC() {
         y - 50
     );
 
+
+    /* QUESTION MARK */
+
+    if(
+        questStage === 0
+    ) {
+
+        ctx.font =
+            "bold 25px Arial";
+
+        ctx.fillStyle =
+            "#d9bd87";
+
+
+        ctx.fillText(
+            "?",
+            x + 35,
+            y - 30
+        );
+
+    }
+
 }
 
 
 /* =========================================================
-   DRAW ENEMIES
+   ENEMIES
 ========================================================= */
 
 function drawEnemies() {
@@ -1668,7 +2061,7 @@ function drawEnemies() {
 
 
 /* =========================================================
-   DRAW PLAYER
+   PLAYER
 ========================================================= */
 
 function drawPlayer() {
@@ -1722,9 +2115,11 @@ function drawPlayer() {
     );
 
 
-    /* ATTACK */
+    /* ATTACK EFFECT */
 
-    if(player.attack > 0) {
+    if(
+        player.attackCooldown > 0
+    ) {
 
         ctx.strokeStyle =
             "#d7b978";
@@ -1737,7 +2132,7 @@ function drawPlayer() {
         ctx.arc(
             x,
             y,
-            75,
+            78,
             0,
             Math.PI * 2
         );
@@ -1750,7 +2145,113 @@ function drawPlayer() {
 
 
 /* =========================================================
-   LIGHT EFFECT
+   QUEST ARROW
+========================================================= */
+
+function drawQuestArrow() {
+
+    let target;
+
+
+    if(questStage === 0) {
+
+        target = npc;
+
+    }
+    else {
+
+        target = castle;
+
+    }
+
+
+    if(!target)
+        return;
+
+
+    const dx =
+        target.x -
+        player.x;
+
+    const dy =
+        target.y -
+        player.y;
+
+
+    const angle =
+        Math.atan2(
+            dy,
+            dx
+        );
+
+
+    const arrowDistance = 100;
+
+
+    const x =
+        W / 2 +
+        Math.cos(angle) *
+        arrowDistance;
+
+
+    const y =
+        H / 2 +
+        Math.sin(angle) *
+        arrowDistance;
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.rotate(
+        angle
+    );
+
+
+    ctx.fillStyle =
+        "#d9bd87";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        25,
+        0
+    );
+
+    ctx.lineTo(
+        -15,
+        -14
+    );
+
+    ctx.lineTo(
+        -8,
+        0
+    );
+
+    ctx.lineTo(
+        -15,
+        14
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   DARKNESS
 ========================================================= */
 
 function drawDarkness() {
@@ -1762,7 +2263,7 @@ function drawDarkness() {
             100,
             W / 2,
             H / 2,
-            Math.max(W, H) * .75
+            Math.max(W,H) * .75
         );
 
 
@@ -1771,19 +2272,22 @@ function drawDarkness() {
         "rgba(0,0,0,0)"
     );
 
+
     gradient.addColorStop(
         .65,
         "rgba(0,0,0,.15)"
     );
 
+
     gradient.addColorStop(
         1,
-        "rgba(0,0,0,.75)"
+        "rgba(0,0,0,.78)"
     );
 
 
     ctx.fillStyle =
         gradient;
+
 
     ctx.fillRect(
         0,
@@ -1796,24 +2300,42 @@ function drawDarkness() {
 
 
 /* =========================================================
-   UPDATE UI
+   UI
 ========================================================= */
 
 function updateUI() {
 
     document
-    .getElementById("hp")
-    .style.width =
-        Math.max(
-            0,
-            player.hp
-        ) + "%";
+        .getElementById("hp")
+        .style.width =
+            Math.max(
+                0,
+                player.hp
+            ) + "%";
 
 
     document
-    .getElementById("souls")
-    .textContent =
-        souls;
+        .getElementById("souls")
+        .textContent =
+            souls;
+
+
+    updateQuest();
+
+
+    if(messageTimer > 0) {
+
+        messageTimer--;
+
+        if(messageTimer === 0) {
+
+            document
+                .getElementById("message")
+                .style.opacity = "0";
+
+        }
+
+    }
 
 }
 
@@ -1830,16 +2352,13 @@ function gameLoop() {
 
     updatePlayer();
 
+    updateAttack();
+
     updateEnemies();
 
     updateCamera();
 
-
-    if(player.attack > 0) {
-
-        player.attack--;
-
-    }
+    updateUI();
 
 
     if(player.hp <= 0) {
@@ -1848,15 +2367,16 @@ function gameLoop() {
             player.maxHp;
 
         player.x =
-            1800;
+            2100;
 
         player.y =
-            1850;
+            2200;
+
+        showMessage(
+            "BẠN ĐÃ GỤC NGÃ..."
+        );
 
     }
-
-
-    updateUI();
 
 
     drawBackground();
@@ -1876,6 +2396,8 @@ function gameLoop() {
     drawEnemies();
 
     drawPlayer();
+
+    drawQuestArrow();
 
     drawDarkness();
 
