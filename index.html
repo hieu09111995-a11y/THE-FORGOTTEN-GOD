@@ -7,1069 +7,520 @@
 <title>THE FORGOTTEN GOD</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+* {
+    box-sizing: border-box;
 }
 
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#050509;
-    font-family:Arial,sans-serif;
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050507;
+    font-family: Georgia, serif;
 }
 
-/* GAME */
-
-#game{
-    position:fixed;
-    inset:0;
-    background:#08080d;
+#game {
+    position: fixed;
+    inset: 0;
 }
 
-canvas{
-    display:block;
-    width:100%;
-    height:100%;
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-/* START SCREEN */
+#menu {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
 
-#startScreen{
-    position:fixed;
-    inset:0;
-    z-index:20;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    text-align:center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     background:
         radial-gradient(
-            circle,
-            #24131d 0%,
-            #09070b 45%,
-            #020204 100%
+            circle at center,
+            #24151c,
+            #08070a 65%,
+            #020203
         );
+
+    color: #dfc693;
+    text-align: center;
 }
 
-.startBox{
-    width:90%;
-    max-width:700px;
-}
+h1 {
+    margin: 0;
 
-.logo{
-    color:#e8d09d;
-
-    font-family:Georgia,serif;
-
-    font-size:clamp(
-        45px,
-        9vw,
-        100px
-    );
-
-    line-height:.9;
-
-    letter-spacing:8px;
+    font-size: clamp(45px, 9vw, 100px);
+    letter-spacing: 8px;
 
     text-shadow:
         0 0 15px #8c3546,
-        0 0 50px #4b1523;
+        0 0 40px #5b1828;
 }
 
-.subtitle{
-    margin-top:25px;
-
-    color:#9c8d7c;
-
-    letter-spacing:6px;
-
-    font-size:14px;
+p {
+    letter-spacing: 5px;
+    color: #988b7b;
 }
 
-.startButton{
-    margin-top:55px;
+button {
+    margin-top: 35px;
 
-    width:280px;
-    height:60px;
+    width: 260px;
+    height: 60px;
 
-    border:1px solid #a98a60;
+    background: #110c11;
+    border: 1px solid #a68a60;
 
-    background:#100c11;
+    color: #dfc693;
 
-    color:#dfc48e;
+    font-family: Georgia, serif;
+    font-size: 16px;
+    letter-spacing: 3px;
 
-    font-family:Georgia,serif;
-
-    font-size:15px;
-
-    letter-spacing:4px;
-
-    cursor:pointer;
-
-    transition:.3s;
+    cursor: pointer;
 }
 
-.startButton:hover{
-    background:#24151c;
-
-    box-shadow:
-        0 0 25px #6e2637;
-
-    transform:scale(1.04);
+button:hover {
+    background: #291720;
 }
 
-/* UI */
+#ui {
+    display: none;
 
-#ui{
-    position:fixed;
-    inset:0;
+    position: fixed;
+    top: 20px;
+    left: 20px;
 
-    z-index:5;
+    z-index: 5;
 
-    pointer-events:none;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
-#stats{
-    position:absolute;
+#bar {
+    width: 220px;
+    height: 18px;
 
-    top:20px;
-    left:20px;
+    margin-top: 6px;
 
-    width:250px;
-
-    color:#ddd;
-
-    font-size:14px;
+    border: 1px solid #9c8058;
+    background: #180b10;
 }
 
-#healthBackground{
-    width:250px;
-    height:18px;
-
-    margin-top:8px;
-
-    border:1px solid #826a4e;
-
-    background:#180b10;
+#hp {
+    width: 100%;
+    height: 100%;
+    background: #a52f43;
 }
 
-#health{
-    width:100%;
-    height:100%;
-
-    background:#a52f43;
+#info {
+    margin-top: 8px;
+    color: #d8c18e;
 }
 
-#score{
-    margin-top:10px;
+#gameover {
+    display: none;
 
-    color:#d5bd8c;
+    position: fixed;
+    inset: 0;
 
-    letter-spacing:2px;
+    z-index: 20;
+
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    background: rgba(0,0,0,.9);
+
+    color: #c94a58;
 }
 
-#help{
-    position:absolute;
-
-    bottom:20px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    color:#8d8378;
-
-    font-size:13px;
-
-    text-align:center;
+#gameover h2 {
+    font-size: 60px;
+    letter-spacing: 6px;
 }
-
-/* GAME OVER */
-
-#gameOver{
-    position:fixed;
-    inset:0;
-
-    z-index:30;
-
-    display:none;
-
-    justify-content:center;
-    align-items:center;
-
-    text-align:center;
-
-    background:rgba(0,0,0,.88);
-}
-
-.gameOverTitle{
-    color:#c24a58;
-
-    font-family:Georgia,serif;
-
-    font-size:70px;
-
-    letter-spacing:8px;
-}
-
-#restartButton{
-    margin-top:30px;
-
-    width:240px;
-    height:55px;
-
-    background:#120d12;
-
-    color:#ddc18b;
-
-    border:1px solid #9c8058;
-
-    cursor:pointer;
-
-    letter-spacing:3px;
-}
-
-/* MOBILE CONTROLS */
-
-#mobileControls{
-    display:none;
-
-    position:fixed;
-
-    left:20px;
-    bottom:70px;
-
-    z-index:10;
-}
-
-.controlRow{
-    display:flex;
-
-    justify-content:center;
-}
-
-.control{
-    width:55px;
-    height:55px;
-
-    margin:3px;
-
-    border-radius:8px;
-
-    border:1px solid #806a50;
-
-    background:rgba(20,15,20,.75);
-
-    color:#d9c18e;
-
-    font-size:20px;
-}
-
-#attackButton{
-    position:fixed;
-
-    right:30px;
-    bottom:80px;
-
-    z-index:10;
-
-    display:none;
-
-    width:80px;
-    height:80px;
-
-    border-radius:50%;
-
-    border:1px solid #a97865;
-
-    background:rgba(50,15,25,.8);
-
-    color:#e6c995;
-
-    font-size:16px;
-}
-
-@media(max-width:700px){
-
-    #mobileControls{
-        display:block;
-    }
-
-    #attackButton{
-        display:block;
-    }
-
-    #help{
-        display:none;
-    }
-
-}
-
 </style>
 </head>
 
 <body>
 
-
-<!-- =========================================
-     GAME
-========================================= -->
-
 <div id="game">
-
     <canvas id="canvas"></canvas>
-
 </div>
 
+<div id="menu">
 
-<!-- =========================================
-     START SCREEN
-========================================= -->
+    <h1>
+        THE<br>
+        FORGOTTEN GOD
+    </h1>
 
-<div id="startScreen">
+    <p>
+        THE DARKNESS REMEMBERS
+    </p>
 
-    <div class="startBox">
-
-        <div class="logo">
-
-            THE<br>
-            FORGOTTEN<br>
-            GOD
-
-        </div>
-
-        <div class="subtitle">
-
-            THE DARKNESS REMEMBERS
-
-        </div>
-
-        <button
-            class="startButton"
-            id="startButton">
-
-            ENTER THE WORLD
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     UI
-========================================= -->
-
-<div id="ui">
-
-    <div id="stats">
-
-        <div>
-            LIFE
-        </div>
-
-        <div id="healthBackground">
-
-            <div id="health"></div>
-
-        </div>
-
-        <div id="score">
-
-            SOULS:
-            <span id="scoreNumber">
-                0
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div id="help">
-
-        WASD = MOVE &nbsp;&nbsp;&nbsp;
-        SPACE / LEFT CLICK = ATTACK
-
-    </div>
-
-
-    <!-- MOBILE -->
-
-    <div id="mobileControls">
-
-        <div class="controlRow">
-
-            <button
-                class="control"
-                id="up">
-
-                ▲
-
-            </button>
-
-        </div>
-
-        <div class="controlRow">
-
-            <button
-                class="control"
-                id="left">
-
-                ◀
-
-            </button>
-
-            <button
-                class="control"
-                id="down">
-
-                ▼
-
-            </button>
-
-            <button
-                class="control"
-                id="right">
-
-                ▶
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <button
-        id="attackButton">
-
-        ATTACK
-
+    <button id="start">
+        ENTER THE WORLD
     </button>
 
 </div>
 
+<div id="ui">
 
-<!-- =========================================
-     GAME OVER
-========================================= -->
+    LIFE
 
-<div id="gameOver">
-
-    <div>
-
-        <div class="gameOverTitle">
-
-            YOU DIED
-
-        </div>
-
-        <div
-            style="
-            margin-top:15px;
-            color:#8f8378;
-            ">
-
-            THE DARKNESS CLAIMED YOU
-
-        </div>
-
-        <button
-            id="restartButton">
-
-            TRY AGAIN
-
-        </button>
-
+    <div id="bar">
+        <div id="hp"></div>
     </div>
+
+    <div id="info">
+        SOULS: <span id="score">0</span>
+    </div>
+
+    <div style="margin-top:10px;">
+        WASD: MOVE<br>
+        SPACE: ATTACK
+    </div>
+
+</div>
+
+<div id="gameover">
+
+    <h2>YOU DIED</h2>
+
+    <button id="again">
+        TRY AGAIN
+    </button>
 
 </div>
 
 
 <script>
 
-/* =========================================
-   CANVAS
-========================================= */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-const canvas =
-    document.getElementById("canvas");
+let W = 0;
+let H = 0;
 
-const ctx =
-    canvas.getContext("2d");
+function resize() {
 
-let width;
-let height;
+    W = window.innerWidth;
+    H = window.innerHeight;
 
-
-function resize(){
-
-    width =
-        canvas.width =
-        window.innerWidth;
-
-    height =
-        canvas.height =
-        window.innerHeight;
-
+    canvas.width = W;
+    canvas.height = H;
 }
 
 resize();
 
-window.addEventListener(
-    "resize",
-    resize
-);
+window.addEventListener("resize", resize);
 
 
-/* =========================================
-   GAME STATE
-========================================= */
+/* =========================
+   GAME
+========================= */
 
-let running = false;
+let playing = false;
 
 let score = 0;
 
-let keys = {};
-
-
-/* =========================================
-   PLAYER
-========================================= */
+const keys = {};
 
 const player = {
-
-    x:0,
-    y:0,
-
-    size:24,
-
-    speed:4,
-
-    health:100,
-
-    maxHealth:100,
-
-    attackTimer:0,
-
-    invincible:0
-
+    x: 0,
+    y: 0,
+    speed: 4,
+    hp: 100,
+    maxHp: 100,
+    attack: 0
 };
-
-
-/* =========================================
-   ENEMIES
-========================================= */
 
 let enemies = [];
 
 
-/* =========================================
-   WORLD
-========================================= */
+/* =========================
+   KEYBOARD
+========================= */
 
-const world = {
+window.addEventListener("keydown", function(e) {
 
-    width:2400,
+    keys[e.key.toLowerCase()] = true;
 
-    height:1600
+    if (e.code === "Space") {
 
-};
-
-
-let camera = {
-
-    x:0,
-    y:0
-
-};
-
-
-/* =========================================
-   INPUT
-========================================= */
-
-window.addEventListener(
-    "keydown",
-    function(e){
-
-        keys[e.key.toLowerCase()] =
-            true;
-
-        if(e.code === "Space"){
-
-            e.preventDefault();
-
-            attack();
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    function(e){
-
-        keys[e.key.toLowerCase()] =
-            false;
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousedown",
-    function(){
+        e.preventDefault();
 
         attack();
-
     }
-);
+});
+
+window.addEventListener("keyup", function(e) {
+
+    keys[e.key.toLowerCase()] = false;
+});
 
 
-/* =========================================
+/* =========================
    START
-========================================= */
+========================= */
 
-document
-.getElementById("startButton")
-.addEventListener(
-    "click",
-    function(){
+document.getElementById("start").onclick = function() {
 
-        document
-        .getElementById("startScreen")
-        .style.display =
-        "none";
+    startGame();
 
-        startGame();
-
-    }
-);
+};
 
 
-/* =========================================
+/* =========================
    START GAME
-========================================= */
+========================= */
 
-function startGame(){
+function startGame() {
 
-    running = true;
+    document.getElementById("menu").style.display = "none";
+
+    document.getElementById("gameover").style.display = "none";
+
+    document.getElementById("ui").style.display = "block";
+
+    playing = true;
 
     score = 0;
 
-    player.x =
-        world.width / 2;
+    player.x = W / 2;
+    player.y = H / 2;
 
-    player.y =
-        world.height / 2;
-
-    player.health =
-        player.maxHealth;
+    player.hp = 100;
 
     enemies = [];
 
-    for(
-        let i=0;
-        i<8;
-        i++
-    ){
+    for (let i = 0; i < 6; i++) {
 
-        spawnEnemy();
-
+        createEnemy();
     }
 
-    gameLoop();
-
+    requestAnimationFrame(loop);
 }
 
 
-/* =========================================
-   SPAWN ENEMY
-========================================= */
+/* =========================
+   CREATE ENEMY
+========================= */
 
-function spawnEnemy(){
+function createEnemy() {
 
     let x;
     let y;
 
-    do{
+    do {
 
-        x =
-            100 +
-            Math.random() *
-            (world.width-200);
+        x = 80 + Math.random() * (W - 160);
+        y = 80 + Math.random() * (H - 160);
 
-        y =
-            100 +
-            Math.random() *
-            (world.height-200);
-
-    }
-
-    while(
-        Math.abs(
-            x-player.x
-        )<300
+    } while (
+        Math.abs(x - player.x) < 180 &&
+        Math.abs(y - player.y) < 180
     );
-
 
     enemies.push({
 
-        x:x,
+        x: x,
+        y: y,
 
-        y:y,
+        size: 20,
 
-        size:22,
+        speed: 1,
 
-        speed:
-            0.7+
-            Math.random()*.6,
-
-        health:2,
-
-        hit:0
+        hp: 2
 
     });
-
 }
 
 
-/* =========================================
+/* =========================
+   MOVE PLAYER
+========================= */
+
+function movePlayer() {
+
+    let dx = 0;
+    let dy = 0;
+
+    if (keys["w"]) dy -= 1;
+    if (keys["s"]) dy += 1;
+    if (keys["a"]) dx -= 1;
+    if (keys["d"]) dx += 1;
+
+    if (dx !== 0 || dy !== 0) {
+
+        const length =
+            Math.sqrt(dx * dx + dy * dy);
+
+        dx /= length;
+        dy /= length;
+
+        player.x += dx * player.speed;
+        player.y += dy * player.speed;
+    }
+
+    player.x = Math.max(
+        30,
+        Math.min(W - 30, player.x)
+    );
+
+    player.y = Math.max(
+        30,
+        Math.min(H - 30, player.y)
+    );
+}
+
+
+/* =========================
    ATTACK
-========================================= */
+========================= */
 
-function attack(){
+function attack() {
 
-    if(!running){
+    if (!playing) return;
 
-        return;
+    if (player.attack > 0) return;
 
-    }
+    player.attack = 15;
 
-    if(player.attackTimer>0){
+    for (let i = enemies.length - 1; i >= 0; i--) {
 
-        return;
+        const e = enemies[i];
 
-    }
-
-    player.attackTimer =
-        15;
-
-
-    for(
-        let i=enemies.length-1;
-        i>=0;
-        i--
-    ){
-
-        const enemy =
-            enemies[i];
-
-
-        const dx =
-            enemy.x-player.x;
-
-        const dy =
-            enemy.y-player.y;
+        const dx = e.x - player.x;
+        const dy = e.y - player.y;
 
         const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
+            Math.sqrt(dx * dx + dy * dy);
 
+        if (distance < 80) {
 
-        if(distance<75){
+            e.hp--;
 
-            enemy.health--;
+            if (e.hp <= 0) {
 
-            enemy.hit=8;
-
-
-            if(enemy.health<=0){
-
-                enemies.splice(i,1);
+                enemies.splice(i, 1);
 
                 score++;
 
-                spawnEnemy();
-
+                createEnemy();
             }
-
         }
-
     }
-
 }
 
 
-/* =========================================
-   MOVE PLAYER
-========================================= */
+/* =========================
+   ENEMIES
+========================= */
 
-function movePlayer(){
+function updateEnemies() {
 
-    let dx=0;
-    let dy=0;
+    for (const e of enemies) {
 
-
-    if(keys["w"]){
-
-        dy--;
-
-    }
-
-    if(keys["s"]){
-
-        dy++;
-
-    }
-
-    if(keys["a"]){
-
-        dx--;
-
-    }
-
-    if(keys["d"]){
-
-        dx++;
-
-    }
-
-
-    if(dx!==0 || dy!==0){
-
-        const length =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
-
-        dx/=length;
-        dy/=length;
-
-
-        player.x +=
-            dx*player.speed;
-
-        player.y +=
-            dy*player.speed;
-
-    }
-
-
-    player.x =
-        Math.max(
-            player.size,
-            Math.min(
-                world.width-player.size,
-                player.x
-            )
-        );
-
-
-    player.y =
-        Math.max(
-            player.size,
-            Math.min(
-                world.height-player.size,
-                player.y
-            )
-        );
-
-}
-
-
-/* =========================================
-   ENEMY AI
-========================================= */
-
-function updateEnemies(){
-
-    for(
-        const enemy
-        of enemies
-    ){
-
-        const dx =
-            player.x-enemy.x;
-
-        const dy =
-            player.y-enemy.y;
+        const dx = player.x - e.x;
+        const dy = player.y - e.y;
 
         const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
+            Math.sqrt(dx * dx + dy * dy);
 
+        if (distance > 38) {
 
-        if(distance>35){
+            e.x +=
+                dx / distance *
+                e.speed;
 
-            enemy.x +=
-                dx/distance*
-                enemy.speed;
+            e.y +=
+                dy / distance *
+                e.speed;
 
-            enemy.y +=
-                dy/distance*
-                enemy.speed;
+        } else {
 
+            player.hp -= 0.2;
         }
-
-        else{
-
-            if(
-                player.invincible<=0
-            ){
-
-                player.health -=
-                    .25;
-
-                player.invincible =
-                    20;
-
-            }
-
-        }
-
-
-        if(enemy.hit>0){
-
-            enemy.hit--;
-
-        }
-
     }
-
 }
 
 
-/* =========================================
-   CAMERA
-========================================= */
+/* =========================
+   DRAW
+========================= */
 
-function updateCamera(){
+function draw() {
 
-    camera.x =
-        player.x -
-        width/2;
+    /* BACKGROUND */
 
-    camera.y =
-        player.y -
-        height/2;
-
-
-    camera.x =
-        Math.max(
-            0,
-            Math.min(
-                world.width-width,
-                camera.x
-            )
-        );
-
-
-    camera.y =
-        Math.max(
-            0,
-            Math.min(
-                world.height-height,
-                camera.y
-            )
-        );
-
-}
-
-
-/* =========================================
-   DRAW BACKGROUND
-========================================= */
-
-function drawBackground(){
-
-    ctx.fillStyle =
-        "#09080d";
+    ctx.fillStyle = "#08080d";
 
     ctx.fillRect(
         0,
         0,
-        width,
-        height
+        W,
+        H
     );
 
 
     /* MOON */
 
-    const moonX =
-        1900-camera.x;
-
-    const moonY =
-        180-camera.y;
-
-
-    const glow =
+    const gradient =
         ctx.createRadialGradient(
-            moonX,
-            moonY,
-            20,
-            moonX,
-            moonY,
+            W - 150,
+            130,
+            10,
+            W - 150,
+            130,
             180
         );
 
-
-    glow.addColorStop(
+    gradient.addColorStop(
         0,
-        "rgba(255,235,190,.45)"
+        "rgba(255,230,180,.35)"
     );
 
-    glow.addColorStop(
+    gradient.addColorStop(
         1,
-        "rgba(255,235,190,0)"
+        "rgba(255,230,180,0)"
     );
 
-
-    ctx.fillStyle =
-        glow;
-
+    ctx.fillStyle = gradient;
 
     ctx.beginPath();
 
     ctx.arc(
-        moonX,
-        moonY,
+        W - 150,
+        130,
         180,
         0,
-        Math.PI*2
+        Math.PI * 2
     );
 
     ctx.fill();
 
 
-    ctx.fillStyle =
-        "#e8ddc1";
+    /* MOON */
 
+    ctx.fillStyle = "#e6d9bb";
 
     ctx.beginPath();
 
     ctx.arc(
-        moonX,
-        moonY,
-        55,
+        W - 150,
+        130,
+        48,
         0,
-        Math.PI*2
+        Math.PI * 2
     );
 
     ctx.fill();
@@ -1077,295 +528,66 @@ function drawBackground(){
 
     /* GROUND */
 
-    ctx.fillStyle =
-        "#101016";
-
+    ctx.fillStyle = "#111117";
 
     ctx.fillRect(
-        -camera.x,
-        -camera.y,
-        world.width,
-        world.height
+        0,
+        0,
+        W,
+        H
     );
 
 
     /* GRID */
 
     ctx.strokeStyle =
-        "rgba(100,80,70,.12)";
+        "rgba(120,100,100,.12)";
 
-    ctx.lineWidth=1;
-
-
-    const grid=100;
-
-
-    for(
-        let x=0;
-        x<world.width;
-        x+=grid
-    ){
+    for (
+        let x = 0;
+        x < W;
+        x += 80
+    ) {
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            x-camera.x,
-            -camera.y
-        );
+        ctx.moveTo(x, 0);
 
-        ctx.lineTo(
-            x-camera.x,
-            world.height-camera.y
-        );
+        ctx.lineTo(x, H);
 
         ctx.stroke();
-
     }
 
-
-    for(
-        let y=0;
-        y<world.height;
-        y+=grid
-    ){
+    for (
+        let y = 0;
+        y < H;
+        y += 80
+    ) {
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            -camera.x,
-            y-camera.y
-        );
+        ctx.moveTo(0, y);
 
-        ctx.lineTo(
-            world.width-camera.x,
-            y-camera.y
-        );
+        ctx.lineTo(W, y);
 
         ctx.stroke();
-
     }
 
 
-    /* RUINS */
+    /* ENEMIES */
 
-    for(
-        let i=0;
-        i<15;
-        i++
-    ){
+    for (const e of enemies) {
 
-        const rx =
-            100+
-            i*157;
-
-        const ry =
-            200+
-            (i%5)*270;
-
-
-        ctx.fillStyle =
-            "#19171d";
-
-
-        ctx.fillRect(
-            rx-camera.x,
-            ry-camera.y,
-            60,
-            100
-        );
-
-
-        ctx.fillStyle =
-            "#242027";
-
-
-        ctx.fillRect(
-            rx-10-camera.x,
-            ry-10-camera.y,
-            80,
-            12
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   DRAW PLAYER
-========================================= */
-
-function drawPlayer(){
-
-    const x =
-        player.x-camera.x;
-
-    const y =
-        player.y-camera.y;
-
-
-    /* SHADOW */
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.5)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x,
-        y+18,
-        25,
-        10,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* BODY */
-
-    ctx.fillStyle =
-        "#29151e";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y,
-        player.size,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* HEAD */
-
-    ctx.fillStyle =
-        "#c5a887";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y-18,
-        9,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* SWORD */
-
-    ctx.strokeStyle =
-        "#dbcda9";
-
-    ctx.lineWidth=5;
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+10,
-        y-4
-    );
-
-    ctx.lineTo(
-        x+38,
-        y-35
-    );
-
-    ctx.stroke();
-
-
-    /* ATTACK CIRCLE */
-
-    if(
-        player.attackTimer>0
-    ){
-
-        ctx.strokeStyle =
-            "rgba(225,190,130,.8)";
-
-        ctx.lineWidth=5;
-
+        ctx.fillStyle = "#591827";
 
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            y,
-            70,
+            e.x,
+            e.y,
+            e.size,
             0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
-    }
-
-}
-
-
-/* =========================================
-   DRAW ENEMIES
-========================================= */
-
-function drawEnemies(){
-
-    for(
-        const enemy
-        of enemies
-    ){
-
-        const x =
-            enemy.x-camera.x;
-
-        const y =
-            enemy.y-camera.y;
-
-
-        /* SHADOW */
-
-        ctx.fillStyle =
-            "rgba(0,0,0,.6)";
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            x,
-            y+16,
-            23,
-            9,
-            0,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        /* BODY */
-
-        ctx.fillStyle =
-            enemy.hit>0
-            ? "#dddddd"
-            : "#471522";
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y,
-            enemy.size,
-            0,
-            Math.PI*2
+            Math.PI * 2
         );
 
         ctx.fill();
@@ -1373,231 +595,170 @@ function drawEnemies(){
 
         /* EYES */
 
-        ctx.fillStyle =
-            "#ff5260";
-
+        ctx.fillStyle = "#ff5360";
 
         ctx.fillRect(
-            x-8,
-            y-4,
+            e.x - 8,
+            e.y - 4,
             5,
             5
         );
 
-
         ctx.fillRect(
-            x+3,
-            y-4,
+            e.x + 3,
+            e.y - 4,
             5,
             5
         );
-
     }
 
+
+    /* PLAYER */
+
+    ctx.fillStyle = "#321723";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        player.x,
+        player.y,
+        24,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* HEAD */
+
+    ctx.fillStyle = "#c7aa88";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        player.x,
+        player.y - 27,
+        9,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /* SWORD */
+
+    ctx.strokeStyle = "#e3d4ad";
+
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        player.x + 10,
+        player.y - 5
+    );
+
+    ctx.lineTo(
+        player.x + 42,
+        player.y - 38
+    );
+
+    ctx.stroke();
+
+
+    /* ATTACK */
+
+    if (player.attack > 0) {
+
+        ctx.strokeStyle =
+            "rgba(235,200,140,.8)";
+
+        ctx.lineWidth = 4;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            player.x,
+            player.y,
+            75,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+    }
 }
 
 
-/* =========================================
-   UPDATE UI
-========================================= */
+/* =========================
+   UI
+========================= */
 
-function updateUI(){
+function updateUI() {
 
     const hp =
         Math.max(
             0,
-            player.health/
-            player.maxHealth*
-            100
+            player.hp
         );
 
+    document.getElementById("hp")
+        .style.width =
+        hp + "%";
 
-    document
-    .getElementById("health")
-    .style.width =
-        hp+"%";
-
-
-    document
-    .getElementById("scoreNumber")
-    .textContent =
+    document.getElementById("score")
+        .textContent =
         score;
-
 }
 
 
-/* =========================================
-   GAME OVER
-========================================= */
+/* =========================
+   LOOP
+========================= */
 
-function checkGameOver(){
+function loop() {
 
-    if(
-        player.health<=0
-    ){
-
-        running=false;
-
-        document
-        .getElementById("gameOver")
-        .style.display =
-        "flex";
-
-    }
-
-}
-
-
-/* =========================================
-   GAME LOOP
-========================================= */
-
-function gameLoop(){
-
-    if(!running){
-
-        return;
-
-    }
-
+    if (!playing) return;
 
     movePlayer();
 
     updateEnemies();
 
-    updateCamera();
-
-
-    if(
-        player.attackTimer>0
-    ){
-
-        player.attackTimer--;
-
+    if (player.attack > 0) {
+        player.attack--;
     }
-
-
-    if(
-        player.invincible>0
-    ){
-
-        player.invincible--;
-
-    }
-
 
     updateUI();
 
-    checkGameOver();
+    draw();
 
 
-    drawBackground();
+    if (player.hp <= 0) {
 
-    drawEnemies();
+        playing = false;
 
-    drawPlayer();
+        document.getElementById("gameover")
+            .style.display = "flex";
 
+        return;
+    }
 
-    requestAnimationFrame(
-        gameLoop
-    );
-
+    requestAnimationFrame(loop);
 }
 
 
-/* =========================================
+/* =========================
    RESTART
-========================================= */
+========================= */
 
-document
-.getElementById("restartButton")
-.addEventListener(
-    "click",
-    function(){
+document.getElementById("again").onclick =
+function() {
 
-        document
-        .getElementById("gameOver")
-        .style.display =
-        "none";
+    startGame();
 
-        startGame();
-
-    }
-);
-
-
-/* =========================================
-   MOBILE BUTTONS
-========================================= */
-
-function holdButton(
-    id,
-    key
-){
-
-    const button =
-        document.getElementById(id);
-
-
-    button.addEventListener(
-        "touchstart",
-        function(e){
-
-            e.preventDefault();
-
-            keys[key]=true;
-
-        }
-    );
-
-
-    button.addEventListener(
-        "touchend",
-        function(e){
-
-            e.preventDefault();
-
-            keys[key]=false;
-
-        }
-    );
-
-}
-
-
-holdButton(
-    "up",
-    "w"
-);
-
-holdButton(
-    "down",
-    "s"
-);
-
-holdButton(
-    "left",
-    "a"
-);
-
-holdButton(
-    "right",
-    "d"
-);
-
-
-document
-.getElementById("attackButton")
-.addEventListener(
-    "touchstart",
-    function(e){
-
-        e.preventDefault();
-
-        attack();
-
-    }
-);
+};
 
 </script>
 
