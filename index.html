@@ -2,328 +2,384 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>THE FORGOTTEN GOD</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    background: #050507;
-    color: #ddd;
-    font-family: Georgia, "Times New Roman", serif;
-    overflow: hidden;
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#030405;
+    font-family:Georgia,"Times New Roman",serif;
+    color:#d8c7a0;
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    cursor:crosshair;
 }
 
 /* ================= MENU ================= */
 
-#menu {
-    position: fixed;
-    inset: 0;
+#menu{
+    position:fixed;
+    inset:0;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
     background:
-        radial-gradient(circle at center, #21151c 0%, #09080b 45%, #020203 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
+        radial-gradient(circle at 50% 42%,
+        rgba(91,25,35,.30),
+        rgba(7,7,10,.95) 48%,
+        #020203 100%);
 }
 
-.menu-box {
-    text-align: center;
-    width: 90%;
-    max-width: 800px;
+.menu-content{
+    width:min(900px,90%);
 }
 
-.logo {
-    font-size: clamp(42px, 7vw, 90px);
-    letter-spacing: 12px;
-    color: #d8c7a0;
+.logo{
+    font-size:clamp(42px,7vw,92px);
+    line-height:.9;
+    letter-spacing:12px;
+    color:#dfc994;
     text-shadow:
-        0 0 10px #8b1e2d,
-        0 0 30px #8b1e2d;
-    margin-bottom: 15px;
+        0 0 8px #9b303d,
+        0 0 25px rgba(155,48,61,.8),
+        0 0 70px rgba(155,48,61,.35);
+    animation:logoGlow 4s infinite alternate;
 }
 
-.subtitle {
-    color: #8e7d7d;
-    font-size: 18px;
-    letter-spacing: 5px;
-    margin-bottom: 70px;
+@keyframes logoGlow{
+    from{
+        text-shadow:
+        0 0 8px #9b303d,
+        0 0 20px rgba(155,48,61,.5);
+    }
+    to{
+        text-shadow:
+        0 0 12px #ff6675,
+        0 0 35px rgba(155,48,61,.9),
+        0 0 80px rgba(155,48,61,.35);
+    }
 }
 
-.menu-button {
-    display: block;
-    width: 300px;
-    max-width: 90%;
-    margin: 15px auto;
-    padding: 17px;
-    background: transparent;
-    border: 1px solid #685052;
-    color: #d8c7a0;
-    font-size: 17px;
-    letter-spacing: 3px;
-    cursor: pointer;
-    transition: 0.3s;
+.subtitle{
+    margin-top:30px;
+    font-size:15px;
+    letter-spacing:8px;
+    color:#8d7b7c;
 }
 
-.menu-button:hover {
-    background: #5c1722;
-    border-color: #b76a76;
-    box-shadow: 0 0 25px #5c1722;
-    transform: scale(1.03);
+.menu-buttons{
+    margin-top:65px;
 }
 
-.warning {
-    margin-top: 70px;
-    color: #55494b;
-    font-size: 13px;
+.menu-button{
+    display:block;
+    width:320px;
+    max-width:90%;
+    margin:14px auto;
+    padding:18px;
+    background:rgba(15,11,14,.55);
+    border:1px solid #60484d;
+    color:#d8c7a0;
+    font-family:Georgia,serif;
+    font-size:15px;
+    letter-spacing:4px;
+    cursor:pointer;
+    transition:.3s;
 }
 
-/* ================= GAME ================= */
-
-#game {
-    display: none;
-    position: fixed;
-    inset: 0;
-}
-
-#world {
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 50% 50%, #253021 0%, #111713 35%, #080b09 75%);
-    overflow: hidden;
-}
-
-/* mặt trăng */
-
-.moon {
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: #b9a99a;
+.menu-button:hover{
+    background:rgba(103,28,42,.5);
+    border-color:#b36a73;
     box-shadow:
-        0 0 30px #8b5c60,
-        0 0 80px rgba(139, 40, 50, 0.4);
-    right: 10%;
-    top: 8%;
+        0 0 15px rgba(155,48,61,.4),
+        inset 0 0 20px rgba(155,48,61,.12);
+    transform:translateY(-2px);
 }
 
-/* cây */
-
-.tree {
-    position: absolute;
-    width: 55px;
-    height: 110px;
-}
-
-.tree::before {
-    content: "";
-    position: absolute;
-    left: 21px;
-    bottom: 0;
-    width: 14px;
-    height: 55px;
-    background: #38261c;
-}
-
-.tree::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 55px;
-    height: 70px;
-    background: #182518;
-    clip-path: polygon(50% 0%, 100% 80%, 75% 65%, 95% 100%, 5% 100%, 25% 65%, 0% 80%);
-}
-
-/* player */
-
-#player {
-    position: absolute;
-    width: 38px;
-    height: 48px;
-    background: #252b36;
-    border: 2px solid #c5b28d;
-    border-radius: 45% 45% 35% 35%;
-    z-index: 5;
-    box-shadow: 0 0 15px rgba(200, 170, 120, 0.3);
-}
-
-#player::after {
-    content: "";
-    position: absolute;
-    width: 5px;
-    height: 18px;
-    background: #b9a27d;
-    right: -8px;
-    top: 18px;
-    transform: rotate(-25deg);
-}
-
-/* enemy */
-
-.enemy {
-    position: absolute;
-    width: 42px;
-    height: 42px;
-    background: #241018;
-    border: 2px solid #9e3c4b;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #661d29;
-}
-
-.enemy::before,
-.enemy::after {
-    content: "";
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    background: #d45b64;
-    border-radius: 50%;
-    top: 13px;
-}
-
-.enemy::before {
-    left: 9px;
-}
-
-.enemy::after {
-    right: 9px;
-}
-
-/* altar */
-
-.altar {
-    position: absolute;
-    width: 90px;
-    height: 90px;
-    background: #17131a;
-    border: 2px solid #66556b;
-    box-shadow: 0 0 30px rgba(120, 70, 130, 0.4);
-}
-
-.altar::before {
-    content: "☠";
-    position: absolute;
-    font-size: 45px;
-    left: 20px;
-    top: 17px;
-    color: #a17aab;
+.quote{
+    margin-top:65px;
+    color:#55484b;
+    font-size:12px;
+    letter-spacing:2px;
+    line-height:1.8;
 }
 
 /* ================= HUD ================= */
 
-#hud {
-    position: fixed;
-    left: 20px;
-    top: 20px;
-    width: 270px;
-    z-index: 10;
+#gameUI{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
 }
 
-.panel {
-    background: rgba(7, 7, 10, 0.85);
-    border: 1px solid #4e4145;
-    padding: 15px;
-    margin-bottom: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,.5);
+#topLeft{
+    position:absolute;
+    left:22px;
+    top:20px;
+    width:280px;
 }
 
-.player-name {
-    color: #d8c7a0;
-    font-size: 20px;
-    margin-bottom: 10px;
+.panel{
+    padding:14px;
+    margin-bottom:10px;
+    background:rgba(5,6,8,.78);
+    border:1px solid rgba(125,103,105,.55);
+    box-shadow:
+        0 0 25px rgba(0,0,0,.5),
+        inset 0 0 20px rgba(255,255,255,.015);
+    backdrop-filter:blur(5px);
 }
 
-.bar {
-    height: 13px;
-    background: #25171a;
-    border: 1px solid #53353a;
-    margin-top: 5px;
+.name{
+    font-size:20px;
+    letter-spacing:3px;
+    color:#d9cba9;
 }
 
-#health {
-    height: 100%;
-    width: 100%;
-    background: #8f2838;
-    transition: width .2s;
+.level{
+    margin-top:5px;
+    color:#847577;
+    font-size:12px;
+    letter-spacing:2px;
 }
 
-.quest-title {
-    color: #c7a56c;
-    margin-bottom: 7px;
+.bar-title{
+    margin-top:12px;
+    font-size:10px;
+    letter-spacing:2px;
+    color:#877477;
 }
 
-.quest-text {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.5;
+.bar{
+    width:100%;
+    height:10px;
+    margin-top:5px;
+    background:#180d10;
+    border:1px solid #43272d;
+    overflow:hidden;
 }
 
-#message {
-    position: fixed;
-    bottom: 35px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(5,5,7,.9);
-    border: 1px solid #635057;
-    padding: 15px 25px;
-    color: #d8c7a0;
-    opacity: 0;
-    transition: .4s;
-    z-index: 15;
+#hp{
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg,#651722,#b83b4a);
+    box-shadow:0 0 12px #8b2634;
 }
 
-#controls {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    color: #777;
-    font-size: 13px;
-    z-index: 10;
-    text-align: right;
+#xp{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#6c4a16,#d0a53e);
+    box-shadow:0 0 12px #b78d32;
 }
 
-#logout {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    z-index: 10;
-    background: transparent;
-    border: 1px solid #493c40;
-    color: #999;
-    padding: 10px 15px;
-    cursor: pointer;
+/* quest */
+
+#questPanel{
+    position:absolute;
+    left:22px;
+    bottom:25px;
+    width:320px;
 }
 
-#logout:hover {
-    color: white;
-    border-color: #9b4c57;
+.quest-label{
+    color:#a8894e;
+    font-size:11px;
+    letter-spacing:3px;
+}
+
+.quest-title{
+    margin-top:6px;
+    font-size:17px;
+    color:#d4c19a;
+}
+
+.quest-text{
+    margin-top:8px;
+    color:#8c8585;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* controls */
+
+#controls{
+    position:absolute;
+    right:22px;
+    bottom:25px;
+    text-align:right;
+    color:#62595b;
+    font-size:11px;
+    line-height:1.8;
+    letter-spacing:1px;
+}
+
+#musicButton{
+    pointer-events:auto;
+    position:absolute;
+    right:22px;
+    top:20px;
+    padding:11px 15px;
+    border:1px solid #5c484d;
+    background:rgba(5,6,8,.8);
+    color:#cdbd9d;
+    cursor:pointer;
+    font-family:Georgia,serif;
+}
+
+#musicButton:hover{
+    background:#4b1822;
+}
+
+/* center message */
+
+#message{
+    position:absolute;
+    left:50%;
+    top:82%;
+    transform:translate(-50%,-50%);
+    padding:14px 25px;
+    background:rgba(4,4,6,.9);
+    border:1px solid #60494d;
+    color:#d6c49e;
+    opacity:0;
+    transition:.4s;
+    white-space:nowrap;
+    text-align:center;
+}
+
+/* boss */
+
+#bossBar{
+    display:none;
+    position:absolute;
+    left:50%;
+    top:25px;
+    transform:translateX(-50%);
+    width:min(600px,60%);
+    text-align:center;
+}
+
+.boss-name{
+    color:#c45461;
+    font-size:14px;
+    letter-spacing:5px;
+    margin-bottom:6px;
+}
+
+.boss-health{
+    height:12px;
+    background:#18070b;
+    border:1px solid #6e2733;
+}
+
+#bossHP{
+    height:100%;
+    width:100%;
+    background:linear-gradient(90deg,#57121c,#bd3345,#57121c);
+}
+
+/* death */
+
+#death{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:30;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:rgba(0,0,0,.9);
+}
+
+.death-title{
+    font-size:55px;
+    letter-spacing:10px;
+    color:#9b303d;
+}
+
+.death-text{
+    margin-top:20px;
+    color:#777;
+}
+
+/* lore */
+
+#lore{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:40;
+    align-items:center;
+    justify-content:center;
+    background:rgba(2,2,4,.96);
+}
+
+.lore-box{
+    width:min(700px,90%);
+    padding:35px;
+    border:1px solid #57444a;
+    background:#09080b;
+    line-height:1.8;
+    color:#aaa;
+}
+
+.lore-box h2{
+    color:#d7c59c;
+    letter-spacing:5px;
+    margin-bottom:20px;
+}
+
+.close{
+    margin-top:25px;
+    padding:10px 25px;
+    background:transparent;
+    border:1px solid #57444a;
+    color:#cbbd9d;
+    cursor:pointer;
 }
 
 /* mobile */
 
-@media(max-width:600px) {
-    #hud {
-        width: 210px;
-        left: 10px;
-        top: 10px;
+@media(max-width:600px){
+
+    #topLeft{
+        left:10px;
+        top:10px;
+        width:220px;
     }
 
-    .panel {
-        padding: 10px;
+    #questPanel{
+        left:10px;
+        bottom:10px;
+        width:250px;
     }
 
-    .moon {
-        width: 80px;
-        height: 80px;
+    #controls{
+        display:none;
+    }
+
+    .logo{
+        letter-spacing:5px;
     }
 }
 </style>
@@ -331,345 +387,1978 @@ body {
 
 <body>
 
+<!-- ================= AUDIO ================= -->
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="./music.mp3" type="audio/mpeg">
+</audio>
+
 <!-- ================= MENU ================= -->
 
 <div id="menu">
-    <div class="menu-box">
 
-        <div class="logo">THE FORGOTTEN GOD</div>
+    <div class="menu-content">
+
+        <div class="logo">
+            THE<br>
+            FORGOTTEN<br>
+            GOD
+        </div>
 
         <div class="subtitle">
             HE REMEMBERS YOU
         </div>
 
-        <button class="menu-button" onclick="startGame()">
-            ENTER THE WORLD
-        </button>
+        <div class="menu-buttons">
 
-        <button class="menu-button" onclick="showLore()">
-            THE LORE
-        </button>
+            <button class="menu-button" onclick="startGame()">
+                ENTER THE WORLD
+            </button>
 
-        <div class="warning">
+            <button class="menu-button" onclick="openLore()">
+                THE LORE
+            </button>
+
+        </div>
+
+        <div class="quote">
             THE GODS FORGOT THE WORLD.<br>
             THE WORLD DID NOT FORGET THEM.
         </div>
 
     </div>
+
 </div>
 
 <!-- ================= GAME ================= -->
 
-<div id="game">
+<canvas id="canvas"></canvas>
 
-    <div id="world">
+<div id="gameUI">
 
-        <div class="moon"></div>
-
-        <!-- trees -->
-        <div class="tree" style="left:8%;top:20%;"></div>
-        <div class="tree" style="left:20%;top:65%;"></div>
-        <div class="tree" style="left:75%;top:30%;"></div>
-        <div class="tree" style="left:88%;top:70%;"></div>
-        <div class="tree" style="left:45%;top:15%;"></div>
-        <div class="tree" style="left:60%;top:75%;"></div>
-
-        <!-- altar -->
-        <div class="altar" id="altar" style="left:72%;top:60%;"></div>
-
-        <!-- enemies -->
-        <div class="enemy" id="enemy1" style="left:35%;top:30%;"></div>
-        <div class="enemy" id="enemy2" style="left:65%;top:55%;"></div>
-        <div class="enemy" id="enemy3" style="left:30%;top:75%;"></div>
-
-        <!-- player -->
-        <div id="player"></div>
-
-    </div>
-
-    <!-- HUD -->
-
-    <div id="hud">
+    <div id="topLeft">
 
         <div class="panel">
 
-            <div class="player-name">
+            <div class="name">
                 THE WANDERER
             </div>
 
-            <div>
-                HP
-                <div class="bar">
-                    <div id="health"></div>
-                </div>
+            <div class="level">
+                LEVEL <span id="level">1</span>
             </div>
 
-        </div>
-
-        <div class="panel">
-
-            <div class="quest-title">
-                ✦ THE FIRST WHISPER
+            <div class="bar-title">
+                VITALITY
             </div>
 
-            <div class="quest-text" id="quest">
-                Tìm đến bàn thờ cổ.
+            <div class="bar">
+                <div id="hp"></div>
+            </div>
+
+            <div class="bar-title">
+                EXPERIENCE
+            </div>
+
+            <div class="bar">
+                <div id="xp"></div>
             </div>
 
         </div>
 
     </div>
 
-    <button id="logout" onclick="backToMenu()">
-        MENU
-    </button>
+    <div id="bossBar">
+
+        <div class="boss-name">
+            THE FORGOTTEN GUARDIAN
+        </div>
+
+        <div class="boss-health">
+            <div id="bossHP"></div>
+        </div>
+
+    </div>
+
+    <div id="questPanel" class="panel">
+
+        <div class="quest-label">
+            CURRENT QUEST
+        </div>
+
+        <div class="quest-title" id="questTitle">
+            THE FIRST WHISPER
+        </div>
+
+        <div class="quest-text" id="questText">
+            Tìm đến bàn thờ cổ và khám phá tiếng thì thầm.
+        </div>
+
+    </div>
 
     <div id="controls">
-        W A S D — MOVE<br>
-        E — INTERACT
+        W A S D — DI CHUYỂN<br>
+        SPACE / CLICK — TẤN CÔNG<br>
+        E — TƯƠNG TÁC
     </div>
+
+    <button id="musicButton" onclick="toggleMusic()">
+        🔊 MUSIC
+    </button>
 
     <div id="message"></div>
 
 </div>
 
+<!-- ================= LORE ================= -->
+
+<div id="lore">
+
+    <div class="lore-box">
+
+        <h2>THE FORGOTTEN GOD</h2>
+
+        <p>
+            700 năm trước, thế giới từng có tám vị thần.
+        </p>
+
+        <p>
+            Con người chỉ nhớ bảy vị.
+            Vị thần thứ tám đã bị xóa khỏi lịch sử.
+        </p>
+
+        <p>
+            Không ai được phép nhắc đến tên nó.
+        </p>
+
+        <p>
+            Nhưng một đêm, mặt trăng chuyển sang màu đỏ.
+        </p>
+
+        <p>
+            Và từ sâu bên dưới lòng đất...
+            một giọng nói vang lên:
+        </p>
+
+        <p style="color:#b34b58;font-size:20px;margin-top:15px;">
+            "I REMEMBER YOU."
+        </p>
+
+        <button class="close" onclick="closeLore()">
+            CLOSE
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ================= DEATH ================= -->
+
+<div id="death">
+
+    <div>
+
+        <div class="death-title">
+            YOU DIED
+        </div>
+
+        <div class="death-text">
+            The Afterworld remembers your name...
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
-/* ================= GAME VARIABLES ================= */
+/* =====================================================
+   CANVAS
+===================================================== */
 
-const player = document.getElementById("player");
-const world = document.getElementById("world");
-const healthBar = document.getElementById("health");
-const quest = document.getElementById("quest");
-const message = document.getElementById("message");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let playerX = window.innerWidth / 2;
-let playerY = window.innerHeight / 2;
+let W = window.innerWidth;
+let H = window.innerHeight;
 
-let health = 100;
-let speed = 4;
+function resize(){
+
+    W = canvas.width = window.innerWidth * devicePixelRatio;
+    H = canvas.height = window.innerHeight * devicePixelRatio;
+
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    ctx.setTransform(
+        devicePixelRatio,
+        0,
+        0,
+        devicePixelRatio,
+        0,
+        0
+    );
+
+    W = window.innerWidth;
+    H = window.innerHeight;
+}
+
+window.addEventListener("resize",resize);
+resize();
+
+
+/* =====================================================
+   GAME STATE
+===================================================== */
+
+let playing = false;
+
+const world = {
+    width: 3600,
+    height: 3600
+};
+
+const player = {
+
+    x:1800,
+    y:1800,
+
+    radius:17,
+
+    hp:100,
+    maxHp:100,
+
+    level:1,
+    xp:0,
+    nextXP:100,
+
+    speed:3.3,
+
+    attackCooldown:0,
+    attackTime:0,
+
+    direction:0
+
+};
+
+let camera = {
+    x:0,
+    y:0
+};
 
 let keys = {};
 
-let questCompleted = false;
+let mouse = {
+    x:0,
+    y:0
+};
+
+let enemies = [];
+
+let particles = [];
+
+let trees = [];
+
+let rocks = [];
+
+let fog = [];
+
+let altar = {
+    x:2200,
+    y:1700,
+    radius:55
+};
+
+let questState = 0;
+
+let boss = null;
 
 
-/* ================= MENU ================= */
+/* =====================================================
+   INPUT
+===================================================== */
 
-function startGame() {
-
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("game").style.display = "block";
-
-    playerX = window.innerWidth / 2;
-    playerY = window.innerHeight / 2;
-
-    updatePlayer();
-
-    showMessage(
-        "The forgotten world has awakened..."
-    );
-}
-
-
-function backToMenu() {
-
-    document.getElementById("game").style.display = "none";
-    document.getElementById("menu").style.display = "flex";
-
-}
-
-
-function showLore() {
-
-    alert(
-`THE FORGOTTEN GOD
-
-700 năm trước, có 8 vị thần.
-
-Con người chỉ nhớ 7 vị.
-
-Vị thần thứ 8 đã bị xóa khỏi lịch sử.
-
-Nhưng một ngày...
-
-Nó nhớ lại tên của chính mình.
-
-Và nó cũng nhớ đến con người.
-
-"HE REMEMBERS YOU."`
-    );
-
-}
-
-
-/* ================= MOVEMENT ================= */
-
-document.addEventListener("keydown", function(e) {
+window.addEventListener("keydown",e=>{
 
     keys[e.key.toLowerCase()] = true;
 
-    if(e.key.toLowerCase() === "e") {
+    if(e.code === "Space"){
+        attack();
+    }
+
+    if(e.key.toLowerCase()==="e"){
         interact();
     }
 
 });
 
-
-document.addEventListener("keyup", function(e) {
+window.addEventListener("keyup",e=>{
 
     keys[e.key.toLowerCase()] = false;
 
 });
 
+canvas.addEventListener("mousemove",e=>{
 
-function gameLoop() {
+    mouse.x=e.clientX;
+    mouse.y=e.clientY;
 
-    if(document.getElementById("game").style.display !== "none") {
+});
 
-        if(keys["w"]) playerY -= speed;
-        if(keys["s"]) playerY += speed;
-        if(keys["a"]) playerX -= speed;
-        if(keys["d"]) playerX += speed;
+canvas.addEventListener("mousedown",()=>{
 
-        // giới hạn bản đồ
+    if(playing){
+        attack();
+    }
 
-        playerX = Math.max(0, Math.min(window.innerWidth - 40, playerX));
-        playerY = Math.max(0, Math.min(window.innerHeight - 50, playerY));
+});
 
-        updatePlayer();
 
-        checkEnemyCollision();
+/* =====================================================
+   WORLD GENERATION
+===================================================== */
+
+function random(min,max){
+    return Math.random()*(max-min)+min;
+}
+
+function generateWorld(){
+
+    trees=[];
+    rocks=[];
+    fog=[];
+    enemies=[];
+
+    for(let i=0;i<180;i++){
+
+        trees.push({
+
+            x:random(100,world.width-100),
+            y:random(100,world.height-100),
+
+            size:random(.7,1.5)
+
+        });
 
     }
 
-    requestAnimationFrame(gameLoop);
-}
+    for(let i=0;i<100;i++){
 
+        rocks.push({
 
-function updatePlayer() {
+            x:random(100,world.width-100),
+            y:random(100,world.height-100),
 
-    player.style.left = playerX + "px";
-    player.style.top = playerY + "px";
+            size:random(8,22)
 
-}
+        });
 
+    }
 
-/* ================= ENEMY ================= */
+    for(let i=0;i<45;i++){
 
-function checkEnemyCollision() {
+        fog.push({
 
-    const enemies = document.querySelectorAll(".enemy");
+            x:random(0,world.width),
+            y:random(0,world.height),
 
-    enemies.forEach(enemy => {
+            size:random(80,180),
 
-        const ex = enemy.offsetLeft;
-        const ey = enemy.offsetTop;
+            speed:random(.05,.2)
 
-        const distance = Math.sqrt(
-            Math.pow(playerX - ex, 2) +
-            Math.pow(playerY - ey, 2)
+        });
+
+    }
+
+    for(let i=0;i<14;i++){
+
+        spawnEnemy(
+            random(400,3200),
+            random(400,3200)
         );
 
-        if(distance < 45) {
+    }
 
-            health -= 0.3;
+}
 
-            if(health < 0) health = 0;
+function spawnEnemy(x,y){
 
-            healthBar.style.width = health + "%";
+    enemies.push({
 
-            if(health <= 0) {
+        x:x,
+        y:y,
 
-                showMessage("YOU HAVE FALLEN...");
+        radius:18,
 
-                setTimeout(() => {
+        hp:50,
+        maxHp:50,
 
-                    health = 100;
-                    healthBar.style.width = "100%";
+        speed:random(.55,.85),
 
-                    playerX = window.innerWidth / 2;
-                    playerY = window.innerHeight / 2;
+        attackCooldown:0,
 
-                    updatePlayer();
+        dead:false,
 
-                    showMessage(
-                        "You returned from the Afterworld."
-                    );
-
-                }, 2000);
-
-            }
-
-        }
+        hitFlash:0
 
     });
 
 }
 
 
-/* ================= INTERACTION ================= */
+/* =====================================================
+   START
+===================================================== */
 
-function interact() {
+function startGame(){
 
-    const altar = document.getElementById("altar");
+    document.getElementById("menu").style.display="none";
+    document.getElementById("gameUI").style.display="block";
 
-    const ax = altar.offsetLeft;
-    const ay = altar.offsetTop;
+    playing=true;
 
-    const distance = Math.sqrt(
-        Math.pow(playerX - ax, 2) +
-        Math.pow(playerY - ay, 2)
+    generateWorld();
+
+    player.x=1800;
+    player.y=1800;
+
+    player.hp=100;
+    player.level=1;
+    player.xp=0;
+
+    questState=0;
+
+    const music=document.getElementById("bgMusic");
+
+    music.volume=.28;
+
+    music.play().catch(()=>{
+
+        console.log("Trình duyệt chặn autoplay.");
+
+    });
+
+    showMessage(
+        "THE FORGOTTEN WORLD HAS AWAKENED..."
     );
 
-    if(distance < 130 && !questCompleted) {
+    requestAnimationFrame(gameLoop);
 
-        questCompleted = true;
+}
 
-        quest.innerHTML =
-            "Bàn thờ đã thức tỉnh. Một tiếng thì thầm vang lên...";
 
-        showMessage(
-            "THE FORGOTTEN GOD: I REMEMBER YOU."
-        );
+/* =====================================================
+   PLAYER
+===================================================== */
 
-        setTimeout(() => {
+function updatePlayer(){
 
-            quest.innerHTML =
-                "Nhiệm vụ tiếp theo: Tìm nguồn gốc của tiếng thì thầm.";
+    let dx=0;
+    let dy=0;
 
-        }, 4000);
+    if(keys["w"]) dy--;
+    if(keys["s"]) dy++;
+    if(keys["a"]) dx--;
+    if(keys["d"]) dx++;
 
-    } else if(distance >= 130) {
+    if(dx!==0 || dy!==0){
 
-        showMessage(
-            "Không có gì ở đây..."
-        );
+        const length=Math.hypot(dx,dy);
+
+        dx/=length;
+        dy/=length;
+
+        player.x+=dx*player.speed;
+        player.y+=dy*player.speed;
+
+        player.direction=Math.atan2(dy,dx);
+
+    }
+
+    player.x=Math.max(50,Math.min(world.width-50,player.x));
+    player.y=Math.max(50,Math.min(world.height-50,player.y));
+
+    if(player.attackCooldown>0){
+        player.attackCooldown--;
+    }
+
+    if(player.attackTime>0){
+        player.attackTime--;
+    }
+
+}
+
+
+/* =====================================================
+   ATTACK
+===================================================== */
+
+function attack(){
+
+    if(!playing) return;
+
+    if(player.attackCooldown>0) return;
+
+    player.attackCooldown=25;
+    player.attackTime=12;
+
+    const angle=Math.atan2(
+        mouse.y-H/2,
+        mouse.x-W/2
+    );
+
+    player.direction=angle;
+
+    createParticles(
+        player.x+Math.cos(angle)*35,
+        player.y+Math.sin(angle)*35,
+        8,
+        "slash"
+    );
+
+    for(const enemy of enemies){
+
+        if(enemy.dead) continue;
+
+        const dx=enemy.x-player.x;
+        const dy=enemy.y-player.y;
+
+        const distance=Math.hypot(dx,dy);
+
+        if(distance<85){
+
+            const enemyAngle=Math.atan2(dy,dx);
+
+            let diff=Math.abs(
+                normalizeAngle(enemyAngle-angle)
+            );
+
+            if(diff<1.25){
+
+                enemy.hp-=30;
+                enemy.hitFlash=8;
+
+                createParticles(
+                    enemy.x,
+                    enemy.y,
+                    12,
+                    "blood"
+                );
+
+                if(enemy.hp<=0){
+
+                    enemy.dead=true;
+
+                    gainXP(35);
+
+                    createParticles(
+                        enemy.x,
+                        enemy.y,
+                        25,
+                        "death"
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    if(boss){
+
+        const dx=boss.x-player.x;
+        const dy=boss.y-player.y;
+
+        const distance=Math.hypot(dx,dy);
+
+        if(distance<120){
+
+            boss.hp-=15;
+
+            createParticles(
+                boss.x,
+                boss.y,
+                15,
+                "blood"
+            );
+
+            if(boss.hp<=0){
+
+                boss=null;
+
+                document.getElementById(
+                    "bossBar"
+                ).style.display="none";
+
+                gainXP(300);
+
+                showMessage(
+                    "THE GUARDIAN HAS FALLEN."
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+function normalizeAngle(a){
+
+    while(a>Math.PI)a-=Math.PI*2;
+    while(a<-Math.PI)a+=Math.PI*2;
+
+    return a;
+
+}
+
+
+/* =====================================================
+   ENEMIES
+===================================================== */
+
+function updateEnemies(){
+
+    for(const enemy of enemies){
+
+        if(enemy.dead) continue;
+
+        if(enemy.hitFlash>0)
+            enemy.hitFlash--;
+
+        const dx=player.x-enemy.x;
+        const dy=player.y-enemy.y;
+
+        const distance=Math.hypot(dx,dy);
+
+        if(distance<500){
+
+            enemy.x+=(dx/distance)*enemy.speed;
+            enemy.y+=(dy/distance)*enemy.speed;
+
+        }
+
+        if(distance<45){
+
+            if(enemy.attackCooldown<=0){
+
+                player.hp-=7;
+
+                enemy.attackCooldown=55;
+
+                createParticles(
+                    player.x,
+                    player.y,
+                    8,
+                    "blood"
+                );
+
+                updateHUD();
+
+                if(player.hp<=0){
+
+                    playerDied();
+
+                }
+
+            }
+
+        }
+
+        if(enemy.attackCooldown>0)
+            enemy.attackCooldown--;
 
     }
 
 }
 
 
-/* ================= MESSAGE ================= */
+/* =====================================================
+   BOSS
+===================================================== */
 
-function showMessage(text) {
+function spawnBoss(){
 
-    message.innerText = text;
-    message.style.opacity = "1";
+    boss={
 
-    setTimeout(() => {
+        x:altar.x+180,
+        y:altar.y,
 
-        message.style.opacity = "0";
+        radius:60,
 
-    }, 3000);
+        hp:1000,
+        maxHp:1000,
+
+        speed:.8,
+
+        attackCooldown:0
+
+    };
+
+    document.getElementById(
+        "bossBar"
+    ).style.display="block";
+
+    showMessage(
+        "THE FORGOTTEN GUARDIAN HAS AWAKENED."
+    );
+
+}
+
+function updateBoss(){
+
+    if(!boss) return;
+
+    const dx=player.x-boss.x;
+    const dy=player.y-boss.y;
+
+    const distance=Math.hypot(dx,dy);
+
+    if(distance>80){
+
+        boss.x+=(dx/distance)*boss.speed;
+        boss.y+=(dy/distance)*boss.speed;
+
+    }
+
+    if(distance<100 && boss.attackCooldown<=0){
+
+        player.hp-=18;
+
+        boss.attackCooldown=70;
+
+        createParticles(
+            player.x,
+            player.y,
+            15,
+            "blood"
+        );
+
+        updateHUD();
+
+        if(player.hp<=0){
+            playerDied();
+        }
+
+    }
+
+    if(boss.attackCooldown>0)
+        boss.attackCooldown--;
+
+    document.getElementById(
+        "bossHP"
+    ).style.width=
+        Math.max(0,boss.hp/boss.maxHp*100)+"%";
 
 }
 
 
-/* ================= START ================= */
+/* =====================================================
+   QUEST
+===================================================== */
 
-gameLoop();
+function interact(){
+
+    const dx=player.x-altar.x;
+    const dy=player.y-altar.y;
+
+    const distance=Math.hypot(dx,dy);
+
+    if(distance<130){
+
+        if(questState===0){
+
+            questState=1;
+
+            document.getElementById(
+                "questTitle"
+            ).innerText="THE FIRST WHISPER";
+
+            document.getElementById(
+                "questText"
+            ).innerText=
+                "Bàn thờ đã thức tỉnh. Hãy đánh bại những sinh vật đang bảo vệ nó.";
+
+            showMessage(
+                "A VOICE WHISPERS: I REMEMBER YOU."
+            );
+
+        }
+
+        else if(questState===1){
+
+            const alive=enemies.filter(
+                e=>!e.dead
+            ).length;
+
+            if(alive<=3){
+
+                questState=2;
+
+                document.getElementById(
+                    "questTitle"
+                ).innerText=
+                    "THE FORGOTTEN GUARDIAN";
+
+                document.getElementById(
+                    "questText"
+                ).innerText=
+                    "Một thứ gì đó đang thức dậy dưới bàn thờ...";
+
+                setTimeout(()=>{
+
+                    spawnBoss();
+
+                },1500);
+
+            }
+            else{
+
+                showMessage(
+                    "The altar demands more blood..."
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   XP
+===================================================== */
+
+function gainXP(amount){
+
+    player.xp+=amount;
+
+    if(player.xp>=player.nextXP){
+
+        player.xp-=player.nextXP;
+
+        player.level++;
+
+        player.maxHp+=15;
+
+        player.hp=player.maxHp;
+
+        player.nextXP=
+            Math.floor(player.nextXP*1.35);
+
+        showMessage(
+            "LEVEL UP — THE DARKNESS GROWS WITH YOU."
+        );
+
+    }
+
+    updateHUD();
+
+}
+
+function updateHUD(){
+
+    document.getElementById(
+        "level"
+    ).innerText=player.level;
+
+    document.getElementById(
+        "hp"
+    ).style.width=
+        Math.max(
+            0,
+            player.hp/player.maxHp*100
+        )+"%";
+
+    document.getElementById(
+        "xp"
+    ).style.width=
+        Math.min(
+            100,
+            player.xp/player.nextXP*100
+        )+"%";
+
+}
+
+
+/* =====================================================
+   PARTICLES
+===================================================== */
+
+function createParticles(x,y,count,type){
+
+    for(let i=0;i<count;i++){
+
+        particles.push({
+
+            x:x,
+            y:y,
+
+            vx:random(-2,2),
+            vy:random(-2,2),
+
+            life:random(20,45),
+
+            maxLife:45,
+
+            type:type
+
+        });
+
+    }
+
+}
+
+function updateParticles(){
+
+    for(let i=particles.length-1;i>=0;i--){
+
+        const p=particles[i];
+
+        p.x+=p.vx;
+        p.y+=p.vy;
+
+        p.vx*=.97;
+        p.vy*=.97;
+
+        p.life--;
+
+        if(p.life<=0){
+
+            particles.splice(i,1);
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   DRAW WORLD
+===================================================== */
+
+function drawWorld(){
+
+    ctx.clearRect(0,0,W,H);
+
+    ctx.fillStyle="#080d0b";
+    ctx.fillRect(0,0,W,H);
+
+    camera.x=
+        player.x-W/2;
+
+    camera.y=
+        player.y-H/2;
+
+    camera.x=Math.max(
+        0,
+        Math.min(
+            world.width-W,
+            camera.x
+        )
+    );
+
+    camera.y=Math.max(
+        0,
+        Math.min(
+            world.height-H,
+            camera.y
+        )
+    );
+
+    ctx.save();
+
+    ctx.translate(
+        -camera.x,
+        -camera.y
+    );
+
+    drawGround();
+    drawMoon();
+    drawRocks();
+    drawTrees();
+    drawAltar();
+
+    for(const enemy of enemies){
+
+        if(!enemy.dead)
+            drawEnemy(enemy);
+
+    }
+
+    if(boss)
+        drawBoss();
+
+    drawPlayer();
+    drawParticles();
+    drawFog();
+
+    ctx.restore();
+
+    drawLighting();
+
+}
+
+
+/* =====================================================
+   GROUND
+===================================================== */
+
+function drawGround(){
+
+    ctx.fillStyle="#101912";
+
+    ctx.fillRect(
+        0,
+        0,
+        world.width,
+        world.height
+    );
+
+    // cỏ / nền
+
+    for(let x=0;x<world.width;x+=70){
+
+        for(let y=0;y<world.height;y+=70){
+
+            const noise=
+                Math.sin(x*12.9898+y*78.233)*43758.5453;
+
+            const n=noise-Math.floor(noise);
+
+            if(n>.7){
+
+                ctx.fillStyle="rgba(90,105,72,.08)";
+
+                ctx.fillRect(
+                    x,
+                    y,
+                    2,
+                    8
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   MOON
+===================================================== */
+
+function drawMoon(){
+
+    const x=player.x+900;
+    const y=player.y-650;
+
+    const gradient=ctx.createRadialGradient(
+        x,y,20,
+        x,y,180
+    );
+
+    gradient.addColorStop(0,
+        "rgba(205,190,170,.25)");
+
+    gradient.addColorStop(1,
+        "rgba(100,30,40,0)");
+
+    ctx.fillStyle=gradient;
+
+    ctx.beginPath();
+    ctx.arc(x,y,180,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#aaa092";
+
+    ctx.beginPath();
+    ctx.arc(x,y,85,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="rgba(80,70,70,.18)";
+
+    for(let i=0;i<10;i++){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x+random(-55,55),
+            y+random(-55,55),
+            random(4,13),
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   TREES
+===================================================== */
+
+function drawTrees(){
+
+    for(const t of trees){
+
+        const x=t.x;
+        const y=t.y;
+        const s=t.size;
+
+        if(
+            x<camera.x-100 ||
+            x>camera.x+W+100 ||
+            y<camera.y-150 ||
+            y>camera.y+H+150
+        ) continue;
+
+        // shadow
+
+        ctx.fillStyle="rgba(0,0,0,.35)";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            x,
+            y+45*s,
+            40*s,
+            12*s,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        // trunk
+
+        ctx.fillStyle="#34251d";
+
+        ctx.fillRect(
+            x-7*s,
+            y,
+            14*s,
+            60*s
+        );
+
+        // branches
+
+        ctx.strokeStyle="#2b201a";
+        ctx.lineWidth=8*s;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x,y+30*s);
+        ctx.lineTo(x-28*s,y+5*s);
+
+        ctx.moveTo(x,y+40*s);
+        ctx.lineTo(x+30*s,y+15*s);
+
+        ctx.stroke();
+
+        // leaves
+
+        ctx.fillStyle="#17251b";
+
+        for(let i=0;i<3;i++){
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x,
+                y-35*s+i*25*s
+            );
+
+            ctx.lineTo(
+                x-40*s,
+                y+35*s+i*25*s
+            );
+
+            ctx.lineTo(
+                x+40*s,
+                y+35*s+i*25*s
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   ROCKS
+===================================================== */
+
+function drawRocks(){
+
+    for(const r of rocks){
+
+        ctx.fillStyle="#252b29";
+
+        ctx.beginPath();
+
+        ctx.moveTo(r.x-r.size,r.y);
+
+        ctx.lineTo(
+            r.x-r.size*.5,
+            r.y-r.size
+        );
+
+        ctx.lineTo(
+            r.x+r.size*.7,
+            r.y-r.size*.7
+        );
+
+        ctx.lineTo(
+            r.x+r.size,
+            r.y+r.size*.5
+        );
+
+        ctx.lineTo(
+            r.x-r.size*.6,
+            r.y+r.size
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   ALTAR
+===================================================== */
+
+function drawAltar(){
+
+    const x=altar.x;
+    const y=altar.y;
+
+    const glow=ctx.createRadialGradient(
+        x,y,5,
+        x,y,130
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(155,48,61,.35)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(155,48,61,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,y,
+        130,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#252026";
+
+    ctx.fillRect(
+        x-45,
+        y-20,
+        90,
+        45
+    );
+
+    ctx.fillStyle="#111015";
+
+    ctx.fillRect(
+        x-55,
+        y+25,
+        110,
+        12
+    );
+
+    ctx.fillStyle="#9b303d";
+
+    ctx.font="42px serif";
+
+    ctx.textAlign="center";
+
+    ctx.fillText(
+        "☠",
+        x,
+        y+15
+    );
+
+    ctx.textAlign="left";
+
+}
+
+
+/* =====================================================
+   ENEMY
+===================================================== */
+
+function drawEnemy(e){
+
+    const glow=ctx.createRadialGradient(
+        e.x,e.y,3,
+        e.x,e.y,45
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(140,30,45,.25)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(140,30,45,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        e.x,
+        e.y,
+        45,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle=
+        e.hitFlash>0
+        ? "#eee"
+        : "#271219";
+
+    ctx.strokeStyle="#8e2e3d";
+
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        e.x,
+        e.y,
+        e.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+    ctx.stroke();
+
+    // eyes
+
+    ctx.fillStyle="#df5260";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        e.x-6,
+        e.y-3,
+        3,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        e.x+6,
+        e.y-3,
+        3,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // HP
+
+    ctx.fillStyle="#18080b";
+
+    ctx.fillRect(
+        e.x-22,
+        e.y-31,
+        44,
+        5
+    );
+
+    ctx.fillStyle="#9b3040";
+
+    ctx.fillRect(
+        e.x-22,
+        e.y-31,
+        44*(e.hp/e.maxHp),
+        5
+    );
+
+}
+
+
+/* =====================================================
+   BOSS DRAW
+===================================================== */
+
+function drawBoss(){
+
+    const b=boss;
+
+    const glow=ctx.createRadialGradient(
+        b.x,b.y,10,
+        b.x,b.y,160
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(160,30,50,.5)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(160,30,50,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        b.x,b.y,160,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#151015";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        b.x,
+        b.y,
+        b.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="#a83243";
+
+    ctx.lineWidth=4;
+
+    ctx.stroke();
+
+    // horns
+
+    ctx.fillStyle="#b39b78";
+
+    ctx.beginPath();
+
+    ctx.moveTo(b.x-30,b.y-38);
+    ctx.lineTo(b.x-65,b.y-95);
+    ctx.lineTo(b.x-10,b.y-55);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.moveTo(b.x+30,b.y-38);
+    ctx.lineTo(b.x+65,b.y-95);
+    ctx.lineTo(b.x+10,b.y-55);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    // eyes
+
+    ctx.fillStyle="#e04c5a";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        b.x-18,
+        b.y-5,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        b.x+18,
+        b.y-5,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   PLAYER DRAW
+===================================================== */
+
+function drawPlayer(){
+
+    const x=player.x;
+    const y=player.y;
+
+    // player glow
+
+    const glow=ctx.createRadialGradient(
+        x,y,5,
+        x,y,100
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(190,165,120,.18)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(190,165,120,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,y,100,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // shadow
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y+22,
+        25,
+        10,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // cloak
+
+    ctx.fillStyle="#202735";
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,y-22);
+    ctx.lineTo(x-22,y+28);
+    ctx.lineTo(x+22,y+28);
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.strokeStyle="#8d7b68";
+
+    ctx.lineWidth=2;
+
+    ctx.stroke();
+
+    // head
+
+    ctx.fillStyle="#c1a98c";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-19,
+        10,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // hood
+
+    ctx.fillStyle="#111722";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-20,
+        14,
+        Math.PI,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // sword
+
+    const angle=player.direction;
+
+    ctx.save();
+
+    ctx.translate(x,y);
+    ctx.rotate(angle);
+
+    ctx.strokeStyle="#d9d4c5";
+
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(20,0);
+    ctx.lineTo(55,0);
+
+    ctx.stroke();
+
+    ctx.strokeStyle="#8d6d48";
+
+    ctx.lineWidth=5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(16,-7);
+    ctx.lineTo(16,7);
+
+    ctx.stroke();
+
+    if(player.attackTime>0){
+
+        ctx.strokeStyle="rgba(220,220,190,.8)";
+
+        ctx.lineWidth=6;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            5,
+            0,
+            65,
+            -.9,
+            .9
+        );
+
+        ctx.stroke();
+
+    }
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   PARTICLES DRAW
+===================================================== */
+
+function drawParticles(){
+
+    for(const p of particles){
+
+        let alpha=p.life/p.maxLife;
+
+        if(p.type==="blood")
+            ctx.fillStyle=`rgba(180,45,60,${alpha})`;
+
+        else if(p.type==="slash")
+            ctx.fillStyle=`rgba(220,210,170,${alpha})`;
+
+        else if(p.type==="death")
+            ctx.fillStyle=`rgba(120,80,100,${alpha})`;
+
+        else
+            ctx.fillStyle=`rgba(220,190,130,${alpha})`;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.type==="slash"?3:random(2,4),
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   FOG
+===================================================== */
+
+function drawFog(){
+
+    for(const f of fog){
+
+        f.x+=f.speed;
+
+        if(f.x>world.width+300)
+            f.x=-300;
+
+        const gradient=ctx.createRadialGradient(
+            f.x,
+            f.y,
+            10,
+            f.x,
+            f.y,
+            f.size
+        );
+
+        gradient.addColorStop(
+            0,
+            "rgba(100,110,105,.035)"
+        );
+
+        gradient.addColorStop(
+            1,
+            "rgba(100,110,105,0)"
+        );
+
+        ctx.fillStyle=gradient;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            f.x,
+            f.y,
+            f.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =====================================================
+   LIGHTING
+===================================================== */
+
+function drawLighting(){
+
+    const gradient=ctx.createRadialGradient(
+        W/2,
+        H/2,
+        80,
+        W/2,
+        H/2,
+        Math.max(W,H)*.75
+    );
+
+    gradient.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+    gradient.addColorStop(
+        .45,
+        "rgba(0,0,0,.15)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(0,0,0,.78)"
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+}
+
+
+/* =====================================================
+   DEATH
+===================================================== */
+
+function playerDied(){
+
+    if(!playing) return;
+
+    playing=false;
+
+    document.getElementById(
+        "death"
+    ).style.display="flex";
+
+    setTimeout(()=>{
+
+        document.getElementById(
+            "death"
+        ).style.display="none";
+
+        player.hp=player.maxHp;
+
+        player.x=1800;
+        player.y=1800;
+
+        playing=true;
+
+        showMessage(
+            "THE AFTERWORLD HAS RETURNED YOU."
+        );
+
+    },2500);
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+let messageTimer=null;
+
+function showMessage(text){
+
+    const msg=document.getElementById(
+        "message"
+    );
+
+    msg.innerText=text;
+
+    msg.style.opacity="1";
+
+    clearTimeout(messageTimer);
+
+    messageTimer=setTimeout(()=>{
+
+        msg.style.opacity="0";
+
+    },3500);
+
+}
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+function toggleMusic(){
+
+    const music=document.getElementById(
+        "bgMusic"
+    );
+
+    const button=document.getElementById(
+        "musicButton"
+    );
+
+    if(music.paused){
+
+        music.play();
+
+        button.innerText="🔊 MUSIC";
+
+    }
+    else{
+
+        music.pause();
+
+        button.innerText="🔇 MUSIC";
+
+    }
+
+}
+
+
+/* =====================================================
+   LORE
+===================================================== */
+
+function openLore(){
+
+    document.getElementById(
+        "lore"
+    ).style.display="flex";
+
+}
+
+function closeLore(){
+
+    document.getElementById(
+        "lore"
+    ).style.display="none";
+
+}
+
+
+/* =====================================================
+   GAME LOOP
+===================================================== */
+
+function gameLoop(){
+
+    if(playing){
+
+        updatePlayer();
+        updateEnemies();
+        updateBoss();
+        updateParticles();
+        updateHUD();
+
+        drawWorld();
+
+    }
+
+    requestAnimationFrame(gameLoop);
+
+}
 
 </script>
 
