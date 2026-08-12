@@ -1129,6 +1129,37 @@ and
 }
 </style>
 
+
+<style id="main-title-and-mobile-fullscreen">
+/* Tiêu đề màn hình chính theo bố cục ảnh mẫu */
+.main-game-title {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    line-height:.86;
+    text-align:center;
+    letter-spacing:3px;
+}
+.main-game-title span {
+    display:block;
+}
+
+/* Nút fullscreen chỉ xuất hiện trên điện thoại */
+.mobile-fullscreen-button {
+    display:none;
+}
+@media (max-width:700px) and (pointer:coarse) {
+    .mobile-fullscreen-button {
+        display:inline-block;
+    }
+    .main-game-title {
+        letter-spacing:2px;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -1145,8 +1176,10 @@ MENU
 
 <div id="menu" class="screen">
 
-    <h1 class="title">
-        THE FORGOTTEN GOD
+    <h1 class="title main-game-title">
+        <span>THE</span>
+        <span>FORGOTTEN</span>
+        <span>GOD</span>
     </h1>
 
     <div class="subtitle">
@@ -7164,39 +7197,53 @@ function gameLoop(){
 })();
 </script>
 
-<script id="mobile-fullscreen-script">
+
+<script id="mobile-fullscreen-script-v2">
 (function(){
-    const button = document.getElementById("fullscreenButton");
-    if(!button) return;
+    const btn=document.getElementById('fullscreenButton');
+    if(!btn) return;
 
-    function isFullscreen(){
-        return !!(document.fullscreenElement || document.webkitFullscreenElement);
-    }
+    const isMobile=()=>window.matchMedia('(max-width:700px) and (pointer:coarse)').matches;
 
-    function updateButton(){
-        button.textContent = isFullscreen()
-            ? "⛶ THOÁT TOÀN MÀN HÌNH"
-            : "⛶ TOÀN MÀN HÌNH";
-    }
-
-    button.addEventListener("click", async function(){
+    async function enterFullscreen(){
+        if(!isMobile()) return;
         try {
-            if(isFullscreen()){
-                if(document.exitFullscreen) document.exitFullscreen();
-                else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-            } else {
-                const el = document.documentElement;
-                if(el.requestFullscreen) await el.requestFullscreen();
-                else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            const root=document.documentElement;
+            if(root.requestFullscreen) await root.requestFullscreen({navigationUI:'hide'});
+            else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+
+            // Cố gắng chuyển ngang để game chiếm trọn màn hình trên Android.
+            if(screen.orientation && screen.orientation.lock){
+                try { await screen.orientation.lock('landscape'); } catch(e) {}
             }
+            btn.textContent='⛶ THOÁT TOÀN MÀN HÌNH';
         } catch(e) {
-            console.warn("Không thể bật fullscreen:", e);
+            console.warn('Fullscreen không được trình duyệt cho phép:',e);
         }
+    }
+
+    async function exitFullscreen(){
+        try {
+            if(document.exitFullscreen) await document.exitFullscreen();
+            else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } catch(e) {}
+        btn.textContent='⛶ TOÀN MÀN HÌNH';
+    }
+
+    btn.addEventListener('click',async function(){
+        if(!isMobile()) return;
+        const active=document.fullscreenElement || document.webkitFullscreenElement;
+        if(active) await exitFullscreen();
+        else await enterFullscreen();
     });
 
-    document.addEventListener("fullscreenchange", updateButton);
-    document.addEventListener("webkitfullscreenchange", updateButton);
-    updateButton();
+    function sync(){
+        const active=document.fullscreenElement || document.webkitFullscreenElement;
+        btn.textContent=active?'⛶ THOÁT TOÀN MÀN HÌNH':'⛶ TOÀN MÀN HÌNH';
+    }
+    document.addEventListener('fullscreenchange',sync);
+    document.addEventListener('webkitfullscreenchange',sync);
+    sync();
 })();
 </script>
 
