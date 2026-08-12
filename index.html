@@ -1537,53 +1537,55 @@ function getAutoAimTarget(){
     if(!player) return null;
 
     const candidates = [];
+
     if(typeof boss !== "undefined" && boss && boss.active && !boss.defeated && boss.hp > 0){
         candidates.push(boss);
     }
+
     if(typeof enemies !== "undefined" && Array.isArray(enemies)){
         for(const e of enemies){
-            if(e && e.alive !== false && e.hp > 0) candidates.push(e);
+            if(e && e.alive !== false && e.hp > 0){
+                candidates.push(e);
+            }
         }
     }
 
-    let best = null, bestScore = Infinity;
-    const currentAimLen = Math.hypot(mobileAimX,mobileAimY) || 1;
+    let best = null;
+    let bestScore = Infinity;
+
+    const aimLen = Math.hypot(mobileAimX, mobileAimY);
+    const aimX = aimLen > 0.05 ? mobileAimX / aimLen : 0;
+    const aimY = aimLen > 0.05 ? mobileAimY / aimLen : -1;
 
     for(const e of candidates){
         const dx = e.x - player.x;
         const dy = e.y - player.y;
-        const d = Math.hypot(dx,dy);
+        const d = Math.hypot(dx, dy);
+
+        // Không tự nhắm mục tiêu quá xa.
         if(d > 950) continue;
 
         const tx = dx / (d || 1);
         const ty = dy / (d || 1);
-        const dot = (mobileAimX * tx + mobileAimY * ty) / currentAimLen;
-        const anglePenalty = (1 - Math.max(-1,Math.min(1,dot))) * 180;
 
-        // Vẫn ưu tiên mục tiêu gần, nhưng tránh đổi mục tiêu đột ngột.
-        const score = d + anglePenalty;
+        // dot càng lớn = mục tiêu càng nằm đúng hướng ngắm.
+        const dot = aimLen > 0.05 ? (aimX * tx + aimY * ty) : 0;
+
+        // Ưu tiên hướng ngắm mạnh, sau đó ưu tiên mục tiêu gần.
+        // Boss được ưu tiên nhẹ khi ở khoảng cách tương đương.
+        const bossBonus = (e === boss) ? -35 : 0;
+        const directionPenalty = aimLen > 0.05
+            ? (1 - Math.max(-1, Math.min(1, dot))) * 220
+            : 0;
+
+        const score = d + directionPenalty + bossBonus;
+
         if(score < bestScore){
             bestScore = score;
             best = e;
         }
     }
 
-    // Hysteresis: giữ mục tiêu hiện tại nếu nó vẫn còn hợp lý.
-    if(mobileAimTarget){
-        const dx = mobileAimTarget.x - player.x;
-        const dy = mobileAimTarget.y - player.y;
-        const d = Math.hypot(dx,dy);
-        const alive = mobileAimTarget.alive !== false &&
-                      mobileAimTarget.hp > 0 &&
-                      !mobileAimTarget.defeated;
-
-        if(alive && d <= 1050 &&
-           (!best || d <= Math.hypot(best.x-player.x,best.y-player.y) + 120)){
-            return mobileAimTarget;
-        }
-    }
-
-    mobileAimTarget = best;
     return best;
 }
 
