@@ -1116,15 +1116,50 @@ and
 </style>
 
 <style id="mobile-fullscreen-button">
+/* Nút toàn màn hình: chỉ hiện trên điện thoại */
 #fullscreenButton {
     display: none;
-    margin-top: 10px;
 }
 
-/* CHỈ HIỆN TRÊN ĐIỆN THOẠI */
-@media (max-width: 700px) and (pointer: coarse) {
+@media (max-width:700px) and (pointer:coarse) {
     #fullscreenButton {
-        display: inline-block;
+        display: block !important;
+        position: fixed;
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+        z-index: 99999;
+        width: 58px;
+        height: 58px;
+        margin: 0;
+        padding: 0;
+        border-radius: 50%;
+        font-size: 0;
+        line-height: 1;
+        background: rgba(10,8,12,.92);
+        border: 1px solid rgba(240,190,90,.85);
+        box-shadow: 0 0 18px rgba(240,190,90,.22);
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
+    }
+
+    #fullscreenButton::before {
+        content: "⛶";
+        font-size: 27px;
+        color: #f4d58a;
+    }
+
+    #fullscreenButton.is-fullscreen::before {
+        content: "×";
+        font-size: 31px;
+    }
+}
+
+/* Máy tính: luôn ẩn */
+@media (min-width:701px), (pointer:fine) {
+    #fullscreenButton {
+        display: none !important;
     }
 }
 </style>
@@ -7198,52 +7233,89 @@ function gameLoop(){
 </script>
 
 
-<script id="mobile-fullscreen-script-v2">
+<script id="mobile-fullscreen-script-v3">
 (function(){
-    const btn=document.getElementById('fullscreenButton');
+    const btn = document.getElementById("fullscreenButton");
     if(!btn) return;
 
-    const isMobile=()=>window.matchMedia('(max-width:700px) and (pointer:coarse)').matches;
+    const isMobile = () =>
+        window.matchMedia("(max-width:700px) and (pointer:coarse)").matches;
+
+    function isFullscreen(){
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
+    }
 
     async function enterFullscreen(){
         if(!isMobile()) return;
-        try {
-            const root=document.documentElement;
-            if(root.requestFullscreen) await root.requestFullscreen({navigationUI:'hide'});
-            else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
 
-            // Cố gắng chuyển ngang để game chiếm trọn màn hình trên Android.
-            if(screen.orientation && screen.orientation.lock){
-                try { await screen.orientation.lock('landscape'); } catch(e) {}
+        try{
+            const root = document.documentElement;
+
+            if(root.requestFullscreen){
+                await root.requestFullscreen({navigationUI:"hide"});
+            }else if(root.webkitRequestFullscreen){
+                root.webkitRequestFullscreen();
+            }else{
+                // Một số trình duyệt không hỗ trợ Fullscreen API.
+                alert("Trình duyệt này không hỗ trợ chế độ toàn màn hình. Hãy mở game bằng Chrome/Edge trên Android.");
+                return;
             }
-            btn.textContent='⛶ THOÁT TOÀN MÀN HÌNH';
-        } catch(e) {
-            console.warn('Fullscreen không được trình duyệt cho phép:',e);
+
+            // Sau khi fullscreen, cố gắng xoay ngang để game chiếm trọn màn hình.
+            if(screen.orientation && screen.orientation.lock){
+                try{
+                    await screen.orientation.lock("landscape");
+                }catch(e){}
+            }
+
+            syncButton();
+        }catch(e){
+            console.warn("Không thể bật fullscreen:", e);
         }
     }
 
     async function exitFullscreen(){
-        try {
-            if(document.exitFullscreen) await document.exitFullscreen();
-            else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-        } catch(e) {}
-        btn.textContent='⛶ TOÀN MÀN HÌNH';
+        try{
+            if(document.exitFullscreen){
+                await document.exitFullscreen();
+            }else if(document.webkitExitFullscreen){
+                document.webkitExitFullscreen();
+            }
+
+            if(screen.orientation && screen.orientation.unlock){
+                try{ screen.orientation.unlock(); }catch(e){}
+            }
+        }catch(e){}
+
+        syncButton();
     }
 
-    btn.addEventListener('click',async function(){
+    function syncButton(){
+        const active = isFullscreen();
+
+        btn.classList.toggle("is-fullscreen", active);
+        btn.setAttribute(
+            "aria-label",
+            active ? "Thoát toàn màn hình" : "Bật toàn màn hình"
+        );
+        btn.title = active ? "Thoát toàn màn hình" : "Toàn màn hình";
+    }
+
+    btn.addEventListener("click", function(){
         if(!isMobile()) return;
-        const active=document.fullscreenElement || document.webkitFullscreenElement;
-        if(active) await exitFullscreen();
-        else await enterFullscreen();
+
+        if(isFullscreen()){
+            exitFullscreen();
+        }else{
+            enterFullscreen();
+        }
     });
 
-    function sync(){
-        const active=document.fullscreenElement || document.webkitFullscreenElement;
-        btn.textContent=active?'⛶ THOÁT TOÀN MÀN HÌNH':'⛶ TOÀN MÀN HÌNH';
-    }
-    document.addEventListener('fullscreenchange',sync);
-    document.addEventListener('webkitfullscreenchange',sync);
-    sync();
+    document.addEventListener("fullscreenchange", syncButton);
+    document.addEventListener("webkitfullscreenchange", syncButton);
+    window.addEventListener("resize", syncButton);
+
+    syncButton();
 })();
 </script>
 
