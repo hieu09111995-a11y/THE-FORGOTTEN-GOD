@@ -9,7 +9,7 @@
                user-scalable=no,
                viewport-fit=cover">
 
-<title>The Forgotten God V6</title>
+<title>THE FORGOTTEN GOD — He Still Remembers You.</title>
 
 <style>
 
@@ -273,7 +273,7 @@ canvas{
 #quest{
     position:absolute;
 
-    top:80px;
+    top:115px;
 
     left:20px;
 
@@ -641,6 +641,103 @@ canvas{
     letter-spacing:4px;
 }
 
+/* =========================
+   CONTINUE / SEQUEL
+========================= */
+#continueButton{
+    display:none;
+}
+
+#sequelLoading{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:4500;
+    background:#020812;
+    color:#b9d9f4;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    opacity:0;
+    transition:opacity 1.8s ease;
+}
+
+#sequelLoading.show{
+    display:flex;
+    opacity:1;
+}
+
+#loadingTitle{
+    font-size:clamp(24px,4vw,52px);
+    letter-spacing:7px;
+    color:#c7e6ff;
+    text-shadow:0 0 18px #6ea9d6, 0 0 45px rgba(80,150,220,.35);
+    animation:bluePulse 2.2s infinite;
+}
+
+#loadingSub{
+    margin-top:20px;
+    color:#7898b5;
+    letter-spacing:4px;
+    font-size:12px;
+}
+
+#loadingDots{
+    margin-top:28px;
+    letter-spacing:8px;
+    color:#a9d6fa;
+    animation:loadingDots 1.4s infinite;
+}
+
+#sequelMenu{
+    display:none;
+    opacity:0;
+    transition:opacity 2.2s ease;
+    background:
+        radial-gradient(circle at 50% 42%, #244b70 0%, #122c48 35%, #081a2e 68%, #030b16 100%);
+    color:#c9e6fa;
+}
+
+#sequelMenu.show{
+    display:flex;
+    opacity:1;
+}
+
+#sequelMenu .title{
+    color:#c9e9ff;
+    text-shadow:
+        0 0 15px #6ca9d5,
+        0 0 45px #1f5078,
+        0 0 90px rgba(100,180,240,.25);
+}
+
+#sequelMenu .subtitle{
+    color:#9fc2dc;
+    text-shadow:0 0 12px rgba(120,190,240,.35);
+}
+
+#backToMain{
+    border-color:#6e9cbe;
+    color:#c7e7fb;
+    background:rgba(4,17,30,.78);
+}
+
+#backToMain:hover{
+    background:#173c5b;
+    box-shadow:0 0 25px #3e79a2;
+}
+
+@keyframes bluePulse{
+    0%,100%{opacity:.65; transform:scale(.99)}
+    50%{opacity:1; transform:scale(1)}
+}
+
+@keyframes loadingDots{
+    0%,100%{opacity:.25}
+    50%{opacity:1}
+}
+
 /* ==========================================================
    MOBILE
 ========================================================== */
@@ -810,7 +907,7 @@ canvas{
     #quest{
         width:270px;
 
-        top:70px;
+        top:105px;
 
         font-size:11px;
 
@@ -936,13 +1033,11 @@ MENU
 <div id="menu" class="screen">
 
     <h1 class="title">
-        THE<br>
-        FORGOTTEN<br>
-        GOD
+        THE FORGOTTEN GOD
     </h1>
 
     <div class="subtitle">
-        HE REMEMBERS YOU
+        HE STILL REMEMBERS YOU.
     </div>
 
     <button
@@ -970,27 +1065,17 @@ LORE
 
     <h2>THE LORE</h2>
 
-    <p>
-        Hàng trăm năm trước, một vương quốc
-        từng được bảo vệ bởi các vị thần.
-    </p>
-
-    <p>
-        Nhưng con người dần quên tên của họ.
-        Vương quốc sụp đổ.
-    </p>
-
-    <p>
-        Chỉ còn một vị thần vẫn tồn tại.
-    </p>
-
-    <p>
-        <strong>FORGOTTEN GOD.</strong>
-    </p>
-
-    <p>
-        Một phù thủy tỉnh dậy mà không nhớ mình là ai.
-    </p>
+    <p><strong>THE LOST KINGDOM — ASTERRA</strong></p>
+    <p>Asterra từng là một vương quốc được bảo vệ bởi những vị thần cổ đại. Trong số họ có một vị thần không cần vàng bạc hay đền thờ — hắn chỉ cần con người nhớ tên mình.</p>
+    <p>Hắn đã bảo vệ Asterra qua chiến tranh, mùa đông và những đêm quái vật tràn xuống từ khu rừng phía bắc. Đổi lại, người dân kể tên hắn trong những lời cầu nguyện.</p>
+    <p>Nhưng các thế hệ mới bắt đầu quên. Đền thờ bị bỏ hoang. Những bức tượng nứt vỡ. Tên của vị thần biến mất khỏi sách sử.</p>
+    <p><strong>KEEPER</strong> là người cuối cùng còn canh giữ lâu đài. Hắn biết rằng Forgotten God không đơn giản là một con quái vật. Hắn từng là người bảo hộ của Asterra.</p>
+    <p>Keeper đã nhìn thấy sự thay đổi của hắn: từ một vị thần nhân từ thành một sinh vật chỉ còn sống bằng ký ức và oán hận.</p>
+    <p>Điều kỳ lạ nhất là Forgotten God vẫn nhớ một người. Một lời hứa từ quá khứ nói rằng khi bóng tối nuốt lấy Asterra, người ấy sẽ trở lại.</p>
+    <p>Người ấy chính là <strong>WANDERER</strong> — nhân vật chính. Nhưng khi trở lại, Wanderer đã mất toàn bộ ký ức.</p>
+    <p>Keeper tin rằng lời nguyền không chỉ xóa ký ức của Wanderer. Nó còn khiến Forgotten God tin rằng mình bị phản bội.</p>
+    <p><strong>Vì vậy, cuộc chiến cuối cùng không chỉ là cuộc chiến giữa người và thần.</strong><br>Đó là cuộc chiến giữa ký ức và sự lãng quên.</p>
+    <p><em>Và Keeper biết một bí mật mà hắn chưa nói ra: Forgotten God có thể không phải kẻ tạo ra lời nguyền.</em></p>
 
     <button
         class="button"
@@ -1245,6 +1330,29 @@ ENDING
 
         <br><br>
 
+        Nhưng trước khi bị lãng quên, hắn từng mang một cái tên khác:
+        <strong>GIÁP LONG VƯƠNG</strong>.
+
+        <br><br>
+
+        Giáp Long Vương từng là vị thần chiến giáp cổ đại, người bảo vệ
+        thế giới khỏi những thế lực bóng tối. Hắn không sinh ra để hủy diệt.
+        Hắn từng đứng ở tuyến đầu, che chở Asterra và những vùng đất nằm ngoài
+        vương quốc.
+
+        <br><br>
+
+        Nhưng qua hàng trăm năm, thế giới quên mất tên hắn. Một vị vua từng
+        bảo vệ tất cả đã bị chính những người mình bảo vệ xóa khỏi ký ức.
+        Sự lãng quên biến người bảo hộ thành <strong>FORGOTTEN GOD</strong>.
+
+        <br><br>
+
+        Và có lẽ... trận chiến hôm nay không phải là cuộc chiến giữa người
+        hùng và quái vật. Đó là cuộc chiến giữa ký ức và sự lãng quên.
+
+        <br><br>
+
         Ngươi chính là người đã tạo ra lời nguyền
         từ hàng trăm năm trước.
 
@@ -1272,8 +1380,42 @@ ENDING
 
     </button>
 
+    <button
+        class="button"
+        id="continueButton">
+
+        TIẾP TỤC
+
+    </button>
+
 </div>
 
+<!-- =====================================================
+SEQUEL LOADING
+===================================================== -->
+<div id="sequelLoading">
+    <div id="loadingTitle">THE MEMORY AWAKENS</div>
+    <div id="loadingSub">QUÁ KHỨ ĐANG TRỞ VỀ...</div>
+    <div id="loadingDots">• • •</div>
+</div>
+
+<!-- =====================================================
+THE FORGOTTEN GOD 2
+===================================================== -->
+<div id="sequelMenu" class="screen">
+    <h1 class="title">
+        THE FORGOTTEN<br>
+        GOD 2
+    </h1>
+
+    <div class="subtitle">
+        QUÁ KHỨ CỦA GIÁP LONG VƯƠNG
+    </div>
+
+    <button class="button" id="backToMain">
+        QUAY LẠI MÀN HÌNH CHÍNH
+    </button>
+</div>
 
 <!-- =====================================================
 ROTATE
@@ -1785,7 +1927,7 @@ function initAudio(){
 
 
     master.gain.value =
-        .20;
+        .42;
 
 
     master.connect(
@@ -1922,7 +2064,7 @@ function footstep(){
         Math.random()*20,
         .07,
         "sine",
-        .035
+        .055
     );
 
 }
@@ -1959,7 +2101,7 @@ function shootSound(){
         250,
         .07,
         "sawtooth",
-        .08
+        .12
     );
 
 
@@ -2053,6 +2195,46 @@ function reviveSound(){
 
 }
 
+
+function characterVoice(){
+
+    tone(
+        145 + Math.random()*35,
+        .09,
+        "triangle",
+        .075
+    );
+
+    setTimeout(()=>{
+        tone(
+            210 + Math.random()*45,
+            .08,
+            "sine",
+            .055
+        );
+    },45);
+
+}
+
+function bossVoice(){
+
+    tone(
+        58,
+        .22,
+        "sawtooth",
+        .12
+    );
+
+    setTimeout(()=>{
+        tone(
+            82,
+            .28,
+            "square",
+            .085
+        );
+    },110);
+
+}
 
 function npcSound(){
 
@@ -3973,6 +4155,11 @@ function showEnding(){
         .style.display =
         "flex";
 
+    // Ending đã mở khóa: cho phép bước sang phần 2.
+    document
+        .getElementById("continueButton")
+        .style.display = "inline-block";
+
 }
 
 
@@ -4025,29 +4212,89 @@ const dialogues = [
 ];
 
 
-const castleDialogues = [
+const bossDialogues = [
 
     [
-        "KEEPER",
-        "Ngươi đã vào được lâu đài."
+        "FORGOTTEN GOD",
+        "Cuối cùng... ngươi cũng trở về."
     ],
 
     [
         "WANDERER",
-        "Forgotten God ở đâu?"
+        "Ta chưa từng gặp ngươi."
     ],
 
     [
-        "KEEPER",
-        "Trên tầng cao nhất."
+        "FORGOTTEN GOD",
+        "Nhưng ta đã nhớ ngươi qua hàng trăm năm."
     ],
 
     [
-        "KEEPER",
-        "Nhưng hắn đã chờ ngươi từ rất lâu."
+        "FORGOTTEN GOD",
+        "Khi cả vương quốc quên tên ta, chỉ có lời nguyền của ngươi còn gọi ta thức dậy."
+    ],
+
+    [
+        "WANDERER",
+        "Lời nguyền của ta?"
+    ],
+
+    [
+        "FORGOTTEN GOD",
+        "Ngươi đã hứa sẽ trở lại. Và ta đã chờ."
+    ],
+
+    [
+        "FORGOTTEN GOD",
+        "Ta không muốn giết ngươi. Ta chỉ muốn ngươi nhớ mình là ai."
+    ],
+
+    [
+        "FORGOTTEN GOD",
+        "Nhưng nếu ký ức phải được đánh thức bằng chiến đấu... vậy hãy chiến đấu."
     ]
 
 ];
+
+
+const castleDialogues = [
+    ["KEEPER","Ngươi đã vào được lâu đài. Từ đây, mọi bức tường đều nhớ những gì con người đã quên."],
+    ["WANDERER","Forgotten God ở đâu?"],
+    ["KEEPER","Trên tầng cao nhất. Và đừng để quá khứ huy hoàng của hắn khiến ngươi quên hắn đã trở thành gì."],
+    ["KEEPER","Trước khi bị lãng quên, hắn từng là người bảo hộ. Nhưng giờ hắn đã phản bội chính sứ mệnh đó."],
+    ["WANDERER","Vậy chuyện gì đã xảy ra?"],
+    ["KEEPER","Khi Asterra còn phồn thịnh, người dân gọi tên hắn mỗi bình minh."],
+    ["KEEPER","Họ cầu xin hắn bảo vệ mùa màng, trẻ nhỏ và những người ra trận."],
+    ["KEEPER","Rồi một ngày, con người tìm thấy những vị thần mới. Những lời cầu nguyện dành cho hắn thưa dần."],
+    ["KEEPER","Tên hắn biến mất khỏi bia đá. Những bức tượng bị phủ bụi. Những người cuối cùng biết đến hắn cũng chết đi."],
+    ["KEEPER","Nhưng một vị thần bị lãng quên không chết ngay. Hắn vẫn nghe thấy tiếng gọi của thế giới... chỉ là chẳng còn ai gọi tên hắn."],
+    ["WANDERER","Và sự cô độc đã biến hắn thành Forgotten God?"],
+    ["KEEPER","Sự cô độc không thể biện minh cho những gì hắn đã làm."],
+    ["WANDERER","Là ta?"],
+    ["KEEPER","Đúng. Nhưng ký ức của ngươi đã bị lời nguyền xé thành từng mảnh."],
+    ["KEEPER","Mỗi tầng của lâu đài giữ lại một mảnh ký ức của hắn... và có thể cả của ngươi."],
+    ["KEEPER","Hắn không chờ một kẻ thù. Hắn chờ người đã từng hứa sẽ quay lại."],
+    ["WANDERER","Nếu ta thật sự là người đó, ta phải nhớ lại."],
+    ["KEEPER","Hãy đi lên. Nhưng đừng thương hại hắn. Hãy nhớ rằng hắn đã chọn biến nỗi đau thành bạo lực."],
+    ["KEEPER","Nếu hắn thật sự từng là người bảo hộ, thì chính hắn cũng phải trả giá cho việc phản bội thế giới."],
+    ["KEEPER","Và nếu ngươi muốn biết ai thực sự tạo ra lời nguyền... hãy nhìn vào những ký ức mà hắn sợ nhất."]
+];
+
+
+function startBossDialogue(){
+
+    dialogueOpen = true;
+    dialogueIndex = 0;
+
+    const box = document.getElementById("dialogue");
+    box.classList.toggle(
+        "mobileDialogue",
+        window.matchMedia("(pointer: coarse)").matches
+    );
+
+    showDialogue();
+
+}
 
 
 function startDialogue(){
@@ -4083,9 +4330,9 @@ function startDialogue(){
 function showDialogue(){
 
     const list =
-        area==="outside"
-        ?dialogues
-        :castleDialogues;
+        boss.active
+        ? bossDialogues
+        : (area==="outside" ? dialogues : castleDialogues);
 
 
     document
@@ -4115,6 +4362,13 @@ function showDialogue(){
             dialogueIndex
         ][1];
 
+    if(list[dialogueIndex][0] === "WANDERER")
+        characterVoice();
+    else if(list[dialogueIndex][0] === "FORGOTTEN GOD")
+        bossVoice();
+    else
+        npcSound();
+
 }
 
 
@@ -4124,9 +4378,9 @@ function nextDialogue(){
 
 
     const list =
-        area==="outside"
-        ?dialogues
-        :castleDialogues;
+        boss.active
+        ? bossDialogues
+        : (area==="outside" ? dialogues : castleDialogues);
 
 
     if(
@@ -4146,7 +4400,12 @@ function nextDialogue(){
             "none";
 
 
-        if(
+        if(boss.active){
+
+            showMessage("👑 FORGOTTEN GOD: LET THE MEMORY BEGIN");
+
+        }
+        else if(
             area==="outside"
         ){
 
@@ -4180,6 +4439,49 @@ function nextDialogue(){
     showDialogue();
 
 }
+
+
+/* =====================================================
+FORGOTTEN GOD — EXPANDED LORE DIALOGUES
+===================================================== */
+
+const expandedForgottenDialogues = [
+    ["MYSTERIOUS NPC","Ngươi cuối cùng cũng tỉnh lại. Nhưng có một cái tên vẫn đang gọi ngươi trong bóng tối."],
+    ["WANDERER","Forgotten God..."],
+    ["MYSTERIOUS NPC","Đừng gọi tên hắn quá lớn. Hắn vẫn nghe thấy."],
+    ["MYSTERIOUS NPC","Hắn từng được gọi là vị thần bảo hộ của Asterra. Nhưng đừng để danh xưng đó đánh lừa ngươi."],
+    ["WANDERER","Một vị thần có thể trở thành quái vật sao?"],
+    ["MYSTERIOUS NPC","Có. Forgotten God đã để sự oán hận nuốt mất phần người bảo hộ trong hắn."],
+    ["MYSTERIOUS NPC","Hắn không còn bảo vệ thế giới. Hắn muốn thế giới phải nhớ đến hắn bằng nỗi sợ."],
+    ["WANDERER","Tại sao là ta?"],
+    ["MYSTERIOUS NPC","Vì ngươi là người cuối cùng còn liên quan đến lời hứa cũ của hắn."],
+    ["MYSTERIOUS NPC","Hãy vào lâu đài. Nếu ngươi muốn biết hắn đã biến từ người bảo vệ thành kẻ hủy diệt như thế nào."]
+];
+
+const expandedBossDialogues = [
+    ["FORGOTTEN GOD","Cuối cùng... ngươi cũng trở về."],
+    ["WANDERER","Ta chưa từng gặp ngươi."],
+    ["FORGOTTEN GOD","Ngươi quên ta. Nhưng ta đã nhớ ngươi qua hàng trăm năm."],
+    ["FORGOTTEN GOD","Ta từng bảo vệ Asterra. Mỗi đêm, hàng nghìn người gọi tên ta."],
+    ["FORGOTTEN GOD","Trước khi các ngươi gọi ta Forgotten God, ta là Giáp Long Vương — kẻ mang long giáp đứng giữa thế giới và bóng tối."],
+    ["FORGOTTEN GOD","Rồi lời cầu nguyện ít dần. Những ngôi đền im lặng. Cuối cùng, chẳng còn ai nhớ ta."],
+    ["WANDERER","Vậy tại sao ngươi lại hủy diệt chính vương quốc mình từng bảo vệ?"],
+    ["FORGOTTEN GOD","Bởi ta đã chờ quá lâu. Sự lãng quên biến lòng thương xót thành oán hận."],
+    ["FORGOTTEN GOD","Ta chỉ còn nhớ một lời hứa: ngươi sẽ trở lại."],
+    ["WANDERER","Ta đã hứa gì?"],
+    ["FORGOTTEN GOD","Rằng khi bóng tối nuốt lấy Asterra, ngươi sẽ quay về và giúp ta chấm dứt nó."],
+    ["FORGOTTEN GOD","Nhưng ngươi trở lại mà không còn nhớ ta."],
+    ["FORGOTTEN GOD","Ta đã gọi ngươi bằng giấc mơ. Ta gửi những linh hồn tìm ngươi. Không gì đánh thức được ký ức."],
+    ["WANDERER","Vì thế ngươi muốn giết ta?"],
+    ["FORGOTTEN GOD","Không. Ta muốn ngươi nhớ."],
+    ["FORGOTTEN GOD","Nhưng nếu ký ức chỉ có thể trở lại qua trận chiến... vậy hãy chiến đấu."],
+    ["FORGOTTEN GOD","Và nếu ta ngã xuống, hãy nhớ rằng ta đã từng là người bảo vệ nơi này."],
+    ["FORGOTTEN GOD","Ta không phải con quái vật đầu tiên của câu chuyện này."]
+];
+
+// Ghi đè danh sách thoại hiện tại bằng phiên bản mở rộng.
+dialogues.length=0; expandedForgottenDialogues.forEach(x=>dialogues.push(x));
+bossDialogues.length=0; expandedBossDialogues.forEach(x=>bossDialogues.push(x));
 
 
 /* =====================================================
@@ -6264,6 +6566,42 @@ document
         location.reload();
 
     };
+
+
+/* =====================================================
+CONTINUE TO THE FORGOTTEN GOD 2
+===================================================== */
+function openSequel(){
+    const ending = document.getElementById("ending");
+    const loading = document.getElementById("sequelLoading");
+    const sequel = document.getElementById("sequelMenu");
+
+    ending.style.display = "none";
+    loading.classList.add("show");
+
+    // Màn hình chờ 5 giây, sau đó hiện dần màn hình phần 2.
+    setTimeout(()=>{
+        loading.style.opacity = "0";
+        setTimeout(()=>{
+            loading.classList.remove("show");
+            loading.style.display = "none";
+            sequel.classList.add("show");
+        }, 900);
+    }, 5000);
+}
+
+/* =====================================================
+BACK TO MAIN MENU
+===================================================== */
+document
+    .getElementById("continueButton")
+    .addEventListener("click", openSequel);
+
+document
+    .getElementById("backToMain")
+    .addEventListener("click", ()=>{
+        location.reload();
+    });
 
 
 /* =====================================================
