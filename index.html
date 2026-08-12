@@ -641,6 +641,41 @@ canvas{
     letter-spacing:4px;
 }
 
+
+/* SCROLLABLE LORE / ENDING */
+#lore, #ending{
+    overflow-y:auto;
+    overflow-x:hidden;
+    touch-action:pan-y;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    justify-content:flex-start;
+    align-items:center;
+    padding-top:50px;
+    padding-bottom:60px;
+    pointer-events:auto;
+}
+
+#lore > *, #ending > *{
+    flex-shrink:0;
+}
+
+#lore::-webkit-scrollbar, #ending::-webkit-scrollbar{
+    width:8px;
+}
+
+#lore::-webkit-scrollbar-thumb, #ending::-webkit-scrollbar-thumb{
+    background:rgba(190,155,105,.45);
+    border-radius:10px;
+}
+
+@media(pointer:coarse){
+    #lore, #ending{
+        padding:35px 20px 70px;
+        touch-action:pan-y;
+    }
+}
+
 /* =========================
    CONTINUE / SEQUEL
 ========================= */
@@ -715,6 +750,15 @@ canvas{
 #sequelMenu .subtitle{
     color:#9fc2dc;
     text-shadow:0 0 12px rgba(120,190,240,.35);
+}
+
+#sequelMenu .sequel-coming-soon{
+    margin-top:10px;
+    font-size:12px;
+    letter-spacing:6px;
+    color:#d8efff;
+    opacity:.9;
+    text-shadow:0 0 14px rgba(130,205,255,.5);
 }
 
 #backToMain{
@@ -1022,9 +1066,50 @@ and
 }
 
 </style>
+
+<style id="v8-main-footer-style">
+#v7-credit-footer{
+  display:block;
+  position:fixed;
+  right:18px;
+  bottom:14px;
+  z-index:9999;
+  text-align:right;
+  color:rgba(245,245,245,.9);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:13px;
+  line-height:1.55;
+  letter-spacing:.3px;
+  text-shadow:0 2px 8px rgba(0,0,0,.8);
+  pointer-events:none;
+}
+#mainFooterWhite{
+  color:rgba(245,245,245,.9);
+}
+#mainFooterYellow{
+  display:none;
+  color:#f0d35a;
+  text-shadow:0 2px 10px rgba(0,0,0,.9),0 0 12px rgba(240,190,60,.3);
+}
+@media (max-width:700px){
+  #v7-credit-footer{
+    right:10px;
+    bottom:8px;
+    font-size:10px;
+    line-height:1.45;
+  }
+}
+</style>
+
 </head>
 
 <body>
+
+<div id="v7-credit-footer" aria-hidden="true">
+  <div id="mainFooterWhite">Tắt Unikey để trải nghiệm tốt hơn(PC)</div>
+  <div id="mainFooterYellow">Developed by trunghieu🧸.</div>
+</div>
+
 
 <!-- =====================================================
 MENU
@@ -1374,14 +1459,6 @@ ENDING
 
     <button
         class="button"
-        id="restartButton">
-
-        CHƠI LẠI
-
-    </button>
-
-    <button
-        class="button"
         id="continueButton">
 
         TIẾP TỤC
@@ -1412,6 +1489,10 @@ THE FORGOTTEN GOD 2
         QUÁ KHỨ CỦA GIÁP LONG VƯƠNG
     </div>
 
+    <div class="subtitle sequel-coming-soon">
+        COMING SOON
+    </div>
+
     <button class="button" id="backToMain">
         QUAY LẠI MÀN HÌNH CHÍNH
     </button>
@@ -1440,6 +1521,104 @@ ROTATE
 
 
 <script>
+let sequelScreenUnlocked = false;
+function showForgottenGod2(){
+    sequelScreenUnlocked = true;
+    if(typeof showScreen === "function") return showScreen("forgottenGod2");
+    const el = document.getElementById("forgottenGod2");
+    if(el) el.style.display = "flex";
+}
+
+let mobileAimTarget = null;
+let mobileAimX = 0;
+let mobileAimY = -1;
+
+function getAutoAimTarget(){
+    if(!player) return null;
+
+    const candidates = [];
+    if(typeof boss !== "undefined" && boss && boss.active && !boss.defeated && boss.hp > 0){
+        candidates.push(boss);
+    }
+    if(typeof enemies !== "undefined" && Array.isArray(enemies)){
+        for(const e of enemies){
+            if(e && e.alive !== false && e.hp > 0) candidates.push(e);
+        }
+    }
+
+    let best = null, bestScore = Infinity;
+    const currentAimLen = Math.hypot(mobileAimX,mobileAimY) || 1;
+
+    for(const e of candidates){
+        const dx = e.x - player.x;
+        const dy = e.y - player.y;
+        const d = Math.hypot(dx,dy);
+        if(d > 950) continue;
+
+        const tx = dx / (d || 1);
+        const ty = dy / (d || 1);
+        const dot = (mobileAimX * tx + mobileAimY * ty) / currentAimLen;
+        const anglePenalty = (1 - Math.max(-1,Math.min(1,dot))) * 180;
+
+        // Vẫn ưu tiên mục tiêu gần, nhưng tránh đổi mục tiêu đột ngột.
+        const score = d + anglePenalty;
+        if(score < bestScore){
+            bestScore = score;
+            best = e;
+        }
+    }
+
+    // Hysteresis: giữ mục tiêu hiện tại nếu nó vẫn còn hợp lý.
+    if(mobileAimTarget){
+        const dx = mobileAimTarget.x - player.x;
+        const dy = mobileAimTarget.y - player.y;
+        const d = Math.hypot(dx,dy);
+        const alive = mobileAimTarget.alive !== false &&
+                      mobileAimTarget.hp > 0 &&
+                      !mobileAimTarget.defeated;
+
+        if(alive && d <= 1050 &&
+           (!best || d <= Math.hypot(best.x-player.x,best.y-player.y) + 120)){
+            return mobileAimTarget;
+        }
+    }
+
+    mobileAimTarget = best;
+    return best;
+}
+
+function getShotDirection(){
+    const mobile = window.isMobileDevice || "ontouchstart" in window;
+    let dx = aimX, dy = aimY;
+    const target = mobile ? getAutoAimTarget() : null;
+
+    if(mobile && target){
+        const tx = target.x - player.x;
+        const ty = target.y - player.y;
+        const len = Math.hypot(tx,ty) || 1;
+        const desiredX = tx / len;
+        const desiredY = ty / len;
+
+        // Nội suy từng khung hình để ngắm trên điện thoại mượt hơn.
+        mobileAimX += (desiredX - mobileAimX) * 0.28;
+        mobileAimY += (desiredY - mobileAimY) * 0.28;
+        dx = mobileAimX;
+        dy = mobileAimY;
+    }else if(mobile){
+        const len = Math.hypot(aimX,aimY) || 1;
+        const desiredX = aimX / len;
+        const desiredY = aimY / len;
+        mobileAimX += (desiredX - mobileAimX) * 0.18;
+        mobileAimY += (desiredY - mobileAimY) * 0.18;
+        dx = mobileAimX;
+        dy = mobileAimY;
+    }
+
+    const len = Math.hypot(dx,dy) || 1;
+    return {x:dx/len, y:dy/len, target};
+}
+
+
 
 /* =====================================================
 CANVAS
@@ -1657,6 +1836,29 @@ addEventListener(
 
     }
 );
+
+/* Không để phím/joystick bị kẹt khiến nhân vật tự di chuyển. */
+function clearMovementInput(){
+    for(const k of Object.keys(keys)) keys[k]=false;
+    keys.space=false;
+    resetJoystick();
+}
+
+addEventListener("blur", clearMovementInput);
+addEventListener("pagehide", clearMovementInput);
+addEventListener("pointerup", e=>{
+    if(joystickPointer !== null && e.pointerId === joystickPointer){
+        resetJoystick();
+    }
+});
+addEventListener("pointercancel", e=>{
+    if(joystickPointer !== null && e.pointerId === joystickPointer){
+        resetJoystick();
+    }
+});
+addEventListener("visibilitychange", ()=>{
+    if(document.hidden) clearMovementInput();
+});
 
 
 /* =====================================================
@@ -1926,8 +2128,9 @@ function initAudio(){
         audioCtx.createGain();
 
 
+    /* Nhạc nền và hiệu ứng rõ hơn, nhưng vẫn dưới mức gây méo tiếng. */
     master.gain.value =
-        .42;
+        .80;
 
 
     master.connect(
@@ -2261,6 +2464,8 @@ function npcSound(){
 }
 
 
+function doorOpenSound(){if(!audioCtx)return;tone(120,.12,"sine",.10);setTimeout(()=>tone(180,.16,"triangle",.09),90);setTimeout(()=>tone(260,.24,"sine",.08),180);noise(.22,.035);}
+
 function levelSound(){
 
     tone(
@@ -2411,7 +2616,7 @@ function startMusic(){
                     ],
                     1.1,
                     "triangle",
-                    .025
+                    .09
                 );
 
 
@@ -2468,7 +2673,7 @@ function startBossMusic(){
                     ],
                     .7,
                     "sawtooth",
-                    .035
+                    .065
                 );
 
 
@@ -2492,6 +2697,7 @@ let rocks = [];
 let graves = [];
 
 let enemies = [];
+let ruins = [];
 
 
 const npc = {
@@ -2552,9 +2758,14 @@ const boss = {
 
     maxHp:150,
 
-    speed:1.35,
+    speed:1.15,
 
+    // Boss khổng lồ: AI giữ khoảng cách và tấn công từ xa
     attackCooldown:0,
+    rangedCooldown:0,
+    radius:115,
+    preferredDistance:500,
+    orbitDirection:1,
 
     active:false,
 
@@ -2605,6 +2816,56 @@ function createWorld(){
     graves = [];
 
     enemies = [];
+    ruins = [
+        {x:520,y:620,w:230,h:150,rot:-.05},
+        {x:900,y:1480,w:210,h:140,rot:.08},
+        {x:3020,y:820,w:260,h:160,rot:-.08},
+        {x:3370,y:2050,w:220,h:145,rot:.05},
+        {x:1200,y:2600,w:280,h:170,rot:-.06},
+        {x:2850,y:2720,w:240,h:150,rot:.04},
+        {x:3650,y:1250,w:190,h:130,rot:-.1},
+
+        /* Khu dân cư phía tây */
+        {x:280,y:720,w:190,h:135,rot:-.03},
+        {x:300,y:980,w:230,h:150,rot:.04},
+        {x:560,y:1120,w:170,h:125,rot:-.08},
+        {x:820,y:880,w:220,h:145,rot:.06},
+        {x:1080,y:1030,w:180,h:130,rot:-.04},
+        {x:1350,y:850,w:240,h:155,rot:.03},
+
+        /* Khu phố phía đông */
+        {x:2550,y:720,w:210,h:145,rot:-.04},
+        {x:2820,y:640,w:180,h:125,rot:.07},
+        {x:3100,y:620,w:250,h:155,rot:-.05},
+        {x:3400,y:760,w:200,h:140,rot:.04},
+        {x:3650,y:920,w:230,h:150,rot:-.06},
+        {x:3900,y:1120,w:190,h:135,rot:.08},
+
+        /* Khu nhà dân quanh quảng trường cũ */
+        {x:420,y:1750,w:230,h:150,rot:.05},
+        {x:720,y:1900,w:190,h:135,rot:-.04},
+        {x:1050,y:1750,w:250,h:160,rot:.02},
+        {x:1320,y:1950,w:210,h:145,rot:.08},
+        {x:1550,y:1700,w:180,h:130,rot:-.06},
+        {x:1780,y:1900,w:240,h:155,rot:.04},
+        {x:2250,y:1760,w:210,h:140,rot:-.05},
+        {x:2500,y:1950,w:260,h:165,rot:.03},
+        {x:2780,y:1720,w:190,h:130,rot:-.07},
+        {x:3060,y:1880,w:230,h:150,rot:.05},
+        {x:3340,y:1700,w:210,h:140,rot:-.02},
+
+        /* Phía nam vương quốc */
+        {x:300,y:2450,w:250,h:165,rot:-.05},
+        {x:650,y:2680,w:200,h:140,rot:.06},
+        {x:980,y:2420,w:230,h:150,rot:-.03},
+        {x:1400,y:2740,w:260,h:170,rot:.05},
+        {x:1850,y:2520,w:210,h:145,rot:-.06},
+        {x:2350,y:2700,w:240,h:155,rot:.03},
+        {x:2750,y:2460,w:200,h:135,rot:-.04},
+        {x:3150,y:2650,w:250,h:160,rot:.07},
+        {x:3550,y:2400,w:220,h:150,rot:-.05},
+        {x:3900,y:2700,w:190,h:130,rot:.04}
+    ];
 
 
     for(
@@ -2782,16 +3043,16 @@ function updatePlayer(){
 
     /* MOBILE */
 
+    /* Chỉ nhận hướng từ joystick khi người chơi đang thực sự giữ joystick.
+       Điều này ngăn nhân vật tự đi sau khi pointer/touch bị mất sự kiện thả. */
     if(
-        Math.abs(joystickX)>.05 ||
-        Math.abs(joystickY)>.05
+        joystickActive &&
+        (Math.abs(joystickX)>.05 ||
+         Math.abs(joystickY)>.05)
     ){
 
-        dx +=
-            joystickX;
-
-        dy +=
-            joystickY;
+        dx += joystickX;
+        dy += joystickY;
 
     }
 
@@ -3313,7 +3574,7 @@ function updateEnemies(){
         ){
 
             damagePlayer(
-                .12
+                6
             );
 
         }
@@ -3855,6 +4116,10 @@ function activateBoss(){
         .style.display =
         "block";
 
+    // Không hiện dòng FLOOR 3 trong lúc chiến đấu với Boss.
+    document.getElementById("location").textContent = "FORGOTTEN GOD";
+    document.getElementById("level").textContent = "BOSS";
+
 
     startBossMusic();
 
@@ -3882,73 +4147,56 @@ function updateBoss(){
     )
         return;
 
+    const dx = player.x - boss.x;
+    const dy = player.y - boss.y;
+    const d = Math.hypot(dx,dy) || 1;
 
-    const d =
-        distance(
-            boss.x,
-            boss.y,
-            player.x,
-            player.y
-        );
+    if(boss.attackCooldown>0) boss.attackCooldown--;
+    if(boss.rangedCooldown>0) boss.rangedCooldown--;
 
+    // AI chiến đấu: tiến lại gần khi quá xa, lùi ra khi người chơi áp sát,
+    // đồng thời di chuyển ngang để Boss không đứng yên.
+    const preferred = boss.preferredDistance;
+    let moveX = 0, moveY = 0;
 
-    if(d>85){
-
-        const dx =
-            player.x-
-            boss.x;
-
-
-        const dy =
-            player.y-
-            boss.y;
-
-
-        boss.x +=
-            dx/d*
-            boss.speed;
-
-
-        boss.y +=
-            dy/d*
-            boss.speed;
-
+    if(d > preferred + 110){
+        moveX = dx/d;
+        moveY = dy/d;
+    }else if(d < preferred - 150){
+        moveX = -dx/d;
+        moveY = -dy/d;
+    }else{
+        // Strafe quanh người chơi
+        moveX = -dy/d * boss.orbitDirection;
+        moveY =  dx/d * boss.orbitDirection;
     }
 
+    const speed = boss.speed * (boss.hp < boss.maxHp*0.35 ? 1.22 : 1);
+    boss.x += moveX * speed;
+    boss.y += moveY * speed;
 
-    if(
-        boss.attackCooldown>0
-    ){
+    // Đổi hướng thỉnh thoảng để chuyển động khó đoán hơn.
+    if(Math.random() < 0.008) boss.orbitDirection *= -1;
 
-        boss.attackCooldown--;
-
-    }
-
-
-    if(
-        d<650 &&
-        boss.attackCooldown<=0
-    ){
-
+    // Tấn công phép tầm xa. Boss có thể bắn khi người chơi cách tối đa 900 đơn vị.
+    if(d < 900 && boss.rangedCooldown <= 0){
         bossAttack();
-
-        boss.attackCooldown =
-            75;
-
+        boss.rangedCooldown = boss.hp < boss.maxHp*0.5 ? 52 : 72;
     }
 
-
-    if(
-        d<80
-    ){
-
-        damagePlayer(
-            .45
-        );
-
+    // Nếu người chơi áp sát quá gần, Boss gây sát thương tiếp xúc nhưng không đứng yên.
+    if(d < boss.radius + 28 && boss.attackCooldown<=0){
+        damagePlayer(8);
+        boss.attackCooldown = 45;
     }
+
+    // Giữ Boss trong đại điện rộng.
+    const minX=130, maxX=1370, minY=110, maxY=810;
+    boss.x=Math.max(minX,Math.min(maxX,boss.x));
+    boss.y=Math.max(minY,Math.min(maxY,boss.y));
 
 }
+
 
 
 /* =====================================================
@@ -3959,48 +4207,26 @@ function bossAttack(){
 
     bossAttackSound();
 
+    const dx = player.x-boss.x;
+    const dy = player.y-boss.y;
+    const len = Math.hypot(dx,dy) || 1;
+    const base = Math.atan2(dy,dx);
 
-    const dx =
-        player.x-
-        boss.x;
-
-
-    const dy =
-        player.y-
-        boss.y;
-
-
-    const len =
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
-
-
-    if(len===0)
-        return;
-
-
-    bossProjectiles.push({
-
-        x:
-            boss.x,
-
-        y:
-            boss.y,
-
-        vx:
-            dx/len*7,
-
-        vy:
-            dy/len*7,
-
-        life:
-            120
-
+    // Một phát đạn lớn + hai tia phụ, tạo cảm giác Boss thực sự tấn công từ xa.
+    const angles=[base,base-0.13,base+0.13];
+    angles.forEach((a,i)=>{
+        const speed = i===0 ? 8.2 : 7.1;
+        bossProjectiles.push({
+            x:boss.x + Math.cos(a)*55,
+            y:boss.y + Math.sin(a)*55,
+            vx:Math.cos(a)*speed,
+            vy:Math.sin(a)*speed,
+            life:150,
+            radius:i===0 ? 17 : 12
+        });
     });
-
 }
+
 
 
 /* =====================================================
@@ -4143,10 +4369,23 @@ function showEnding(){
     gameFinished =
         true;
 
+    try{
+        localStorage.setItem("forgottenGodCompleted","1");
+    }catch(e){}
+
+    // Dòng vàng sẽ được hiển thị khi quay về màn hình chính sau khi hoàn thành.
+    const mainFooterYellow = document.getElementById("mainFooterYellow");
+    if(mainFooterYellow) mainFooterYellow.style.display = "block";
+
+    initAudio();
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    doorOpenSound();
 
     running =
         false;
 
+    // Không hiện hai dòng chân trang trong màn hình kết thúc.
+    document.getElementById("v7-credit-footer").style.display = "none";
 
     document
         .getElementById(
@@ -4861,73 +5100,143 @@ DRAW OUTSIDE
 
 function drawOutside(){
 
+    /* xanh lam-xanh rêu thay cho nền ô vuông */
     ctx.fillStyle =
-        "#111017";
+        "#183f3b";
 
+    ctx.fillRect(0,0,W,H);
 
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
+    /* lớp cỏ loang nhẹ */
+    const g = ctx.createRadialGradient(W*.5,H*.45,80,W*.5,H*.45,Math.max(W,H)*.8);
+    g.addColorStop(0,"rgba(68,120,104,.16)");
+    g.addColorStop(1,"rgba(4,20,24,.28)");
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,W,H);
 
+    /* lối mòn chính xuyên khu rừng tới lâu đài */
+    ctx.save();
+    ctx.translate(-camera.x,-camera.y);
+    ctx.beginPath();
+    ctx.moveTo(1970,3200);
+    ctx.bezierCurveTo(1900,2750,2240,2450,2080,2150);
+    ctx.bezierCurveTo(1920,1850,2160,1520,2070,1220);
+    ctx.bezierCurveTo(1980,900,2150,620,2100,330);
+    ctx.lineWidth=175;
+    ctx.strokeStyle="#6b6650";
+    ctx.lineCap="round";
+    ctx.stroke();
 
-    ctx.strokeStyle =
-        "rgba(130,120,130,.045)";
+    ctx.lineWidth=115;
+    ctx.strokeStyle="#81765a";
+    ctx.stroke();
 
+    /* lối mòn phụ */
+    ctx.beginPath();
+    ctx.moveTo(0,2200);
+    ctx.bezierCurveTo(650,2150,1250,2240,2080,2150);
+    ctx.lineWidth=95;
+    ctx.strokeStyle="#5f5d4b";
+    ctx.stroke();
+    ctx.restore();
 
-    const grid =
-        100;
-
-
-    for(
-        let x =
-            -camera.x%grid;
-        x<W;
-        x+=grid
-    ){
-
+    /* vệt cỏ nhỏ trên đường */
+    ctx.save();
+    ctx.translate(-camera.x,-camera.y);
+    for(let i=0;i<45;i++){
+        const x=350+(i*347)%3500;
+        const y=250+(i*613)%2700;
+        ctx.strokeStyle="rgba(95,150,115,.18)";
+        ctx.lineWidth=3;
         ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+4,y-10);
+        ctx.moveTo(x+8,y);
+        ctx.lineTo(x+12,y-7);
+        ctx.stroke();
+    }
+    ctx.restore();
 
-        ctx.moveTo(
-            x,
-            0
-        );
+}
 
-        ctx.lineTo(
-            x,
-            H
-        );
 
+/* =====================================================
+SCENERY: RUINED HOUSES
+===================================================== */
+function drawRuins(){
+    for(const r of ruins){
+        const x=r.x-camera.x, y=r.y-camera.y;
+        if(x<-350||x>W+350||y<-250||y>H+250) continue;
+
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(r.rot||0);
+
+        /* shadow */
+        ctx.fillStyle="rgba(0,0,0,.28)";
+        ctx.fillRect(-r.w/2+8, r.h*.42, r.w, 22);
+
+        /* broken walls */
+        ctx.fillStyle="#4d5750";
+        ctx.fillRect(-r.w/2, -r.h/2, r.w, r.h);
+        ctx.fillStyle="#647067";
+        ctx.fillRect(-r.w/2+10, -r.h/2+10, r.w-20, 12);
+
+        /* missing sections */
+        ctx.fillStyle="#183f3b";
+        ctx.fillRect(-r.w/2+20, -5, 62, r.h*.55);
+        ctx.fillRect(r.w/2-65, -r.h/2+35, 45, 70);
+
+        /* cửa */
+        ctx.fillStyle="#171c1b";
+        ctx.fillRect(-25, 15, 50, r.h*.48);
+
+        /* mái đổ */
+        ctx.fillStyle="#303936";
+        ctx.beginPath();
+        ctx.moveTo(-r.w/2-15,-r.h/2+4);
+        ctx.lineTo(-25,-r.h/2-45);
+        ctx.lineTo(r.w/2+25,-r.h/2+10);
+        ctx.lineTo(r.w/2-5,-r.h/2+35);
+        ctx.closePath();
+        ctx.fill();
+
+        /* cửa sổ vỡ */
+        ctx.fillStyle="#111817";
+        ctx.fillRect(-r.w*.34,-r.h*.18,34,30);
+        ctx.fillRect(r.w*.20,-r.h*.22,34,30);
+        ctx.strokeStyle="#65736c";
+        ctx.lineWidth=3;
+        ctx.beginPath();
+        ctx.moveTo(-r.w*.34,-r.h*.18); ctx.lineTo(-r.w*.34+34,r.h*.02);
+        ctx.moveTo(r.w*.20,-r.h*.22); ctx.lineTo(r.w*.20+34,r.h*.08);
         ctx.stroke();
 
-    }
-
-
-    for(
-        let y =
-            -camera.y%grid;
-        y<H;
-        y+=grid
-    ){
-
+        /* gỗ gãy */
+        ctx.strokeStyle="#6a5847";
+        ctx.lineWidth=10;
         ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            y
-        );
-
-        ctx.lineTo(
-            W,
-            y
-        );
-
+        ctx.moveTo(-r.w*.4,r.h*.38);
+        ctx.lineTo(r.w*.35,-r.h*.38);
+        ctx.moveTo(-r.w*.15,r.h*.42);
+        ctx.lineTo(r.w*.05,-r.h*.30);
         ctx.stroke();
 
-    }
+        /* gạch đá vỡ quanh nhà */
+        ctx.fillStyle="#59635e";
+        for(let i=0;i<7;i++){
+            const bx=-r.w*.48 + ((i*47)%(Math.max(40,r.w*.9)));
+            const by=r.h*.45 + (i%3)*7;
+            ctx.fillRect(bx,by,12+(i%3)*5,8);
+        }
 
+        /* ống khói gãy */
+        ctx.fillStyle="#3e4743";
+        ctx.fillRect(r.w*.24,-r.h*.62,24,55);
+        ctx.fillStyle="#252c2a";
+        ctx.fillRect(r.w*.20,-r.h*.66,34,8);
+
+        ctx.restore();
+    }
 }
 
 
@@ -4937,88 +5246,46 @@ TREES
 
 function drawTrees(){
 
-    for(
-        const t of trees
-    ){
+    for(const t of trees){
+        const x=t.x-camera.x;
+        const y=t.y-camera.y;
+        if(x<-120||x>W+120||y<-150||y>H+150) continue;
 
-        const x =
-            t.x-
-            camera.x;
-
-
-        const y =
-            t.y-
-            camera.y;
-
-
-        if(
-            x<-100 ||
-            x>W+100 ||
-            y<-100 ||
-            y>H+100
-        )
-            continue;
-
-
-        ctx.strokeStyle =
-            "#241a20";
-
-
-        ctx.lineWidth =
-            9;
-
-
+        /* bóng */
+        ctx.fillStyle="rgba(0,0,0,.22)";
         ctx.beginPath();
+        ctx.ellipse(x,y+t.size*.72,t.size*.75,t.size*.22,0,0,Math.PI*2);
+        ctx.fill();
 
-
-        ctx.moveTo(
-            x,
-            y+t.size
-        );
-
-
-        ctx.lineTo(
-            x,
-            y-t.size
-        );
-
-
+        /* thân */
+        ctx.strokeStyle="#3d3028";
+        ctx.lineWidth=9;
+        ctx.beginPath();
+        ctx.moveTo(x,y+t.size);
+        ctx.lineTo(x,y-t.size*.25);
         ctx.stroke();
 
-
-        ctx.lineWidth =
-            5;
-
-
+        /* cành */
+        ctx.lineWidth=5;
         ctx.beginPath();
-
-
-        ctx.moveTo(
-            x,
-            y
-        );
-
-
-        ctx.lineTo(
-            x-t.size,
-            y-t.size*.7
-        );
-
-
-        ctx.moveTo(
-            x,
-            y-10
-        );
-
-
-        ctx.lineTo(
-            x+t.size,
-            y-t.size*.8
-        );
-
-
+        ctx.moveTo(x,y-t.size*.1);
+        ctx.lineTo(x-t.size*.7,y-t.size*.65);
+        ctx.moveTo(x,y-t.size*.2);
+        ctx.lineTo(x+t.size*.72,y-t.size*.72);
         ctx.stroke();
 
+        /* tán cây xanh */
+        ctx.fillStyle="#2d6651";
+        ctx.beginPath();
+        ctx.arc(x-t.size*.35,y-t.size*.65,t.size*.48,0,Math.PI*2);
+        ctx.arc(x+t.size*.32,y-t.size*.7,t.size*.5,0,Math.PI*2);
+        ctx.arc(x,y-t.size*.98,t.size*.55,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle="rgba(101,157,112,.25)";
+        ctx.beginPath();
+        ctx.arc(x-t.size*.2,y-t.size*1.08,t.size*.22,0,Math.PI*2);
+        ctx.fill();
     }
 
 }
@@ -5402,208 +5669,234 @@ INTERIOR
 
 function drawInterior(){
 
+    /* =====================================================
+       WARM NOBLE CASTLE INTERIOR
+       Không còn nền ô vuông: mỗi tầng là một khu phòng
+       quý tộc với sàn gỗ, thảm, tường, tranh và nội thất.
+    ===================================================== */
+
+    const ox = -camera.x;
+    const oy = -camera.y;
+
+    /* nền sàn gỗ ấm */
     ctx.fillStyle =
-        castleFloor===1
-        ?"#0e0a10"
-        :castleFloor===2
-        ?"#130a10"
-        :"#18070e";
+        castleFloor===1 ? "#5b3828" :
+        castleFloor===2 ? "#493026" :
+        "#3f2925";
+    ctx.fillRect(0,0,W,H);
 
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.strokeStyle =
-        "rgba(170,140,100,.08)";
-
-
-    ctx.lineWidth =
-        2;
-
-
-    for(
-        let x =
-            -camera.x%100;
-        x<W;
-        x+=100
-    ){
-
+    /* vân gỗ dài, không phải ô vuông */
+    ctx.save();
+    ctx.globalAlpha = .20;
+    ctx.strokeStyle = "#d29a5c";
+    ctx.lineWidth = 2;
+    for(let y = ((-camera.y)%42)-42; y<H+42; y+=42){
         ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            0
-        );
-
-        ctx.lineTo(
-            x,
-            H
-        );
-
+        ctx.moveTo(0,y);
+        ctx.lineTo(W,y);
         ctx.stroke();
+    }
+    ctx.restore();
 
+    function room(x,y,w,h,name,accent="#8d6743"){
+        const sx=x+ox, sy=y+oy;
+        /* nền phòng */
+        ctx.fillStyle="#6d4933";
+        ctx.fillRect(sx,sy,w,h);
+
+        /* thảm */
+        ctx.fillStyle="rgba(116,44,40,.88)";
+        ctx.fillRect(sx+32,sy+38,w-64,h-76);
+        ctx.strokeStyle="rgba(225,184,111,.62)";
+        ctx.lineWidth=3;
+        ctx.strokeRect(sx+42,sy+48,w-84,h-96);
+
+        /* tường */
+        ctx.fillStyle="#2a1b19";
+        ctx.fillRect(sx,sy,w,18);
+        ctx.fillRect(sx,sy+h-18,w,18);
+        ctx.fillRect(sx,sy,18,h);
+        ctx.fillRect(sx+w-18,sy,18,h);
+
+        /* tên phòng */
+        ctx.fillStyle="#f0d29a";
+        ctx.font="bold 13px Georgia";
+        ctx.textAlign="center";
+        ctx.fillText(name,sx+w/2,sy+25);
     }
 
+    function table(x,y,w=120,h=55){
+        const sx=x+ox, sy=y+oy;
+        ctx.fillStyle="#3b2118";
+        ctx.fillRect(sx,sy,w,h);
+        ctx.fillStyle="#9b633a";
+        ctx.fillRect(sx+7,sy+6,w-14,h-12);
+        ctx.fillStyle="#d9b46d";
+        ctx.beginPath(); ctx.arc(sx+w*.28,sy+h*.5,5,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(sx+w*.72,sy+h*.5,5,0,Math.PI*2); ctx.fill();
+    }
 
-    for(
-        let y =
-            -camera.y%100;
-        y<H;
-        y+=100
-    ){
+    function chair(x,y){
+        const sx=x+ox, sy=y+oy;
+        ctx.fillStyle="#4a261b";
+        ctx.fillRect(sx,sy,25,25);
+        ctx.fillRect(sx+5,sy-16,15,16);
+    }
 
+    function sofa(x,y,w=130){
+        const sx=x+ox, sy=y+oy;
+        ctx.fillStyle="#5c2730";
+        ctx.fillRect(sx,sy,w,45);
+        ctx.fillRect(sx+8,sy-15,w-16,18);
+        ctx.fillStyle="#d5a65d";
+        ctx.fillRect(sx+8,sy+35,w-16,5);
+    }
+
+    function bookshelf(x,y,h=110){
+        const sx=x+ox, sy=y+oy;
+        ctx.fillStyle="#321c15";
+        ctx.fillRect(sx,sy,28,h);
+        for(let i=0;i<5;i++){
+            ctx.fillStyle=i%2?"#a36a3e":"#70402b";
+            ctx.fillRect(sx+4,sy+8+i*20,20,13);
+        }
+    }
+
+    function portrait(x,y,emoji="🖼️"){
+        const sx=x+ox, sy=y+oy;
+        ctx.fillStyle="#a77a3e";
+        ctx.fillRect(sx,sy,48,60);
+        ctx.strokeStyle="#e0bc73";
+        ctx.lineWidth=3;
+        ctx.strokeRect(sx,sy,48,60);
+        ctx.font="30px Arial";
+        ctx.textAlign="center";
+        ctx.textBaseline="middle";
+        ctx.fillText(emoji,sx+24,sy+31);
+    }
+
+    function chandelier(x,y){
+        const sx=x+ox, sy=y+oy;
+        ctx.strokeStyle="#c79a52";
+        ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(sx,sy-35); ctx.lineTo(sx,sy); ctx.stroke();
+        ctx.fillStyle="#b88a48";
+        ctx.beginPath(); ctx.arc(sx,sy+4,30,0,Math.PI*2); ctx.fill();
+        for(let i=0;i<6;i++){
+            const a=i*Math.PI/3;
+            ctx.fillStyle="#ffe4a2";
+            ctx.beginPath(); ctx.arc(sx+Math.cos(a)*30,sy+Math.sin(a)*18,6,0,Math.PI*2); ctx.fill();
+        }
+    }
+
+    /* đại sảnh */
+    room(80,70,760,420,"ĐẠI SẢNH");
+    sofa(150,150,150);
+    sofa(590,150,150);
+    table(350,250,210,65);
+    chair(375,325); chair(500,325);
+    portrait(125,280,"👑");
+    portrait(730,280,"🐉");
+    chandelier(460,145);
+
+    /* phòng thư viện */
+    room(80,530,480,320,"THƯ VIỆN HOÀNG GIA");
+    bookshelf(115,590,190);
+    bookshelf(155,590,190);
+    bookshelf(195,590,190);
+    table(280,650,170,55);
+    chair(310,715); chair(405,715);
+    portrait(430,570,"📜");
+
+    /* phòng khách quý tộc */
+    room(590,530,430,320,"PHÒNG KHÁCH");
+    sofa(640,600,145);
+    sofa(820,600,145);
+    table(725,690,140,50);
+    chandelier(805,585);
+    portrait(950,570,"🕯️");
+
+    /* khu bên phải: phòng ăn + hành lang */
+    room(1040,70,390,380,"ĐẠI YẾN");
+    table(1110,190,250,70);
+    for(let i=0;i<4;i++){
+        chair(1120+i*70,275);
+        chair(1120+i*70,145);
+    }
+    chandelier(1235,125);
+
+    room(1040,480,390,370,"PHÒNG BÁU VẬT");
+    ctx.fillStyle="#b98b42";
+    ctx.fillRect(1120+ox,585+oy,220,110);
+    ctx.fillStyle="#e9c873";
+    ctx.font="42px Arial";
+    ctx.textAlign="center";
+    ctx.fillText("💰",1230+ox,650+oy);
+    portrait(1070,535,"💎");
+    portrait(1340,535,"🏆");
+
+    /* hành lang trung tâm */
+    ctx.fillStyle="#2b1b18";
+    ctx.fillRect(850+ox,70+oy,175,780);
+    ctx.fillStyle="#8e6842";
+    ctx.fillRect(885+ox,105+oy,105,710);
+    ctx.globalAlpha=.55;
+    for(let y=140;y<790;y+=75){
+        ctx.fillStyle="#cda65e";
+        ctx.fillRect(930+ox,y+oy,15,45);
+    }
+    ctx.globalAlpha=1;
+
+    /* PHÒNG CHUYỂN TẦNG — căn phòng riêng thay cho cầu thang */
+    const tx = 1060+ox, ty = 70+oy, tw = 340, th = 380;
+    ctx.fillStyle="#4b3027"; ctx.fillRect(tx,ty,tw,th);
+    ctx.fillStyle="#241716"; ctx.fillRect(tx,ty,tw,18); ctx.fillRect(tx,ty+th-18,tw,18); ctx.fillRect(tx,ty,18,th); ctx.fillRect(tx+tw-18,ty,18,th);
+    ctx.fillStyle="#6e2330"; ctx.fillRect(tx+45,ty+55,tw-90,th-110);
+    ctx.strokeStyle="#d4ad68"; ctx.lineWidth=3; ctx.strokeRect(tx+55,ty+65,tw-110,th-130);
+    ctx.fillStyle="#171112"; ctx.fillRect(tx+125,ty+115,90,180);
+    ctx.strokeStyle="#c99c54"; ctx.lineWidth=6; ctx.strokeRect(tx+125,ty+115,90,180);
+    ctx.fillStyle="#b9d7d8"; ctx.font="42px Arial"; ctx.textAlign="center"; ctx.fillText("🗝️",tx+170,ty+210);
+    ctx.fillStyle="#f1d18e"; ctx.font="bold 14px Georgia"; ctx.fillText("PHÒNG CHUYỂN TẦNG",tx+170,ty+40);
+    ctx.font="12px Arial"; ctx.fillText("⬆ NHẤN E ĐỂ TIẾP TỤC",tx+170,ty+330);
+
+    /* cột đá trang trí */
+    for(const px of [65,825,1030,1430]){
+        ctx.fillStyle="#2c1c1a";
+        ctx.fillRect(px-camera.x,50-camera.y,24,820);
+        ctx.fillStyle="#9b7044";
+        ctx.fillRect(px-6-camera.x,42-camera.y,36,12);
+        ctx.fillRect(px-6-camera.x,870-camera.y,36,12);
+    }
+
+    /* đèn và nến */
+    drawCandle(400-camera.x,250-camera.y);
+    drawCandle(1050-camera.x,250-camera.y);
+    drawCandle(400-camera.x,700-camera.y);
+    drawCandle(1050-camera.x,700-camera.y);
+
+    /* Keeper ở tầng 1 */
+    if(castleFloor===1){
+        ctx.fillStyle="rgba(255,220,150,.08)";
         ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            y
-        );
-
-        ctx.lineTo(
-            W,
-            y
-        );
-
-        ctx.stroke();
-
+        ctx.arc(castleNPC.x-camera.x,castleNPC.y-camera.y,85,0,Math.PI*2);
+        ctx.fill();
     }
 
-
-    ctx.strokeStyle =
-        "#3a3038";
-
-
-    ctx.lineWidth =
-        25;
-
-
-    ctx.strokeRect(
-        -camera.x,
-        -camera.y,
-        1500,
-        1000
-    );
-
-
-    ctx.fillStyle =
-        "#321822";
-
-
-    ctx.fillRect(
-        700-camera.x,
-        -camera.y,
-        100,
-        1000
-    );
-
-
-    /* STAIRS */
-
-    ctx.fillStyle =
-        "#4b3a40";
-
-
-    for(
-        let i=0;
-        i<7;
-        i++
-    ){
-
-        ctx.fillRect(
-            1120-camera.x,
-            700-
-                i*70-
-                camera.y,
-            240,
-            50
-        );
-
-    }
-
-
-    ctx.fillStyle =
-        "#d1b477";
-
-
-    ctx.font =
-        "bold 15px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.fillText(
-        "⬆ CẦU THANG",
-        1240-camera.x,
-        170-camera.y
-    );
-
-
-    drawCandle(
-        400-camera.x,
-        250-camera.y
-    );
-
-
-    drawCandle(
-        1050-camera.x,
-        250-camera.y
-    );
-
-
-    drawCandle(
-        400-camera.x,
-        700-camera.y
-    );
-
-
-    drawCandle(
-        1050-camera.x,
-        700-camera.y
-    );
-
-
-    if(
-        castleFloor===3
-    ){
-
+    /* phòng Boss tầng 3 */
+    if(castleFloor===3){
         drawBossRoom();
-
     }
 
-
-    if(
-        castleFloor===1
-    ){
-
-        ctx.fillStyle =
-            "#080609";
-
-
-        ctx.fillRect(
-            700-camera.x,
-            900-camera.y,
-            100,
-            100
-        );
-
-
-        ctx.fillStyle =
-            "#b99b65";
-
-
-        ctx.fillText(
-            "🚪 EXIT",
-            750-camera.x,
-            875-camera.y
-        );
-
+    /* cửa ra */
+    if(castleFloor===1){
+        ctx.fillStyle="#211313";
+        ctx.fillRect(700-camera.x,900-camera.y,100,100);
+        ctx.strokeStyle="#b99b65";
+        ctx.lineWidth=5;
+        ctx.strokeRect(700-camera.x,900-camera.y,100,100);
+        ctx.fillStyle="#f0cf8a";
+        ctx.font="bold 15px Arial";
+        ctx.fillText("🚪 EXIT",750-camera.x,875-camera.y);
     }
 
 }
@@ -5614,93 +5907,29 @@ BOSS ROOM
 ===================================================== */
 
 function drawBossRoom(){
-
-    const pulse =
-        Math.sin(
-            Date.now()/300
-        )*.5+.5;
-
-
-    ctx.fillStyle =
-        `rgba(
-            120,
-            20,
-            45,
-            ${.03+
-            pulse*.04}
-        )`;
-
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    ctx.strokeStyle =
-        "rgba(170,30,60,.25)";
-
-
-    ctx.lineWidth =
-        4;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        750-camera.x,
-        250-camera.y,
-        170,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.font =
-        "100px Arial";
-
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.textBaseline =
-        "middle";
-
-
-    ctx.fillText(
-        "👑",
-        boss.x-camera.x,
-        boss.y-camera.y
-    );
-
-
-    ctx.font =
-        "bold 18px Georgia";
-
-
-    ctx.fillStyle =
-        "#d9bd87";
-
-
-    ctx.fillText(
-        "FORGOTTEN GOD",
-        boss.x-camera.x,
-        boss.y-camera.y+80
-    );
-
+    ctx.save();
+    const ox=-camera.x, oy=-camera.y;
+    ctx.fillStyle="#d9d5cb"; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="#eeeae0"; ctx.fillRect(35+ox,35+oy,1430,860);
+    ctx.strokeStyle="#aaa49a"; ctx.lineWidth=8; ctx.strokeRect(35+ox,35+oy,1430,860);
+    const glow=ctx.createRadialGradient(750+ox,170+oy,40,750+ox,170+oy,650);
+    glow.addColorStop(0,"rgba(255,255,255,.8)"); glow.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=glow; ctx.fillRect(35+ox,35+oy,1430,860);
+    function column(x){ctx.fillStyle="#f7f5ef";ctx.fillRect(x+ox,90+oy,38,680);ctx.fillRect(x-10+ox,75+oy,58,18);ctx.fillRect(x-10+ox,770+oy,58,18);}
+    [90,280,1220,1410].forEach(column);
+    const statues=[[190,210,"⚔️"],[190,540,"🏺"],[1310,210,"🗡️"],[1310,540,"🏺"],[470,150,"🪽"],[1030,150,"🪽"]];
+    for(const [x,y,icon] of statues){ctx.fillStyle="#f7f6f1";ctx.beginPath();ctx.arc(x+ox,y+oy,42,0,Math.PI*2);ctx.fill();ctx.fillRect(x-30+ox,y+38+oy,60,105);ctx.fillRect(x-48+ox,y+140+oy,96,18);ctx.font="28px Arial";ctx.textAlign="center";ctx.fillStyle="#b8b4ad";ctx.fillText(icon,x+ox,y+85+oy);}
+    const throneX=750+ox, throneY=150+oy;
+    ctx.fillStyle="#d7d1c3"; ctx.fillRect(throneX-110,throneY+130,220,25);
+    ctx.fillStyle="#8c6b39"; ctx.fillRect(throneX-82,throneY+5,164,145); ctx.fillRect(throneX-58,throneY-65,116,75);
+    ctx.fillStyle="#f2e3b2"; ctx.fillRect(throneX-68,throneY+20,136,100);
+    ctx.font="44px Arial"; ctx.fillText("👑",throneX,throneY+88);
+    ctx.fillStyle="#807b72"; ctx.font="bold 18px Georgia"; ctx.fillText("ĐẠI ĐIỆN CỦA GIÁP LONG VƯƠNG",throneX,470+oy);
+    ctx.font="13px Arial"; ctx.fillText("Nơi vị vua từng đứng để bảo vệ thế giới",throneX,495+oy);
+    ctx.fillStyle="rgba(145,130,110,.12)"; ctx.beginPath(); ctx.ellipse(750+ox,650+oy,470,130,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
 }
 
-
-/* =====================================================
-CASTLE NPC
-===================================================== */
 
 function drawCastleNPC(){
 
@@ -6000,6 +6229,44 @@ function drawPlayer(){
 PROJECTILE DRAW
 ===================================================== */
 
+function drawBoss(){
+    if(!boss.active || boss.defeated || castleFloor!==3) return;
+
+    const x=boss.x-camera.x, y=boss.y-camera.y;
+    ctx.save();
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+
+    // Aura của Forgotten God
+    const aura=ctx.createRadialGradient(x,y,25,x,y,170);
+    aura.addColorStop(0,'rgba(255,245,210,.30)');
+    aura.addColorStop(.35,'rgba(150,110,80,.18)');
+    aura.addColorStop(1,'rgba(50,20,10,0)');
+    ctx.fillStyle=aura;
+    ctx.beginPath(); ctx.arc(x,y,170,0,Math.PI*2); ctx.fill();
+
+    // Bóng lớn dưới chân
+    ctx.fillStyle='rgba(40,25,20,.25)';
+    ctx.beginPath(); ctx.ellipse(x,y+88,105,32,0,0,Math.PI*2); ctx.fill();
+
+    // Long giáp + thân hình khổng lồ
+    ctx.font='128px Arial';
+    ctx.fillText('🐉',x,y-28);
+    ctx.font='92px Arial';
+    ctx.fillText('👑',x,y-92);
+
+    // Viền sáng khi Boss đang bị khóa mục tiêu
+    ctx.strokeStyle='rgba(255,210,120,.55)';
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(x,y,120,0,Math.PI*2); ctx.stroke();
+
+    ctx.font='bold 16px Georgia';
+    ctx.fillStyle='#fff1cf';
+    ctx.fillText('FORGOTTEN GOD',x,y+118);
+    ctx.restore();
+}
+
+
 function drawProjectiles(){
 
     for(
@@ -6055,7 +6322,7 @@ function drawProjectiles(){
         ctx.arc(
             x,
             y,
-            30,
+            p.radius || 30,
             0,
             Math.PI*2
         );
@@ -6464,6 +6731,9 @@ document
                 "hidden"
             );
 
+        // Hai dòng chân trang chỉ xuất hiện ở màn hình chính.
+        document.getElementById("v7-credit-footer").style.display = "none";
+
 
         document
             .getElementById(
@@ -6489,6 +6759,74 @@ document
 
     };
 
+
+/* =====================================================
+SCROLL SUPPORT FOR LORE / ENDING
+===================================================== */
+function enableStoryScroll(id){
+    const el=document.getElementById(id);
+    if(!el) return;
+
+    // Chuột: lăn để đọc lore/ending. Không chặn nút bấm.
+    el.addEventListener("wheel", e=>{
+        if(Math.abs(e.deltaY)>0){
+            el.scrollTop += e.deltaY;
+            e.preventDefault();
+        }
+    }, {passive:false});
+
+    // Điện thoại / chuột: kéo để cuộn.
+    // Quan trọng: không bắt pointer của BUTTON, nếu không click
+    // nút QUAY LẠI sẽ bị mất trên một số trình duyệt.
+    let startY=0;
+    let startScroll=0;
+    let dragging=false;
+    let activePointerId=null;
+
+    el.addEventListener("pointerdown", e=>{
+        if(e.pointerType==="mouse" && e.button!==0) return;
+
+        const interactive=e.target.closest("button, a, input, select, textarea");
+        if(interactive) return;
+
+        startY=e.clientY;
+        startScroll=el.scrollTop;
+        dragging=true;
+        activePointerId=e.pointerId;
+        try{ el.setPointerCapture(e.pointerId); }catch(_){}
+    });
+
+    el.addEventListener("pointermove", e=>{
+        if(!dragging || e.pointerId!==activePointerId) return;
+        if(e.pointerType==="mouse" && !(e.buttons&1)){
+            dragging=false;
+            return;
+        }
+
+        const dy=e.clientY-startY;
+        if(Math.abs(dy)>1){
+            el.scrollTop=startScroll-dy;
+            e.preventDefault();
+        }
+    }, {passive:false});
+
+    const stopDrag=e=>{
+        if(activePointerId===null || !e || e.pointerId===activePointerId){
+            dragging=false;
+            activePointerId=null;
+        }
+    };
+
+    el.addEventListener("pointerup", stopDrag);
+    el.addEventListener("pointercancel", stopDrag);
+    el.addEventListener("lostpointercapture", ()=>{
+        dragging=false;
+        activePointerId=null;
+    });
+}
+
+enableStoryScroll("lore");
+enableStoryScroll("ending");
 
 /* =====================================================
 LORE BUTTON
@@ -6553,20 +6891,23 @@ document
 
 
 /* =====================================================
-RESTART
+COMPLETION MESSAGE ON MAIN MENU
 ===================================================== */
+function updateMainMenuCompletionMessage(){
+    const footer = document.getElementById("v7-credit-footer");
+    const yellow = document.getElementById("mainFooterYellow");
+    if(!footer || !yellow) return;
 
-document
-    .getElementById(
-        "restartButton"
-    )
-    .onclick =
-    ()=>{
+    footer.style.display = "block";
 
-        location.reload();
+    let completed = false;
+    try{
+        completed = localStorage.getItem("forgottenGodCompleted") === "1";
+    }catch(e){}
 
-    };
-
+    yellow.style.display = completed ? "block" : "none";
+}
+updateMainMenuCompletionMessage();
 
 /* =====================================================
 CONTINUE TO THE FORGOTTEN GOD 2
@@ -6600,7 +6941,54 @@ document
 document
     .getElementById("backToMain")
     .addEventListener("click", ()=>{
-        location.reload();
+        running = false;
+        dialogueOpen = false;
+        reviving = false;
+        bossMusic = false;
+        mobileAttacking = false;
+        clearMovementInput();
+
+        document.getElementById("ending").style.display = "none";
+        document.getElementById("sequelLoading").classList.remove("show");
+        document.getElementById("sequelLoading").style.display = "none";
+        document.getElementById("sequelLoading").style.opacity = "0";
+        document.getElementById("sequelMenu").classList.remove("show");
+        document.getElementById("sequelMenu").style.display = "none";
+        document.getElementById("ui").style.display = "none";
+        document.getElementById("bossUI").style.display = "none";
+        document.getElementById("dialogue").style.display = "none";
+        document.getElementById("interactButton").classList.remove("show");
+
+        gameFinished = false;
+        area = "outside";
+        castleFloor = 0;
+        questStage = 0;
+        souls = 0;
+        boss.active = false;
+        boss.defeated = false;
+        projectiles = [];
+        bossProjectiles = [];
+        mobileAimTarget = null;
+        mobileAimX = 0;
+        mobileAimY = -1;
+
+        player.x = 2100;
+        player.y = 2200;
+        player.hp = player.maxHp;
+        player.mana = player.maxMana;
+
+        document.getElementById("location").textContent = "THE LOST KINGDOM";
+        document.getElementById("level").textContent = "OUTSIDE";
+
+        document.getElementById("menu").classList.remove("hidden");
+        document.getElementById("v7-credit-footer").style.display = "block";
+
+        let completed = false;
+        try{
+            completed = localStorage.getItem("forgottenGodCompleted") === "1";
+        }catch(e){}
+        document.getElementById("mainFooterYellow").style.display =
+            completed ? "block" : "none";
     });
 
 
@@ -6659,6 +7047,8 @@ function gameLoop(){
 
         drawOutside();
 
+        drawRuins();
+
         drawTrees();
 
         drawRocks();
@@ -6682,6 +7072,8 @@ function gameLoop(){
 
     }
 
+
+    drawBoss();
 
     drawProjectiles();
 
