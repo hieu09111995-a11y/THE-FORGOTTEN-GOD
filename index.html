@@ -1115,6 +1115,20 @@ and
 }
 </style>
 
+<style id="mobile-fullscreen-button">
+#fullscreenButton {
+    display: none;
+    margin-top: 10px;
+}
+
+/* CHỈ HIỆN TRÊN ĐIỆN THOẠI */
+@media (max-width: 700px) and (pointer: coarse) {
+    #fullscreenButton {
+        display: inline-block;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -1150,6 +1164,12 @@ MENU
         id="loreButton">
         THE LORE
     </button>
+
+<button
+    class="button"
+    id="fullscreenButton">
+    ⛶ TOÀN MÀN HÌNH
+</button>
 
 </div>
 
@@ -7141,6 +7161,42 @@ function gameLoop(){
 
   init();
   window.addEventListener("load", init);
+})();
+</script>
+
+<script id="mobile-fullscreen-script">
+(function(){
+    const button = document.getElementById("fullscreenButton");
+    if(!button) return;
+
+    function isFullscreen(){
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
+    }
+
+    function updateButton(){
+        button.textContent = isFullscreen()
+            ? "⛶ THOÁT TOÀN MÀN HÌNH"
+            : "⛶ TOÀN MÀN HÌNH";
+    }
+
+    button.addEventListener("click", async function(){
+        try {
+            if(isFullscreen()){
+                if(document.exitFullscreen) document.exitFullscreen();
+                else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+            } else {
+                const el = document.documentElement;
+                if(el.requestFullscreen) await el.requestFullscreen();
+                else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            }
+        } catch(e) {
+            console.warn("Không thể bật fullscreen:", e);
+        }
+    });
+
+    document.addEventListener("fullscreenchange", updateButton);
+    document.addEventListener("webkitfullscreenchange", updateButton);
+    updateButton();
 })();
 </script>
 
