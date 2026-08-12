@@ -1101,6 +1101,20 @@ and
 }
 </style>
 
+<style id="mobile-menu-scroll-fix">
+@media (pointer: coarse) {
+  #menu, #sequelMenu {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    max-height: 100vh;
+    box-sizing: border-box;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -7092,6 +7106,42 @@ function gameLoop(){
 
 }
 
+</script>
+
+<script id="mobile-menu-scroll-js">
+(function(){
+  function enableSwipe(id){
+    const el = document.getElementById(id);
+    if(!el || el.dataset.swipeReady === "1") return;
+    el.dataset.swipeReady = "1";
+    el.style.overflowY = "auto";
+    el.style.overflowX = "hidden";
+    el.style.webkitOverflowScrolling = "touch";
+    el.style.touchAction = "pan-y";
+
+    let startY = 0, startScroll = 0;
+    el.addEventListener("touchstart", e => {
+      if(e.touches.length !== 1) return;
+      startY = e.touches[0].clientY;
+      startScroll = el.scrollTop;
+    }, {passive:true});
+
+    el.addEventListener("touchmove", e => {
+      if(e.touches.length !== 1) return;
+      el.scrollTop = startScroll - (e.touches[0].clientY - startY);
+    }, {passive:true});
+  }
+
+  function init(){
+    if(window.matchMedia("(pointer: coarse)").matches){
+      enableSwipe("menu");
+      enableSwipe("sequelMenu");
+    }
+  }
+
+  init();
+  window.addEventListener("load", init);
+})();
 </script>
 
 </body>
