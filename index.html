@@ -1283,6 +1283,18 @@ and
   }
 }
 </style>
+<style id="mobile-global-swipe">
+@media (pointer: coarse) {
+  html, body {
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  #menu, #sequelMenu, #secretEnding, #badEnding, #divineShrine,
+  #gameScreen, #dialogueBox {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -1929,6 +1941,8 @@ let messageTimer =
 
 let reviving =
     false;
+
+let secretEndingRoute = false;
 
 let gameFinished =
     false;
@@ -3347,7 +3361,7 @@ function updatePlayer(){
             const dx0 = player.x - 750;
             const dy0 = player.y - 760;
             const dist0 = Math.hypot(dx0,dy0)||1;
-            const arenaRadius = 250;
+            const arenaRadius = 500;
             if(dist0 > arenaRadius){
                 player.x = 750 + dx0/dist0*arenaRadius;
                 player.y = 760 + dy0/dist0*arenaRadius;
@@ -3384,7 +3398,7 @@ function updatePlayer(){
             const ax = player.x - 750;
             const ay = player.y - 760;
             const ad = Math.hypot(ax,ay)||1;
-            const arenaRadius = 250;
+            const arenaRadius = 500;
             if(ad > arenaRadius){
                 player.x = 750 + ax/ad*arenaRadius;
                 player.y = 760 + ay/ad*arenaRadius;
@@ -4110,6 +4124,10 @@ function interact(){
 
 
     if(area==="divineShrine"){
+        // Trong trận Nhân Thần không cho rời Thánh Điện.
+        if(divineGod.active && !divineGod.defeated){
+            return;
+        }
         if(distance(player.x,player.y,divineShrine.x,divineShrine.y+310)<180){
             area="outside";
             divineGod.active=false;
@@ -4735,6 +4753,8 @@ ENDING
 
 function showEnding(){
 
+    // Secret Ending -> Forgotten Castle vẫn cho phép mở THE END
+    // bình thường sau khi người chơi đánh bại Forgotten God.
     if(
         gameFinished
     )
@@ -5732,6 +5752,8 @@ function defeatDivineGod(){
     divineGod.defeated=true;
     divineGod.active=false;
     document.getElementById("bossUI").style.display="none";
+    const leaveBtn = document.getElementById("interactButton");
+    if(leaveBtn) leaveBtn.classList.remove("show");
     showMessage("✨ NHÂN THẦN ĐÃ BỊ ĐÁNH BẠI!");
     setTimeout(showQuestionEnding,900);
 }
@@ -7554,6 +7576,8 @@ function updateUI(){
 
 
     if(area==="divineShrine" && divineGod.active && !divineGod.defeated){
+        const leaveBtn = document.getElementById("interactButton");
+        if(leaveBtn) leaveBtn.classList.remove("show");
         document.getElementById("bossName").textContent = "👁️ NHÂN THẦN";
         document.getElementById("bossUI").style.display = "block";
         document.getElementById("bossHP").style.width = Math.max(0,divineGod.hp)/divineGod.maxHp*100 + "%";
@@ -8062,6 +8086,8 @@ function chooseDivineReject(){
     divineGod.rangedCooldown=45;
     questStage=6;
     document.getElementById("bossUI").style.display="block";
+    const leaveBtn = document.getElementById("interactButton");
+    if(leaveBtn) leaveBtn.classList.remove("show");
     document.getElementById("bossName").textContent="👁️ NHÂN THẦN";
     showMessage("⚔️ NHÂN THẦN: VẬY HÃY CHỨNG MINH LỰA CHỌN CỦA NGƯƠI!");
     gameLoop();
@@ -8074,6 +8100,8 @@ function showQuestionEnding(){
 }
 
 function continueFromQuestionEnding(){
+    // Đánh dấu đây là nhánh Secret Ending để không quay lại THE END cũ.
+    secretEndingRoute = true;
     closeDivineOverlays();
     clearMovementInput();
     joystickActive=false;
@@ -8130,5 +8158,24 @@ body.story-glitch{animation:storyGlitch .08s steps(2) infinite;filter:contrast(1
 @keyframes storyGlitch{0%{transform:translate(0)}25%{transform:translate(4px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,3px)}100%{transform:translate(-2px,-3px)}}
 </style>
 
+<script id="mobile-global-swipe-js">
+(function(){
+  const ids=["menu","sequelMenu","secretEnding","badEnding","divineShrine","gameScreen"];
+  function enable(){
+    if(!window.matchMedia("(pointer: coarse)").matches) return;
+    ids.forEach(function(id){
+      const el=document.getElementById(id);
+      if(!el || el.dataset.globalSwipe==="1") return;
+      el.dataset.globalSwipe="1";
+      el.style.touchAction="pan-y";
+      el.style.overflowY="auto";
+      el.style.overflowX="hidden";
+      el.style.webkitOverflowScrolling="touch";
+    });
+  }
+  enable();
+  window.addEventListener("load",enable);
+})();
+</script>
 </body>
 </html>
