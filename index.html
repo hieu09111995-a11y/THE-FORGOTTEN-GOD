@@ -308,6 +308,34 @@ canvas{
     line-height:1.5;
 }
 
+#quest.quest-glitch{
+    border-left-color:#8b72ff;
+    animation:questGlitchPulse .18s steps(2,end) infinite;
+}
+
+#quest.quest-glitch #questTitle,
+#quest.quest-glitch #questText,
+#quest.quest-glitch #distance{
+    text-shadow:
+        1px 0 rgba(120,90,255,.75),
+        -1px 0 rgba(255,80,160,.45);
+    animation:questTextGlitch .22s steps(2,end) infinite;
+}
+
+@keyframes questGlitchPulse{
+    0%,100%{transform:translateX(0);filter:none;}
+    25%{transform:translateX(-1px);filter:brightness(1.08);}
+    50%{transform:translateX(1px);filter:contrast(1.12);}
+    75%{transform:translateX(-1px);filter:brightness(.94);}
+}
+
+@keyframes questTextGlitch{
+    0%,100%{opacity:1;clip-path:inset(0 0 0 0);}
+    20%{opacity:.82;clip-path:inset(12% 0 55% 0);}
+    45%{opacity:1;clip-path:inset(65% 0 8% 0);}
+    70%{opacity:.9;clip-path:inset(35% 0 35% 0);}
+}
+
 #distance{
     margin-top:8px;
 
@@ -518,52 +546,94 @@ canvas{
 
 #reviveScreen{
     display:none;
-
     position:fixed;
-
     inset:0;
-
     z-index:2000;
-
-    background:#000;
-
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 52%, rgba(96,52,170,.20) 0%, rgba(20,13,35,.10) 28%, rgba(0,0,0,.96) 72%),
+        linear-gradient(180deg,#08080d 0%,#09070e 55%,#050508 100%);
     justify-content:center;
-
     align-items:center;
-
     flex-direction:column;
-
-    color:#d8bd87;
-
+    color:#f5f2ff;
     text-align:center;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+#reviveScreen::before{
+    content:"";
+    position:absolute;
+    width:min(72vw,760px);
+    height:min(38vw,390px);
+    border-radius:50%;
+    background:rgba(104,62,190,.17);
+    filter:blur(70px);
+    pointer-events:none;
+    animation:reviveGlow 2.2s ease-in-out infinite;
 }
 
 #wakeUp{
-    font-size:
-        clamp(55px,11vw,130px);
-
-    letter-spacing:16px;
-
+    position:relative;
+    z-index:1;
+    font-size:clamp(48px,9vw,108px);
+    font-weight:300;
+    letter-spacing:clamp(8px,2.2vw,20px);
+    color:#fff;
     text-shadow:
-        0 0 15px #9b4659,
-        0 0 50px #401421;
-
-    animation:
-        pulse 2s infinite;
+        0 0 12px rgba(190,137,255,.65),
+        0 0 34px rgba(112,54,190,.65),
+        0 0 70px rgba(67,28,120,.55);
+    animation:wakePulse 2s ease-in-out infinite;
 }
 
 #reviveText{
-    margin-top:20px;
+    position:relative;
+    z-index:1;
+    margin-top:24px;
+    color:#aaa5b8;
+    font-size:clamp(16px,2.8vw,30px);
+    letter-spacing:clamp(2px,0.6vw,7px);
+    text-shadow:0 0 18px rgba(125,85,190,.28);
+}
 
-    color:#6f6669;
-
+#reviveTimerLabel{
+    position:relative;
+    z-index:1;
+    margin-top:34px;
+    color:#81788e;
+    font-size:13px;
     letter-spacing:4px;
 }
 
 #reviveTimer{
-    margin-top:20px;
+    position:relative;
+    z-index:1;
+    margin-top:5px;
+    min-width:110px;
+    font-size:clamp(54px,9vw,96px);
+    line-height:1;
+    font-weight:700;
+    color:#fff;
+    text-shadow:
+        0 0 12px #b78aff,
+        0 0 34px rgba(128,69,214,.9);
+    animation:timerPulse .95s ease-in-out infinite;
+}
 
-    font-size:35px;
+@keyframes wakePulse{
+    0%,100%{opacity:.72;transform:scale(.985);}
+    50%{opacity:1;transform:scale(1);}
+}
+
+@keyframes timerPulse{
+    0%,100%{transform:scale(.94);opacity:.72;}
+    50%{transform:scale(1.08);opacity:1;}
+}
+
+@keyframes reviveGlow{
+    0%,100%{opacity:.45;transform:scale(.92);}
+    50%{opacity:1;transform:scale(1.08);}
 }
 
 @keyframes pulse{
@@ -582,6 +652,43 @@ canvas{
    ENDING
 ========================= */
 
+#swordEmperorDialogue{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:3500;
+    background:rgba(0,0,0,.72);
+    justify-content:center;
+    align-items:flex-end;
+    padding:28px;
+    box-sizing:border-box;
+    pointer-events:auto;
+}
+#swordEmperorDialogue.show{display:flex;}
+.sword-dialogue-box{
+    width:min(820px,94vw);
+    background:linear-gradient(180deg,rgba(25,18,15,.98),rgba(8,7,9,.98));
+    border:1px solid #b99b65;
+    border-radius:12px;
+    padding:22px 26px 18px;
+    box-shadow:0 0 45px rgba(0,0,0,.7),0 0 20px rgba(185,155,101,.16);
+    color:#ddd0b8;
+    font-family:Georgia,serif;
+    text-align:center;
+}
+.sword-dialogue-name{
+    color:#e4c27b;
+    font-size:clamp(20px,4vw,30px);
+    letter-spacing:4px;
+    margin-bottom:15px;
+}
+#swordEmperorDialogueText{
+    font-size:clamp(17px,3vw,24px);
+    line-height:1.7;
+}
+#swordEmperorDialogueClose{
+    margin-top:18px;
+}
 #ending{
     display:none;
 
@@ -1069,27 +1176,18 @@ and
 
 <style id="v8-main-footer-style">
 #v7-credit-footer{
-  display:block;
   position:fixed;
   right:18px;
   bottom:14px;
   z-index:9999;
   text-align:right;
-  color:rgba(245,245,245,.9);
+  color:rgba(230,240,255,.82);
   font-family:Georgia,"Times New Roman",serif;
   font-size:13px;
   line-height:1.55;
   letter-spacing:.3px;
   text-shadow:0 2px 8px rgba(0,0,0,.8);
   pointer-events:none;
-}
-#mainFooterWhite{
-  color:rgba(245,245,245,.9);
-}
-#mainFooterYellow{
-  display:none;
-  color:#f0d35a;
-  text-shadow:0 2px 10px rgba(0,0,0,.9),0 0 12px rgba(240,190,60,.3);
 }
 @media (max-width:700px){
   #v7-credit-footer{
@@ -1099,29 +1197,101 @@ and
     line-height:1.45;
   }
 }
-</style>
-
-<style id="mobile-menu-scroll-fix">
-@media (pointer: coarse) {
-  #menu, #sequelMenu {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-    overscroll-behavior-y: contain;
-    max-height: 100vh;
-    box-sizing: border-box;
+#completedPlayerMessage{
+  display:none !important;
+  position:fixed;
+  left:18px;
+  top:14px;
+  z-index:10000;
+  color:#f0d9a6;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:13px;
+  line-height:1.5;
+  text-shadow:0 2px 10px rgba(0,0,0,.9),0 0 12px rgba(170,90,120,.25);
+  pointer-events:none;
+}
+@media (max-width:700px){
+  #completedPlayerMessage{
+    left:10px;
+    top:8px;
+    font-size:10px;
   }
 }
 </style>
 
+<style id="divine-choice-ending-style">
+#divineChoiceOverlay,#divineBadEnding,#divineQuestionEnding{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);color:#eee;text-align:center;font-family:Georgia,serif;padding:24px;box-sizing:border-box;}
+#divineChoiceOverlay.show,#divineBadEnding.show,#divineQuestionEnding.show{display:flex;}
+#divineChoicePanel{width:min(720px,94vw);padding:32px 24px;border:1px solid rgba(190,160,255,.45);background:linear-gradient(180deg,rgba(25,20,38,.97),rgba(7,7,12,.98));box-shadow:0 0 45px rgba(130,90,255,.18);}
+#divineChoiceTitle{font-size:28px;letter-spacing:4px;color:#d9c8ff;margin-bottom:22px;}
+#divineChoiceText{font-size:22px;line-height:1.7;margin-bottom:28px;}
+#divineChoiceButtons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+#divineChoiceButtons button,#badEndingBack,#questionEndingContinue{font:600 16px Georgia,serif;color:#fff;background:#17131f;border:1px solid #8d72bb;padding:14px 20px;cursor:pointer;min-width:210px;}
+#divineChoiceButtons button:hover,#badEndingBack:hover,#questionEndingContinue:hover{background:#2b213a;}
+#divineBadEnding{background:linear-gradient(145deg,#050505,#202020,#080808);flex-direction:column;overflow:hidden;}
+#badEndingTitle{font-size:clamp(48px,9vw,100px);letter-spacing:12px;color:#ddd;text-shadow:0 0 22px #fff;z-index:2;}
+#badEndingText,#questionEndingText{max-width:820px;font-size:20px;line-height:1.8;color:#cfcfcf;margin:28px auto;z-index:2;}
+#badEndingBack,#questionEndingContinue{z-index:2;margin-top:12px;}
+.badEndingNoise{position:absolute;inset:-20%;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px 5px);mix-blend-mode:screen;animation:endingNoise .12s steps(2) infinite;}
+#divineQuestionEnding{flex-direction:column;background:radial-gradient(circle at center,#25252a,#080808 70%);}
+#questionEndingTitle{font-size:clamp(52px,10vw,110px);letter-spacing:10px;color:#eee;text-shadow:0 0 24px rgba(255,255,255,.35);}
+@keyframes endingNoise{0%{transform:translate(0,0)}25%{transform:translate(4px,-3px)}50%{transform:translate(-3px,3px)}75%{transform:translate(2px,4px)}100%{transform:translate(-2px,-2px)}}
+@media(max-width:600px){#divineChoiceText,#badEndingText,#questionEndingText{font-size:17px;}#divineChoiceButtons{flex-direction:column;}#divineChoiceButtons button,#badEndingBack,#questionEndingContinue{width:100%;}}
+</style>
+
+<style id="divine-revive-glitch-style">
+#reviveScreen.divineDeathGlitch{
+  animation: divineReviveGlitch .11s steps(2) infinite;
+  filter: grayscale(.65) contrast(1.45);
+}
+#reviveScreen.divineDeathGlitch::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,.04) 0px,
+    rgba(255,255,255,.04) 2px,
+    rgba(0,0,0,.16) 3px,
+    rgba(0,0,0,.16) 5px
+  );
+  mix-blend-mode:screen;
+}
+@keyframes divineReviveGlitch{
+  0%{transform:translate(0);opacity:.92}
+  25%{transform:translate(5px,-2px);opacity:.7}
+  50%{transform:translate(-4px,2px);opacity:1}
+  75%{transform:translate(2px,3px);opacity:.72}
+  100%{transform:translate(-2px,-1px);opacity:.95}
+}
+</style>
+<style id="secret-ending-mobile-scroll">
+@media (pointer: coarse){
+  #divineQuestionEnding{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+    overscroll-behavior-y:contain;
+    max-height:100vh;
+    box-sizing:border-box;
+    align-items:flex-start !important;
+  }
+  #divineQuestionEnding > *{
+    touch-action:pan-y;
+  }
+}
+</style>
 </head>
 
 <body>
 
+<div id="completedPlayerMessage" aria-hidden="true">🎲Người đã chơi game này rất cute ❤❤❤</div>
 <div id="v7-credit-footer" aria-hidden="true">
-  <div id="mainFooterWhite">Tắt Unikey để trải nghiệm tốt hơn(PC)</div>
-  <div id="mainFooterYellow">Developed by trunghieu🧸.</div>
+  <div>Tắt Unikey để trải nghiệm tốt hơn(PC)</div>
+  <div>Developed by trunghieu🧸.</div>
+</div>
 </div>
 
 
@@ -1389,7 +1559,11 @@ WAKE UP
     </div>
 
     <div id="reviveText">
-        THE DARKNESS HAS NOT CLAIMED YOU
+        THE FORGOTTEN IS WAITING
+    </div>
+
+    <div id="reviveTimerLabel">
+        HỒI SINH TRONG
     </div>
 
     <div id="reviveTimer">
@@ -1398,6 +1572,49 @@ WAKE UP
 
 </div>
 
+
+<!-- =====================================================
+NHÂN THẦN — LỰA CHỌN / ENDINGS
+===================================================== -->
+<div id="divineChoiceOverlay" aria-hidden="true">
+  <div id="divineChoicePanel">
+    <div id="divineChoiceTitle">NHÂN THẦN</div>
+    <div id="divineChoiceText">Liệu ngươi có muốn giúp ta thoát khỏi phong ấn?</div>
+    <div id="divineChoiceButtons">
+      <button id="divineAccept">1. CHẤP NHẬN</button>
+      <button id="divineReject">2. KHÔNG CHẤP NHẬN</button>
+    </div>
+  </div>
+</div>
+
+<div id="divineBadEnding" aria-hidden="true">
+  <div class="badEndingNoise"></div>
+  <div id="badEndingTitle">BAD ENDING</div>
+  <div id="badEndingText">
+    Nhân Thần đã được giải phong ấn.
+    <br><br>
+    Hắn tìm thấy Giáp Long Vương và Kiếm Thần.
+    <br><br>
+    Ba kẻ mang sức mạnh của thần linh bước vào một cuộc chiến cuối cùng,
+    xóa sổ Trái Đất và chấm dứt mọi sự sống.
+  </div>
+  <button id="badEndingBack">VỀ MÀN HÌNH CHÍNH</button>
+</div>
+
+<div id="divineQuestionEnding" aria-hidden="true">
+  <div id="questionEndingTitle">SECRET ENDING</div>
+  <div id="questionEndingText">
+    Nhân Thần đã bị đánh bại.
+    <br><br>
+    Sự thật cuối cùng được hé lộ: chính Giáp Long Vương đã phong ấn Nhân Thần.
+    <br><br>
+    Nhưng cùng với phong ấn, một lời nguyền đã đeo bám Giáp Long Vương.
+    <br><br>
+    Trong tương lai gần, khi lời nguyền khiến Giáp Long Vương sa đọa hoàn toàn,
+    thế giới sẽ bị phá hủy.
+  </div>
+  <button id="questionEndingContinue">TIẾP TỤC</button>
+</div>
 
 <!-- =====================================================
 ENDING
@@ -1551,55 +1768,60 @@ function getAutoAimTarget(){
     if(!player) return null;
 
     const candidates = [];
-
     if(typeof boss !== "undefined" && boss && boss.active && !boss.defeated && boss.hp > 0){
         candidates.push(boss);
+    }
+    if(typeof swordEmperor !== "undefined" && swordEmperor && swordEmperor.active && !swordEmperor.defeated && swordEmperor.hp > 0){
+        candidates.push(swordEmperor);
+    }
+    if(typeof divineGod !== "undefined" && area==="divineShrine" && divineGod.active && !divineGod.defeated && divineGod.hp>0){
+        candidates.push(divineGod);
     }
 
     if(typeof enemies !== "undefined" && Array.isArray(enemies)){
         for(const e of enemies){
-            if(e && e.alive !== false && e.hp > 0){
-                candidates.push(e);
-            }
+            if(e && e.alive !== false && e.hp > 0) candidates.push(e);
         }
     }
 
-    let best = null;
-    let bestScore = Infinity;
-
-    const aimLen = Math.hypot(mobileAimX, mobileAimY);
-    const aimX = aimLen > 0.05 ? mobileAimX / aimLen : 0;
-    const aimY = aimLen > 0.05 ? mobileAimY / aimLen : -1;
+    let best = null, bestScore = Infinity;
+    const currentAimLen = Math.hypot(mobileAimX,mobileAimY) || 1;
 
     for(const e of candidates){
         const dx = e.x - player.x;
         const dy = e.y - player.y;
-        const d = Math.hypot(dx, dy);
-
-        // Không tự nhắm mục tiêu quá xa.
+        const d = Math.hypot(dx,dy);
         if(d > 950) continue;
 
         const tx = dx / (d || 1);
         const ty = dy / (d || 1);
+        const dot = (mobileAimX * tx + mobileAimY * ty) / currentAimLen;
+        const anglePenalty = (1 - Math.max(-1,Math.min(1,dot))) * 180;
 
-        // dot càng lớn = mục tiêu càng nằm đúng hướng ngắm.
-        const dot = aimLen > 0.05 ? (aimX * tx + aimY * ty) : 0;
-
-        // Ưu tiên hướng ngắm mạnh, sau đó ưu tiên mục tiêu gần.
-        // Boss được ưu tiên nhẹ khi ở khoảng cách tương đương.
-        const bossBonus = (e === boss) ? -35 : 0;
-        const directionPenalty = aimLen > 0.05
-            ? (1 - Math.max(-1, Math.min(1, dot))) * 220
-            : 0;
-
-        const score = d + directionPenalty + bossBonus;
-
+        // Vẫn ưu tiên mục tiêu gần, nhưng tránh đổi mục tiêu đột ngột.
+        const score = d + anglePenalty;
         if(score < bestScore){
             bestScore = score;
             best = e;
         }
     }
 
+    // Hysteresis: giữ mục tiêu hiện tại nếu nó vẫn còn hợp lý.
+    if(mobileAimTarget){
+        const dx = mobileAimTarget.x - player.x;
+        const dy = mobileAimTarget.y - player.y;
+        const d = Math.hypot(dx,dy);
+        const alive = mobileAimTarget.alive !== false &&
+                      mobileAimTarget.hp > 0 &&
+                      !mobileAimTarget.defeated;
+
+        if(alive && d <= 1050 &&
+           (!best || d <= Math.hypot(best.x-player.x,best.y-player.y) + 120)){
+            return mobileAimTarget;
+        }
+    }
+
+    mobileAimTarget = best;
     return best;
 }
 
@@ -2748,6 +2970,46 @@ const gate = {
 
 };
 
+const swordShrine = {
+    x:1970,
+    y:3050
+};
+
+/* MA PHÁP PHÍA TÂY — cổng dẫn tới Nhân Thần */
+const divineGate = {
+    x:170,
+    y:2200
+};
+
+/* MAP NHÂN THẦN */
+const divineShrine = {
+    x:750,
+    y:500
+};
+
+const divineGod = {
+    x:750,
+    y:300,
+    hp:320,
+    maxHp:320,
+    active:false,
+    defeated:false,
+    attackCooldown:0,
+    rangedCooldown:0
+};
+
+const swordEmperor = {
+    x:750,
+    y:360,
+    hp:213,
+    maxHp:213,
+    speed:1.7,
+    radius:72,
+    active:false,
+    defeated:false,
+    attackCooldown:0
+};
+
 
 const castleNPC = {
 
@@ -3080,6 +3342,18 @@ function updatePlayer(){
 
     if(moving){
 
+        // Trong trận chiến với Nhân Thần, người chơi bị khóa trong khu vực ma pháp trận.
+        if(area==="divineShrine" && divineGod.active && !divineGod.defeated){
+            const dx0 = player.x - 750;
+            const dy0 = player.y - 760;
+            const dist0 = Math.hypot(dx0,dy0)||1;
+            const arenaRadius = 250;
+            if(dist0 > arenaRadius){
+                player.x = 750 + dx0/dist0*arenaRadius;
+                player.y = 760 + dy0/dist0*arenaRadius;
+            }
+        }
+
         const len =
             Math.sqrt(
                 dx*dx+
@@ -3105,6 +3379,17 @@ function updatePlayer(){
             dy*
             player.speed;
 
+        // Khóa hoàn toàn người chơi trong vòng ma pháp trận khi đang đánh Nhân Thần.
+        if(area==="divineShrine" && divineGod.active && !divineGod.defeated && !dialogueOpen){
+            const ax = player.x - 750;
+            const ay = player.y - 760;
+            const ad = Math.hypot(ax,ay)||1;
+            const arenaRadius = 250;
+            if(ad > arenaRadius){
+                player.x = 750 + ax/ad*arenaRadius;
+                player.y = 760 + ay/ad*arenaRadius;
+            }
+        }
 
         player.footTimer--;
 
@@ -3267,7 +3552,13 @@ function rangedAttack(){
         return;
 
 
-    if(player.mana<8){
+    const divineInfiniteMana =
+        area==="divineShrine" &&
+        divineGod.active &&
+        !divineGod.defeated &&
+        !dialogueOpen;
+
+    if(!divineInfiniteMana && player.mana<8){
 
         showMessage(
             "🔮 KHÔNG ĐỦ MANA"
@@ -3282,11 +3573,19 @@ function rangedAttack(){
         9;
 
 
-    player.mana -=
-        8;
+    if(!divineInfiniteMana){
+        player.mana -=
+            8;
+    }
 
 
     castSound();
+
+
+    setTimeout(
+        shootSound,
+        60
+    );;
 
 
     setTimeout(
@@ -3378,6 +3677,13 @@ function updateAttack(){
 
 
     if(
+        area==="divineShrine" &&
+        divineGod.active &&
+        !divineGod.defeated &&
+        !dialogueOpen
+    ){
+        player.mana = player.maxMana;
+    }else if(
         player.mana<
         player.maxMana
     ){
@@ -3417,6 +3723,26 @@ function updateProjectiles(){
 
         p.life--;
 
+
+        /* KIẾM ĐẾ */
+        if(area==="swordShrine" && swordEmperor.active && !swordEmperor.defeated &&
+           distance(p.x,p.y,swordEmperor.x,swordEmperor.y)<75){
+            swordEmperor.hp -= p.damage;
+            projectiles.splice(i,1);
+            bossHitSound();
+            if(swordEmperor.hp<=0){ swordEmperor.hp=0; defeatSwordEmperor(); }
+            continue;
+        }
+
+        /* NHÂN THẦN */
+        if(area==="divineShrine" && divineGod.active && !divineGod.defeated &&
+           distance(p.x,p.y,divineGod.x,divineGod.y)<78){
+            divineGod.hp -= p.damage;
+            projectiles.splice(i,1);
+            bossHitSound();
+            if(divineGod.hp<=0){ divineGod.hp=0; defeatDivineGod(); }
+            continue;
+        }
 
         /* BOSS */
 
@@ -3590,7 +3916,7 @@ function updateEnemies(){
         ){
 
             damagePlayer(
-                6
+                .12
             );
 
         }
@@ -3647,73 +3973,42 @@ function playerDeath(){
     if(reviving)
         return;
 
-
-    reviving =
-        true;
-
-
-    running =
-        false;
-
-
-    mobileAttacking =
-        false;
-
+    reviving = true;
+    running = false;
+    mobileAttacking = false;
+    dialogueOpen = false;
 
     deathSound();
 
+    const screen = document.getElementById("reviveScreen");
+    const timer = document.getElementById("reviveTimer");
 
-    const screen =
-        document.getElementById(
-            "reviveScreen"
-        );
+    if(!screen || !timer){
+        revivePlayer();
+        return;
+    }
 
+    const divineDeath = area === "divineShrine";
 
-    const timer =
-        document.getElementById(
-            "reviveTimer"
-        );
+    screen.classList.toggle("divineDeathGlitch", divineDeath);
+    screen.style.display = "flex";
 
+    let count = 5;
+    timer.textContent = count;
 
-    screen.style.display =
-        "flex";
+    // 5 giây hồi sinh, màn hình Nhân Thần có nhiễu.
+    const interval = setInterval(()=>{
+        count--;
 
+        if(count > 0){
+            timer.textContent = count;
+            return;
+        }
 
-    let count =
-        5;
-
-
-    timer.textContent =
-        count;
-
-
-    const interval =
-        setInterval(
-            ()=>{
-
-                count--;
-
-                timer.textContent =
-                    count;
-
-
-                if(
-                    count<=0
-                ){
-
-                    clearInterval(
-                        interval
-                    );
-
-
-                    revivePlayer();
-
-                }
-
-            },
-            1000
-        );
-
+        clearInterval(interval);
+        screen.classList.remove("divineDeathGlitch");
+        revivePlayer();
+    },1000);
 }
 
 
@@ -3742,25 +4037,30 @@ function revivePlayer(){
         [];
 
 
-    if(
-        area==="outside"
-    ){
-
-        player.x =
-            2100;
-
-        player.y =
-            2200;
-
+    if(area==="outside"){
+        player.x = 2100;
+        player.y = 2200;
+    }
+    else if(area==="swordShrine"){
+        // Chết trong Thánh Địa Kiếm: hồi sinh ngay trong võ đường,
+        // cách Kiếm Đế một khoảng an toàn.
+        player.x = 750;
+        player.y = 760;
+        swordEmperor.attackCooldown = 110;
+        swordEmperor.hitFlash = 0;
+        swordEmperor.invulnerable = false;
+    }
+    else if(area==="divineShrine"){
+        // Chết trước Nhân Thần: hồi sinh lại trong Thánh Điện,
+        // Boss không được tấn công ngay sau khi hồi sinh.
+        player.x = 750;
+        player.y = 760;
+        divineGod.attackCooldown = 150;
+        divineGod.rangedCooldown = 150;
     }
     else{
-
-        player.x =
-            750;
-
-        player.y =
-            800;
-
+        player.x = 750;
+        player.y = 800;
     }
 
 
@@ -3809,11 +4109,46 @@ function interact(){
     }
 
 
+    if(area==="divineShrine"){
+        if(distance(player.x,player.y,divineShrine.x,divineShrine.y+310)<180){
+            area="outside";
+            divineGod.active=false;
+            player.x=divineGate.x;
+            player.y=divineGate.y;
+            document.getElementById("location").textContent="THE LOST KINGDOM";
+            document.getElementById("level").textContent="OUTSIDE";
+            showMessage("🌲 TRỞ LẠI CON ĐƯỜNG");
+        }
+        return;
+    }
+
+    if(area==="swordShrine"){
+        if(swordEmperor.defeated && distance(player.x,player.y,750,820)<170){
+            area="outside";
+            player.x=swordShrine.x;
+            player.y=swordShrine.y+210;
+            document.getElementById("location").textContent="THE LOST KINGDOM";
+            document.getElementById("level").textContent="OUTSIDE";
+            document.getElementById("bossUI").style.display="none";
+            showMessage("🌲 RỜI THÁNH ĐỊA KIẾM");
+        }
+        return;
+    }
+
     /* OUTSIDE */
 
     if(
         area==="outside"
     ){
+
+        if(distance(player.x,player.y,divineGate.x,divineGate.y)<190){
+            if(!swordEmperor.defeated){
+                showMessage("⚔️ HÃY ĐÁNH KIẾM ĐẾ TRƯỚC!");
+                return;
+            }
+            enterDivineShrine();
+            return;
+        }
 
         if(
             distance(
@@ -3828,6 +4163,19 @@ function interact(){
 
             return;
 
+        }
+
+
+        if(
+            distance(
+                player.x,
+                player.y,
+                swordShrine.x,
+                swordShrine.y
+            )<190
+        ){
+            enterSwordShrine();
+            return;
         }
 
 
@@ -4273,6 +4621,13 @@ function updateBossProjectiles(){
         p.life--;
 
 
+        if(p.source==="divine" && area!=="divineShrine"){ bossProjectiles.splice(i,1); continue; }
+        if(p.source==="divine" && area==="divineShrine" && distance(p.x,p.y,player.x,player.y)<32){
+            bossProjectiles.splice(i,1);
+            damagePlayer(p.damage || 10);
+            continue;
+        }
+
         if(
             distance(
                 p.x,
@@ -4281,6 +4636,7 @@ function updateBossProjectiles(){
                 player.y
             )<35
         ){
+
 
             damagePlayer(
                 12
@@ -4332,6 +4688,9 @@ function defeatBoss(){
 
     boss.active =
         false;
+    swordEmperor.active = false;
+    swordEmperor.defeated = false;
+    area = "outside";
 
 
     bossDeathSound();
@@ -4389,9 +4748,9 @@ function showEnding(){
         localStorage.setItem("forgottenGodCompleted","1");
     }catch(e){}
 
-    // Dòng vàng sẽ được hiển thị khi quay về màn hình chính sau khi hoàn thành.
-    const mainFooterYellow = document.getElementById("mainFooterYellow");
-    if(mainFooterYellow) mainFooterYellow.style.display = "block";
+    // Chỉ hiện thông báo sau khi người chơi thật sự hoàn thành màn chơi.
+    const completedMsg = document.getElementById("completedPlayerMessage");
+    if(completedMsg) completedMsg.style.setProperty("display","block","important");
 
     initAudio();
     if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
@@ -4400,8 +4759,6 @@ function showEnding(){
     running =
         false;
 
-    // Không hiện hai dòng chân trang trong màn hình kết thúc.
-    document.getElementById("v7-credit-footer").style.display = "none";
 
     document
         .getElementById(
@@ -4464,6 +4821,32 @@ const dialogues = [
         "Hãy tìm hắn."
     ]
 
+];
+
+
+let swordEmperorDialogueActive = false;
+let divineGodDialogueActive = false;
+
+const divineGodDialogues = [
+    ["NHÂN THẦN","Tại sao ngươi lại có thể bước vào nơi này?"],
+    ["WANDERER","Ta không biết. Ta chỉ đi theo con đường dẫn đến đây."],
+    ["NHÂN THẦN","Bốn nghìn năm trước, ta đã giao chiến với Giáp Long Vương."],
+    ["NHÂN THẦN","Cuộc chiến ấy kéo dài đến tận khi Giáp Long Vương giành chiến thắng."],
+    ["NHÂN THẦN","Nhưng chiến thắng ấy đã đẩy hắn vào con đường sa đọa, và sức mạnh của hắn khiến thế giới bắt đầu sụp đổ."],
+    ["NHÂN THẦN","Ta đã bị phong ấn trong ma pháp trận này để không thể can thiệp vào số phận của thế giới."],
+    ["NHÂN THẦN","Giờ đây ta hỏi ngươi một điều..."],
+    ["NHÂN THẦN","Liệu ngươi có muốn giúp ta thoát khỏi phong ấn?" ]
+];
+
+const swordEmperorDialogues = [
+    [
+        "KIẾM ĐẾ",
+        "Đừng tin vào lời của Nhân Thần, nếu không chuyện đó sẽ lặp lại như Kiếm Thần và Giáp Long Vương."
+    ],
+    [
+        "WANDERER",
+        "..."
+    ]
 ];
 
 
@@ -4585,9 +4968,13 @@ function startDialogue(){
 function showDialogue(){
 
     const list =
-        boss.active
-        ? bossDialogues
-        : (area==="outside" ? dialogues : castleDialogues);
+        swordEmperorDialogueActive
+        ? swordEmperorDialogues
+        : (divineGodDialogueActive
+            ? divineGodDialogues
+            : (boss.active
+                ? bossDialogues
+                : (area==="outside" ? dialogues : castleDialogues)));
 
 
     document
@@ -4633,9 +5020,13 @@ function nextDialogue(){
 
 
     const list =
-        boss.active
-        ? bossDialogues
-        : (area==="outside" ? dialogues : castleDialogues);
+        swordEmperorDialogueActive
+        ? swordEmperorDialogues
+        : (divineGodDialogueActive
+            ? divineGodDialogues
+            : (boss.active
+                ? bossDialogues
+                : (area==="outside" ? dialogues : castleDialogues)));
 
 
     if(
@@ -4655,7 +5046,31 @@ function nextDialogue(){
             "none";
 
 
-        if(boss.active){
+        if(divineGodDialogueActive){
+            divineGodDialogueActive = false;
+            showDivineChoices();
+            return;
+        }
+
+        if(swordEmperorDialogueActive){
+
+            swordEmperorDialogueActive = false;
+
+            // Sau câu trả lời "...", nhân vật chính tự rời Thánh Địa Kiếm.
+            area = "outside";
+            player.x = swordShrine.x;
+            player.y = swordShrine.y + 210;
+
+            document.getElementById("location").textContent = "THE LOST KINGDOM";
+            document.getElementById("level").textContent = "OUTSIDE";
+            document.getElementById("bossUI").style.display = "none";
+
+            showMessage("🌲 WANDERER RỜI THÁNH ĐỊA KIẾM");
+
+            return;
+
+        }
+        else if(boss.active){
 
             showMessage("👑 FORGOTTEN GOD: LET THE MEMORY BEGIN");
 
@@ -4756,6 +5171,11 @@ function updateQuest(){
             "distance"
         );
 
+    const questBox = document.getElementById("quest");
+    if(questBox){
+        questBox.classList.toggle("quest-glitch", questStage===5);
+    }
+
 
     let target =
         null;
@@ -4847,6 +5267,27 @@ function updateQuest(){
             "👑 Đánh bại Forgotten God.";
 
     }
+    else if(
+        questStage===5
+    ){
+
+        // Sau Kiếm Đế, thanh nhiệm vụ bị nhiễu và chỉ dẫn tới Nhân Thần.
+        target =
+            divineGate;
+
+        name =
+            "NHÂN THẦN";
+
+        text.innerHTML =
+            "▓▒░ TÍN HIỆU NHIỄU ░▒▓<br>"+
+            "🔮 Đi đến Nhân Thần.";
+
+    }
+    else if(questStage===6){
+        target = divineGod;
+        name = "NHÂN THẦN";
+        text.innerHTML = "⚔️ Đánh bại Nhân Thần.";
+    }
     else{
 
         target =
@@ -4927,6 +5368,24 @@ function updateInteractionPrompt(){
         area==="outside"
     ){
 
+        const divineGateDistance = distance(player.x,player.y,divineGate.x,divineGate.y);
+        if(divineGateDistance<190){
+            icon.textContent="🔮";
+            text.textContent = swordEmperor.defeated
+                ? "VÀO MA PHÁP DỊCH CHUYỂN"
+                : "HÃY ĐÁNH KIẾM ĐẾ TRƯỚC";
+            button.classList.add("show");
+            return;
+        }
+
+        const shrineDistance = distance(player.x,player.y,swordShrine.x,swordShrine.y);
+        if(shrineDistance<190){
+            icon.textContent="⚔️";
+            text.textContent="VÀO THÁNH ĐỊA KIẾM";
+            button.classList.add("show");
+            return;
+        }
+
         const npcDistance =
             distance(
                 player.x,
@@ -4984,6 +5443,33 @@ function updateInteractionPrompt(){
 
     }
 
+
+    /* =====================
+       THÁNH ĐIỆN NHÂN THẦN
+    ===================== */
+    if(area==="divineShrine"){
+        if(distance(player.x,player.y,divineShrine.x,divineShrine.y+310)<180){
+            icon.textContent="🚪";
+            text.textContent="RỜI THÁNH ĐIỆN";
+            button.classList.add("show");
+            return;
+        }
+    }
+
+    /* =====================
+       THÁNH ĐỊA KIẾM
+    ===================== */
+    if(area==="swordShrine"){
+        if(swordEmperor.defeated){
+            const exitDistance=distance(player.x,player.y,750,820);
+            if(exitDistance<170){
+                icon.textContent="🚪";
+                text.textContent="RỜI THÁNH ĐỊA";
+                button.classList.add("show");
+            }
+        }
+        return;
+    }
 
     /* =====================
        INSIDE
@@ -5083,6 +5569,372 @@ function updateInteractionPrompt(){
 
 
 /* =====================================================
+THÁNH ĐỊA KIẾM — KIẾM ĐẾ
+===================================================== */
+function enterDivineShrine(){
+    if(!swordEmperor.defeated){
+        showMessage("⚔️ HÃY ĐÁNH KIẾM ĐẾ TRƯỚC!");
+        return;
+    }
+
+    area = "divineShrine";
+    divineGod.active = true;
+    divineGod.defeated = false;
+    divineGod.hp = divineGod.maxHp;
+    divineGod.attackCooldown = 60;
+    divineGod.rangedCooldown = 90;
+    divineGodDialogueActive = false;
+    dialogueOpen = false;
+
+    player.x = 750;
+    player.y = 760;
+
+    document.getElementById("location").textContent = "THÁNH ĐIỆN NHÂN THẦN";
+    document.getElementById("level").textContent = "NHÂN THẦN";
+    document.getElementById("bossUI").style.display = "none";
+
+    showMessage("🔮 MA PHÁP DỊCH CHUYỂN — THÁNH ĐIỆN NHÂN THẦN");
+
+    setTimeout(()=>{
+        if(area==="divineShrine" && running && !dialogueOpen){
+            divineGodDialogueActive = true;
+            dialogueOpen = true;
+            dialogueIndex = 0;
+            document.getElementById("dialogue").classList.toggle(
+                "mobileDialogue",
+                window.matchMedia("(pointer: coarse)").matches
+            );
+            showDialogue();
+        }
+    }, 900);
+}
+
+function enterSwordShrine(){
+    area = "swordShrine";
+    player.x = 750;
+    player.y = 760;
+    swordEmperor.active = true;
+    swordEmperor.defeated = false;
+    swordEmperor.hp = swordEmperor.maxHp;
+    swordEmperor.x = 750;
+    swordEmperor.y = 300;
+    swordEmperorDialogueActive = false;
+    dialogueOpen = false;
+    document.getElementById("location").textContent = "THÁNH ĐỊA KIẾM";
+    document.getElementById("level").textContent = "KIẾM ĐẾ";
+    document.getElementById("bossName").textContent = "⚔️ KIẾM ĐẾ";
+    document.getElementById("bossUI").style.display = "block";
+    showMessage("⚔️ BƯỚC VÀO THÁNH ĐỊA KIẾM");
+}
+
+function updateSwordEmperor(){
+    if(area!=="swordShrine" || !swordEmperor.active || swordEmperor.defeated) return;
+    const dx=player.x-swordEmperor.x, dy=player.y-swordEmperor.y;
+    const d=Math.hypot(dx,dy)||1;
+    if(swordEmperor.attackCooldown>0) swordEmperor.attackCooldown--;
+    if(d>105){
+        swordEmperor.x += dx/d*swordEmperor.speed;
+        swordEmperor.y += dy/d*swordEmperor.speed;
+    }else if(swordEmperor.attackCooldown<=0){
+        player.hp -= 12;
+        swordEmperor.attackCooldown=48;
+        bossAttackSound();
+        hurtSound();
+        showMessage("⚔️ KIẾM ĐẾ CHÉM TRÚNG BẠN!");
+        if(player.hp<=0){
+            player.hp=0;
+            playerDeath();
+        }
+    }
+}
+
+function defeatSwordEmperor(){
+    if(swordEmperor.defeated) return;
+
+    swordEmperor.defeated = true;
+    swordEmperor.active = false;
+    swordEmperor.attackCooldown = 0;
+
+    document.getElementById("bossUI").style.display = "none";
+    document.getElementById("bossName").textContent = "👑 FORGOTTEN GOD";
+
+    souls += 100;
+
+    // Kiếm Đế đã bị hạ: nhiệm vụ bị nhiễu và chỉ còn dẫn tới Nhân Thần.
+    questStage = 5;
+
+    showMessage("⚔️ KIẾM ĐẾ ĐÃ BỊ TIÊU DIỆT!");
+
+    // Sau khi bị đánh bại, Kiếm Đế nói chuyện theo giao diện
+    // chuẩn giống NPC và Keeper.
+    setTimeout(()=>{
+        startSwordEmperorDialogue();
+    }, 1800);
+}
+
+function startSwordEmperorDialogue(){
+
+    swordEmperorDialogueActive = true;
+    dialogueOpen = true;
+    dialogueIndex = 0;
+
+    const box = document.getElementById("dialogue");
+    box.classList.toggle(
+        "mobileDialogue",
+        window.matchMedia("(pointer: coarse)").matches
+    );
+
+    showDialogue();
+}
+
+
+function drawSwordEmperor(){
+    if(area!=="swordShrine" || !swordEmperor.active || swordEmperor.defeated) return;
+    const x=swordEmperor.x-camera.x, y=swordEmperor.y-camera.y;
+    ctx.save(); ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillStyle="rgba(255,220,130,.18)"; ctx.beginPath(); ctx.arc(x,y,145,0,Math.PI*2); ctx.fill();
+    ctx.font="110px Arial"; ctx.fillText("⚔️",x,y-15);
+    ctx.font="72px Arial"; ctx.fillText("👑",x,y-78);
+    ctx.font="bold 18px Georgia"; ctx.fillStyle="#fff0c0"; ctx.fillText("KIẾM ĐẾ",x,y+100);
+    ctx.restore();
+}
+
+function updateDivineGod(){
+    // Nhân Thần chỉ được phép tấn công sau khi người chơi chọn "KHÔNG CHẤP NHẬN".
+    // Trong lúc hội thoại và lúc đang chọn đáp án, Boss hoàn toàn bất động.
+    if(area!=="divineShrine" || !divineGod.active || divineGod.defeated || questStage!==6 || dialogueOpen || reviving) return;
+    const dx=player.x-divineGod.x, dy=player.y-divineGod.y;
+    const d=Math.hypot(dx,dy)||1;
+    if(divineGod.attackCooldown>0) divineGod.attackCooldown--;
+    if(divineGod.rangedCooldown>0) divineGod.rangedCooldown--;
+
+    if(d>125){
+        divineGod.x += dx/d*1.35;
+        divineGod.y += dy/d*1.35;
+    }else if(divineGod.attackCooldown<=0){
+        player.hp -= 15;
+        divineGod.attackCooldown=42;
+        bossAttackSound(); hurtSound();
+        showMessage("👁️ NHÂN THẦN TẤN CÔNG!");
+        if(player.hp<=0){ player.hp=0; playerDeath(); return; }
+    }
+
+    if(divineGod.rangedCooldown<=0 && d>150 && d<900){
+        const len=Math.hypot(dx,dy)||1;
+        bossProjectiles.push({x:divineGod.x,y:divineGod.y,vx:dx/len*8,vy:dy/len*8,life:100,damage:10,source:"divine"});
+        divineGod.rangedCooldown=85;
+        bossAttackSound();
+    }
+}
+
+function defeatDivineGod(){
+    if(divineGod.defeated) return;
+    divineGod.defeated=true;
+    divineGod.active=false;
+    document.getElementById("bossUI").style.display="none";
+    showMessage("✨ NHÂN THẦN ĐÃ BỊ ĐÁNH BẠI!");
+    setTimeout(showQuestionEnding,900);
+}
+
+function drawDivineGod(){
+    if(area!=="divineShrine" || !divineGod.active || divineGod.defeated) return;
+    const x=divineGod.x-camera.x, y=divineGod.y-camera.y;
+    ctx.save(); ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillStyle="rgba(170,100,255,.18)"; ctx.beginPath(); ctx.arc(x,y,130,0,Math.PI*2); ctx.fill();
+    ctx.font="105px Arial"; ctx.fillText("👁️",x,y);
+    ctx.font="bold 20px Georgia"; ctx.fillStyle="#eadfff"; ctx.fillText("NHÂN THẦN",x,y+105);
+    ctx.restore();
+}
+
+function drawDivineShrine(){
+    ctx.fillStyle="#090713";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.translate(-camera.x,-camera.y);
+
+    // Đại điện tím đen
+    ctx.fillStyle="#171126";
+    ctx.fillRect(30,30,1440,850);
+
+    // Sàn đá
+    ctx.fillStyle="#28203b";
+    ctx.fillRect(55,470,1390,390);
+
+    // Gạch sàn
+    ctx.strokeStyle="rgba(160,130,220,.16)";
+    ctx.lineWidth=2;
+    for(let x=70;x<1430;x+=70){
+        ctx.beginPath(); ctx.moveTo(x,470); ctx.lineTo(x,860); ctx.stroke();
+    }
+    for(let y=510;y<860;y+=55){
+        ctx.beginPath(); ctx.moveTo(55,y); ctx.lineTo(1445,y); ctx.stroke();
+    }
+
+    // Cột đá
+    for(const x of [120,360,1140,1380]){
+        ctx.fillStyle="#3a3150";
+        ctx.fillRect(x,110,58,650);
+        ctx.fillStyle="#51436b";
+        ctx.fillRect(x-14,100,86,25);
+        ctx.fillRect(x-14,750,86,25);
+    }
+
+    // Bàn thờ trung tâm
+    ctx.fillStyle="#5a4a76";
+    ctx.fillRect(610,430,280,50);
+    ctx.fillStyle="#8e6ac4";
+    ctx.fillRect(650,400,200,30);
+    ctx.fillStyle="rgba(150,100,255,.18)";
+    ctx.beginPath(); ctx.arc(750,370,115,0,Math.PI*2); ctx.fill();
+
+    // Ma pháp trận
+    ctx.strokeStyle="rgba(176,130,255,.72)";
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(750,500,155,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(750,500,95,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(750,345); ctx.lineTo(885,575); ctx.lineTo(615,575); ctx.closePath(); ctx.stroke();
+
+    // Nhân Thần
+    if(divineGod.active){
+        ctx.textAlign="center"; ctx.textBaseline="middle";
+        ctx.font="96px Arial";
+        ctx.fillText("👁️",750,285);
+        ctx.font="bold 21px Georgia";
+        ctx.fillStyle="#eadfff";
+        ctx.fillText("NHÂN THẦN",750,395);
+    }
+
+    // Lối ra
+    ctx.fillStyle="#0c0915";
+    ctx.fillRect(680,760,140,100);
+    ctx.strokeStyle="#8e6ac4";
+    ctx.strokeRect(680,760,140,100);
+
+    ctx.restore();
+}
+
+function drawSwordShrine(){
+    /*
+       THÁNH ĐỊA KIẾM — VÕ ĐƯỜNG
+       Nền được thiết kế như một võ đường cổ:
+       sàn gỗ, vách gỗ, cột trụ, thảm luyện kiếm,
+       giá kiếm và bàn thờ ở cuối sảnh.
+    */
+    ctx.fillStyle="#17120f";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.translate(-camera.x,-camera.y);
+
+    // Đại sảnh võ đường
+    ctx.fillStyle="#6b4128";
+    ctx.fillRect(30,30,1440,850);
+
+    // Sàn gỗ dài
+    for(let y=45;y<875;y+=42){
+        ctx.fillStyle = (Math.floor(y/42)%2===0) ? "#8a5734" : "#75482d";
+        ctx.fillRect(45,y,1410,34);
+        ctx.strokeStyle="rgba(45,22,12,.45)";
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(45,y+33);
+        ctx.lineTo(1455,y+33);
+        ctx.stroke();
+    }
+
+    // Vách gỗ phía sau
+    ctx.fillStyle="#3b2419";
+    ctx.fillRect(45,45,1410,125);
+    ctx.fillStyle="#5a3422";
+    ctx.fillRect(55,55,1390,105);
+
+    // Cửa sổ võ đường
+    for(let x of [130,430,1070,1370]){
+        ctx.fillStyle="#171b1d";
+        ctx.fillRect(x,70,150,72);
+        ctx.strokeStyle="#b0834b";
+        ctx.lineWidth=6;
+        ctx.strokeRect(x,70,150,72);
+        ctx.beginPath();
+        ctx.moveTo(x+75,70); ctx.lineTo(x+75,142);
+        ctx.moveTo(x,106); ctx.lineTo(x+150,106);
+        ctx.stroke();
+    }
+
+    // Cột trụ
+    for(let x of [70,350,1150,1430]){
+        ctx.fillStyle="#422619";
+        ctx.fillRect(x,45,38,835);
+        ctx.fillStyle="#9b6538";
+        ctx.fillRect(x-9,45,56,16);
+        ctx.fillRect(x-9,864,56,16);
+    }
+
+    // Thảm luyện kiếm trung tâm
+    ctx.fillStyle="#5a2225";
+    ctx.fillRect(430,220,640,500);
+    ctx.strokeStyle="#d1a15b";
+    ctx.lineWidth=5;
+    ctx.strokeRect(450,240,600,460);
+    ctx.lineWidth=2;
+    ctx.strokeRect(470,260,560,420);
+
+    // Bàn thờ cuối võ đường
+    ctx.fillStyle="#352018";
+    ctx.fillRect(625,85,250,100);
+    ctx.fillStyle="#b88945";
+    ctx.fillRect(640,98,220,12);
+    ctx.font="bold 28px Georgia";
+    ctx.textAlign="center";
+    ctx.fillStyle="#f1d58e";
+    ctx.fillText("⚔️  KIẾM ĐẠO  ⚔️",750,150);
+
+    // Giá kiếm hai bên
+    for(let side of [220,1250]){
+        ctx.fillStyle="#3a2117";
+        ctx.fillRect(side,360,120,20);
+        ctx.fillRect(side,560,120,20);
+        for(let i=0;i<4;i++){
+            const sx=side+15+i*27;
+            ctx.strokeStyle="#c9b083";
+            ctx.lineWidth=5;
+            ctx.beginPath();
+            ctx.moveTo(sx,350);
+            ctx.lineTo(sx+35,275);
+            ctx.stroke();
+            ctx.strokeStyle="#76502f";
+            ctx.lineWidth=3;
+            ctx.beginPath();
+            ctx.moveTo(sx+2,353);
+            ctx.lineTo(sx+37,278);
+            ctx.stroke();
+        }
+    }
+
+    // Biển tên
+    ctx.textAlign="center";
+    ctx.fillStyle="#ead8ae";
+    ctx.font="bold 34px Georgia";
+    ctx.fillText("THÁNH ĐỊA KIẾM",750,205);
+    ctx.font="16px Arial";
+    ctx.fillStyle="#c9b98f";
+    ctx.fillText("VÕ ĐƯỜNG CỦA KIẾM ĐẾ",750,230);
+
+    // Cửa ra
+    ctx.fillStyle="#25170f";
+    ctx.fillRect(650,790,200,90);
+    ctx.strokeStyle="#bd8a48";
+    ctx.lineWidth=5;
+    ctx.strokeRect(650,790,200,90);
+    ctx.font="bold 14px Arial";
+    ctx.fillStyle="#ffffff";
+    ctx.fillText("CỬA RA — NHẤN E",750,835);
+
+    ctx.restore();
+}
+
+/* =====================================================
 MESSAGE
 ===================================================== */
 
@@ -5171,6 +6023,44 @@ function drawOutside(){
         ctx.stroke();
     }
     ctx.restore();
+
+    // MA PHÁP DỊCH CHUYỂN ở cuối con đường phía Tây
+    {
+        const gx=divineGate.x-camera.x, gy=divineGate.y-camera.y;
+        if(gx>-260 && gx<W+260 && gy>-260 && gy<H+260){
+            ctx.save();
+            ctx.textAlign="center"; ctx.textBaseline="middle";
+            const pulse=1+Math.sin(performance.now()/260)*0.05;
+            ctx.fillStyle="rgba(120,80,255,.16)";
+            ctx.beginPath(); ctx.arc(gx,gy,105*pulse,0,Math.PI*2); ctx.fill();
+            ctx.strokeStyle="rgba(170,130,255,.85)";
+            ctx.lineWidth=5;
+            ctx.beginPath(); ctx.arc(gx,gy,62*pulse,0,Math.PI*2); ctx.stroke();
+            ctx.font="82px Arial"; ctx.fillText("🔮",gx,gy-12);
+            ctx.font="bold 19px Georgia"; ctx.fillStyle="#e6d8ff";
+            ctx.fillText("MA PHÁP DỊCH CHUYỂN",gx,gy+92);
+            ctx.font="13px Arial"; ctx.fillStyle="#ffffff";
+            ctx.fillText("NHẤN E ĐỂ VÀO",gx,gy+118);
+            ctx.restore();
+        }
+    }
+
+    // THÁNH ĐỊA KIẾM ở cuối con đường
+    {
+        const sx=swordShrine.x-camera.x, sy=swordShrine.y-camera.y;
+        if(sx>-250 && sx<W+250 && sy>-250 && sy<H+250){
+            ctx.save();
+            ctx.textAlign="center"; ctx.textBaseline="middle";
+            ctx.fillStyle="rgba(220,190,100,.18)";
+            ctx.beginPath(); ctx.arc(sx,sy,135,0,Math.PI*2); ctx.fill();
+            ctx.font="96px Arial"; ctx.fillText("⛩️",sx,sy-15);
+            ctx.font="bold 20px Georgia"; ctx.fillStyle="#fff0c0";
+            ctx.fillText("THÁNH ĐỊA KIẾM",sx,sy+105);
+            ctx.font="13px Arial"; ctx.fillStyle="#ffffff";
+            ctx.fillText("NHẤN E ĐỂ VÀO",sx,sy+130);
+            ctx.restore();
+        }
+    }
 
 }
 
@@ -6444,7 +7334,7 @@ QUEST ARROW
 function drawQuestArrow(){
 
     if(
-        questStage>=5 ||
+        questStage>=6 ||
         dialogueOpen
     )
         return;
@@ -6457,11 +7347,20 @@ function drawQuestArrow(){
         area==="outside"
     ){
 
-        target =
-            questStage===0
-            ?npc
-            :gate;
+        if(questStage===5){
+            target = divineGate;
+        }else if(questStage===6){
+            target = divineGod;
+        }else{
+            target =
+                questStage===0
+                ?npc
+                :gate;
+        }
 
+    }
+    else if(area==="swordShrine" && swordEmperor.active){
+        target = swordEmperor;
     }
     else if(
         castleFloor===3 &&
@@ -6654,23 +7553,26 @@ function updateUI(){
         souls;
 
 
-    if(
+    if(area==="divineShrine" && divineGod.active && !divineGod.defeated){
+        document.getElementById("bossName").textContent = "👁️ NHÂN THẦN";
+        document.getElementById("bossUI").style.display = "block";
+        document.getElementById("bossHP").style.width = Math.max(0,divineGod.hp)/divineGod.maxHp*100 + "%";
+    }
+    else if(
+        area==="swordShrine" &&
+        swordEmperor.active &&
+        !swordEmperor.defeated
+    ){
+        document.getElementById("bossHP").style.width =
+            Math.max(0,swordEmperor.hp) /
+            swordEmperor.maxHp * 100 + "%";
+    }
+    else if(
         boss.active
     ){
-
-        document
-            .getElementById(
-                "bossHP"
-            )
-            .style.width =
-            Math.max(
-                0,
-                boss.hp
-            )/
-            boss.maxHp*
-            100+
-            "%";
-
+        document.getElementById("bossHP").style.width =
+            Math.max(0,boss.hp) /
+            boss.maxHp * 100 + "%";
     }
 
 
@@ -6746,9 +7648,6 @@ document
             .classList.add(
                 "hidden"
             );
-
-        // Hai dòng chân trang chỉ xuất hiện ở màn hình chính.
-        document.getElementById("v7-credit-footer").style.display = "none";
 
 
         document
@@ -6910,18 +7809,9 @@ document
 COMPLETION MESSAGE ON MAIN MENU
 ===================================================== */
 function updateMainMenuCompletionMessage(){
-    const footer = document.getElementById("v7-credit-footer");
-    const yellow = document.getElementById("mainFooterYellow");
-    if(!footer || !yellow) return;
-
-    footer.style.display = "block";
-
-    let completed = false;
-    try{
-        completed = localStorage.getItem("forgottenGodCompleted") === "1";
-    }catch(e){}
-
-    yellow.style.display = completed ? "block" : "none";
+    const msg = document.getElementById("completedPlayerMessage");
+    if(!msg) return;
+    msg.style.setProperty("display","none","important");
 }
 updateMainMenuCompletionMessage();
 
@@ -6982,6 +7872,10 @@ document
         souls = 0;
         boss.active = false;
         boss.defeated = false;
+        swordEmperor.active = false;
+        swordEmperor.defeated = false;
+        divineGod.active = false;
+        divineGodDialogueActive = false;
         projectiles = [];
         bossProjectiles = [];
         mobileAimTarget = null;
@@ -7003,8 +7897,11 @@ document
         try{
             completed = localStorage.getItem("forgottenGodCompleted") === "1";
         }catch(e){}
-        document.getElementById("mainFooterYellow").style.display =
-            completed ? "block" : "none";
+        document.getElementById("completedPlayerMessage").style.setProperty(
+            "display",
+            completed ? "block" : "none",
+            "important"
+        );
     });
 
 
@@ -7050,6 +7947,9 @@ function gameLoop(){
 
     updateBoss();
 
+    updateSwordEmperor();
+    updateDivineGod();
+
     updateCamera();
 
     updateUI();
@@ -7076,6 +7976,22 @@ function gameLoop(){
         drawNPC();
 
         drawEnemies();
+
+    }
+    else if(
+        area==="swordShrine"
+    ){
+
+        drawSwordShrine();
+        drawSwordEmperor();
+
+    }
+    else if(
+        area==="divineShrine"
+    ){
+
+        drawDivineShrine();
+        drawDivineGod();
 
     }
     else{
@@ -7108,41 +8024,111 @@ function gameLoop(){
 
 </script>
 
-<script id="mobile-menu-scroll-js">
-(function(){
-  function enableSwipe(id){
-    const el = document.getElementById(id);
-    if(!el || el.dataset.swipeReady === "1") return;
-    el.dataset.swipeReady = "1";
-    el.style.overflowY = "auto";
-    el.style.overflowX = "hidden";
-    el.style.webkitOverflowScrolling = "touch";
-    el.style.touchAction = "pan-y";
 
-    let startY = 0, startScroll = 0;
-    el.addEventListener("touchstart", e => {
-      if(e.touches.length !== 1) return;
-      startY = e.touches[0].clientY;
-      startScroll = el.scrollTop;
-    }, {passive:true});
+<script id="divine-story-flow">
+function showDivineChoices(){
+    running=false; dialogueOpen=false; mobileAttacking=false;
+    const o=document.getElementById("divineChoiceOverlay");
+    o.classList.add("show"); o.setAttribute("aria-hidden","false");
+}
 
-    el.addEventListener("touchmove", e => {
-      if(e.touches.length !== 1) return;
-      el.scrollTop = startScroll - (e.touches[0].clientY - startY);
-    }, {passive:true});
-  }
+function closeDivineOverlays(){
+    ["divineChoiceOverlay","divineBadEnding","divineQuestionEnding"].forEach(id=>{
+        const e=document.getElementById(id); if(e){e.classList.remove("show");e.setAttribute("aria-hidden","true");}
+    });
+}
 
-  function init(){
-    if(window.matchMedia("(pointer: coarse)").matches){
-      enableSwipe("menu");
-      enableSwipe("sequelMenu");
+function chooseDivineAccept(){
+    closeDivineOverlays();
+    running=false;
+    // Nhiễu trước khi chuyển sang BAD ENDING.
+    document.body.classList.add("story-glitch");
+    showMessage("▓▒░ TÍN HIỆU BỊ NHIỄU ░▒▓");
+    setTimeout(()=>{
+        document.body.classList.remove("story-glitch");
+        document.getElementById("divineBadEnding").classList.add("show");
+        document.getElementById("divineBadEnding").setAttribute("aria-hidden","false");
+    },1500);
+}
+
+function chooseDivineReject(){
+    closeDivineOverlays();
+    running=true;
+    area="divineShrine";
+    dialogueOpen=false;
+    divineGodDialogueActive=false;
+    divineGod.active=true; divineGod.defeated=false; divineGod.hp=divineGod.maxHp;
+    divineGod.attackCooldown=20;
+    divineGod.rangedCooldown=45;
+    questStage=6;
+    document.getElementById("bossUI").style.display="block";
+    document.getElementById("bossName").textContent="👁️ NHÂN THẦN";
+    showMessage("⚔️ NHÂN THẦN: VẬY HÃY CHỨNG MINH LỰA CHỌN CỦA NGƯƠI!");
+    gameLoop();
+}
+
+function showQuestionEnding(){
+    running=false; mobileAttacking=false; dialogueOpen=false;
+    document.getElementById("divineQuestionEnding").classList.add("show");
+    document.getElementById("divineQuestionEnding").setAttribute("aria-hidden","false");
+}
+
+function continueFromQuestionEnding(){
+    closeDivineOverlays();
+    clearMovementInput();
+    joystickActive=false;
+    joystickX=0;
+    joystickY=0;
+    area="inside"; castleFloor=1;
+    player.x=750; player.y=800;
+    questStage=2;
+    divineGod.active=false;
+    document.getElementById("location").textContent="FORGOTTEN CASTLE";
+    document.getElementById("level").textContent="CASTLE";
+    document.getElementById("bossUI").style.display="none";
+    running=true;
+    showMessage("🏰 NGƯƠI ĐÃ ĐẾN FORGOTTEN CASTLE");
+    gameLoop();
+}
+
+document.getElementById("divineAccept")?.addEventListener("pointerdown",e=>{e.preventDefault();chooseDivineAccept();});
+document.getElementById("divineReject")?.addEventListener("pointerdown",e=>{e.preventDefault();chooseDivineReject();});
+function returnToMainFromBadEnding(){
+    closeDivineOverlays();
+    document.body.classList.remove("story-glitch");
+    const back = document.getElementById("backToMain");
+    if(back){
+        back.click();
+        return;
     }
-  }
 
-  init();
-  window.addEventListener("load", init);
-})();
+    // Fallback nếu nút menu chính chưa được khởi tạo.
+    running=false;
+    area="outside";
+    questStage=0;
+    divineGod.active=false;
+    swordEmperor.active=false;
+    boss.active=false;
+    document.getElementById("ui").style.display="none";
+    document.getElementById("bossUI").style.display="none";
+    document.getElementById("menu").classList.remove("hidden");
+}
+document.getElementById("badEndingBack")?.addEventListener("click",e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    returnToMainFromBadEnding();
+});
+document.getElementById("badEndingBack")?.addEventListener("pointerdown",e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    returnToMainFromBadEnding();
+});
+document.getElementById("questionEndingContinue")?.addEventListener("pointerdown",e=>{e.preventDefault();continueFromQuestionEnding();});
 </script>
+<style id="story-glitch-style">
+body.story-glitch{animation:storyGlitch .08s steps(2) infinite;filter:contrast(1.35) grayscale(.35);}
+@keyframes storyGlitch{0%{transform:translate(0)}25%{transform:translate(4px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,3px)}100%{transform:translate(-2px,-3px)}}
+</style>
 
 </body>
 </html>
